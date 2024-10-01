@@ -6,12 +6,12 @@ document.addEventListener("DOMContentLoaded", function () {
             { title: 'Dinner', img: 'images/dinner1.jpg' }
         ],
         left: [
-            { title: 'Breakfast', img: 'images/breakfast2.jpg' },
+            { title: 'Breakfast1', img: 'images/breakfast2.jpg' },
             { title: 'Lunch', img: 'images/lunch2.jpg' },
             { title: 'Dinner', img: 'images/dinner2.jpg' }
         ],
         right: [
-            { title: 'Breakfast', img: 'images/breakfast3.jpg' },
+            { title: 'Breakfast2', img: 'images/breakfast3.jpg' },
             { title: 'Lunch', img: 'images/lunch3.jpg' },
             { title: 'Dinner', img: 'images/dinner3.jpg' }
         ]
@@ -60,14 +60,15 @@ document.addEventListener("DOMContentLoaded", function () {
     
     displayFoodMood('first');
     
-    calculateBtn.addEventListener('click', () => {
+    document.getElementById('calculateBtn').addEventListener('click', () => {
+        currentMood = 'first';
+        displayFoodMood(currentMood);
         foodMoodListSection.classList.remove('d-none');
-        emotionCalculator.classList.add('d-none');
+        document.getElementById('emotionCalculator').classList.add('d-none');
     });
-    
-    backToEmotionList.addEventListener('click', () => {
+
+    document.getElementById('backToEmotionList').addEventListener('click', () => {
         foodMoodListSection.classList.add('d-none');
-        emotionCalculator.classList.remove('d-none');
+        document.getElementById('emotionCalculator').classList.remove('d-none');
     });
-    
 });
