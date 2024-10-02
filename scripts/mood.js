@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+    
+    // display with menu
+    
     const foodMood = {
         first: [
             { title: 'Breakfast', img: 'images/breakfast1.jpg' },
@@ -70,5 +73,30 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('backToEmotionList').addEventListener('click', () => {
         foodMoodListSection.classList.add('d-none');
         document.getElementById('emotionCalculator').classList.remove('d-none');
+    });
+
+    // modal
+
+    const modal = document.getElementById('modal');
+    const btnCloseModal = document.getElementById('btnCloseModal');
+    const btnEmotion10 = document.getElementById('emotion10');
+    const btnAge = document.getElementById('btnAge');
+
+    btnEmotion10.addEventListener('click', () => {
+        modal.classList.remove('d-none');
+    });
+
+    btnCloseModal.addEventListener('click', () => {
+        modal.classList.add('d-none');
+    });
+
+    btnAge.addEventListener('click', () => {
+        modal.classList.add('d-none');                // переделать
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('d-none');
+        }
     });
 });

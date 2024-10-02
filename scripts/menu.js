@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+    // burger menu
+
     const btnBurgerMenu = document.getElementById('btnBurgerMenu');
     const crossBurgerMenu = document.getElementById('crossBurgerMenu');
     const menu = document.querySelector('.menu');
