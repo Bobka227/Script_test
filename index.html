@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/styles/menu.css">
     <link rel="stylesheet" href="/styles/style.css">
     <script defer src="scripts/menu.js"></script>
+    <script defer src="scripts/index.js"></script>
     <title>FoodMood</title>
 </head>
 <body>
@@ -38,7 +39,18 @@
                 veniam dicta sed quaerat voluptas dolores 
                 numquam minima, odio sunt. Molestiae, libero autem.
             </p>
-            <button type="button" class="btnGetStarted"><a href="pages/registration.html">Get started...</a></button>
+            <button type="button" class="btnGetStarted">Get started...</button>
+
+            <div id="modal" class="modal d-none">
+                <div class="modal-content">
+                    <p>This feature is intended only for registered users.</p>
+                    <ul class="modal-buttons">
+                        <li><button id="btnCloseModal" class="modal-btn">Close</button></li>
+                        <li><button id="btnLogin" class="modal-btn">Sign in</button></li>
+                        <li><button id="btnSignup" class="modal-btn">Sign up</button></li>
+                    </ul>
+                </div>
+            </div>
         </section>
         <section class="promo">
             <img src="/images/menu/swag.png" alt="promo image">
