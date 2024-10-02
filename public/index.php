@@ -1,3 +1,3 @@
-<?php
-    include("index.html");
+<<?php
+include("public/index.html");
 ?>
