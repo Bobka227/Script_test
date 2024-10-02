@@ -16,12 +16,12 @@
                     <img src="/images/menu/burger.png" alt="burger icon">
                 </button>
                 <button class="crossBtn d-none" id="crossBurgerMenu">
-                    <img src="/images/menu/cross.svg" alt="cross icon"> <!--  для закрытия бургер меню -->
+                    <img src="/images/menu/cross.svg" alt="cross icon">
                 </button>
 
                 <ul class="menu d-none">
-                    <li><a href="#sign_in" class="menu-item">sign in</a></li>
-                    <li><a href="#sign_up" class="menu-item">sign up</a></li>
+                    <li><a href="registration.html" class="menu-item">sign in</a></li>
+                    <li><a href="registration.html" class="menu-item">sign up</a></li>
                     <li><a href="search.html" class="menu-item">food recipes</a></li>
                     <li><a href="mood.html" class="menu-item">mood recipes</a></li>
                     <li><a href="help.html" class="menu-item">help</a></li>
@@ -31,63 +31,76 @@
     </header>
     <main>
         <section class="emotionCalculator" id="emotionCalculator">
+            <h1 class="d-none">Emotion calculator</h1>
             <ul class="emotionsList" id="emotionsList">
                 <li>
-                    <button class="emotion-item" id="emotionItem" type="button">
+                    <button class="emotion-item" id="emotion1" type="button"> emoce
                         <!-- смайлик эмоции -->
                     </button>
                 </li>
                 <li>
-                    <button class="emotion-item" id="emotionItem" type="button">
+                    <button class="emotion-item" id="emotion2" type="button"> emoce
                         <!-- смайлик эмоции -->
                     </button>
                 </li>
                 <li>
-                    <button class="emotion-item" id="emotionItem" type="button">
+                    <button class="emotion-item" id="emotion3" type="button"> emoce
                         <!-- смайлик эмоции -->
                     </button>
                 </li>
                 <li>
-                    <button class="emotion-item" id="emotionItem" type="button">
+                    <button class="emotion-item" id="emotion4" type="button"> emoce
                         <!-- смайлик эмоции -->
                     </button>
                 </li>
                 <li>
-                    <button class="emotion-item" id="emotionItem" type="button">
+                    <button class="emotion-item" id="emotion5" type="button"> emoce
                         <!-- смайлик эмоции -->
                     </button>
                 </li>
                 <li>
-                    <button class="emotion-item" id="emotionItem" type="button">
+                    <button class="emotion-item" id="emotion6" type="button"> emoce
                         <!-- смайлик эмоции -->
                     </button>
                 </li>
                 <li>
-                    <button class="emotion-item" id="emotionItem" type="button">
+                    <button class="emotion-item" id="emotion7" type="button"> emoce
                         <!-- смайлик эмоции -->
                     </button>
                 </li>
                 <li>
-                    <button class="emotion-item" id="emotionItem" type="button">
+                    <button class="emotion-item" id="emotion8" type="button"> emoce
                         <!-- смайлик эмоции -->
                     </button>
                 </li>
                 <li>
-                    <button class="emotion-item" id="emotionItem" type="button">
+                    <button class="emotion-item" id="emotion9" type="button"> emoce
                         <!-- смайлик эмоции -->
                     </button>
                 </li>
                 <li class="emotion">
-                    <button class="emotion-item" id="emotionItem" type="button">
+                    <button class="emotion-item" id="emotion10" type="button"> emoce
                         <!-- смайлик эмоции -->
                     </button>
                 </li>
             </ul>
 
             <button class="calculateBtn" id="calculateBtn">calculate</button>
+
+            <div id="modal" class="modal d-none">
+                <div class="modal-content">
+                    <p>This feature is intended only for 18+ users.</p>
+                    <ul class="modal-buttons">
+                        <li><button id="btnCloseModal" class="modal-btn">Close</button></li>
+                        <li><button id="btnNoRUnction" class="modal-btn d-none">Wow</button></li>
+                        <li><button id="btnAge" class="modal-btn">18+</button></li>
+                    </ul>
+                </div>
+            </div>            
         </section>
 
         <section class="foodMoodList d-none" id="foodMoodList">
+            <h2 class="d-none">The menu for the day according to the emotion</h2>
             <ul class="foodList-ul" id="foodList-container"> <!-- вставка html-кода в js --> </ul>
 
             <div class="foodListSkip">
