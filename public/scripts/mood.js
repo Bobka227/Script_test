@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
         currentMood = 'first';
         displayFoodMood(currentMood);
         foodMoodListSection.classList.remove('d-none');
+        // foodMoodListSection.classList.add('animate__animated', 'animate__fadeIn');
         document.getElementById('emotionCalculator').classList.add('d-none');
     });
 

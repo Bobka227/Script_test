@@ -53,6 +53,7 @@
     cursor: pointer;
     border-radius: 5px;
 }
+
 .modal-buttons li:nth-child(1) .modal-btn {
     background-color: #FF4136;
 }

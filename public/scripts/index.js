@@ -17,11 +17,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     btnLogin.addEventListener('click', () => {
-        window.location.href = '../pages/registration.html';
+        window.location.href = 'pages/registration.html';
     });
 
     btnSignup.addEventListener('click', () => {
-        window.location.href = '../pages/registration.html';
+        window.location.href = 'pages/registration.html';
     });
 
     window.addEventListener('click', (e) => {
