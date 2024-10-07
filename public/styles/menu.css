@@ -1,96 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&display=swap');
+
 *{
-    font-family: "Kantumruy Pro", sans-serif;
-}
-/* burger menu styles */
-
-/* .menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 200px;
-    height: 100%;
-    background-color: white;
-    padding: 20px;
-    list-style-type: none;
-} */
-
-header {
-    padding: 20px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-ul {
-    list-style: none;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
+    font-family: "Kantumruy Pro" !important;
 }
 
 
-.menu {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background-color: #333;
-    width: 200px;
-    padding: 20px;
-    z-index: 100;
-    list-style-type: none;
-} 
-
-.burger-menu {
-    display: flex;
-    align-items: center;
+.offcanvas {
+    width: 30vh !important; 
+    border-radius: 10px 0 0 10px; 
 }
 
-.burgerBtn, .crossBtn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
+.offcanvas-body {
+    padding: 0; 
 }
 
-.burgerBtn img, .crossBtn img {
-    width: 100%;
-}
-
-
-.burger-menu {
-    position: relative;
+.list-unstyled {
+    padding-left: 20px;
+    padding-top: 20px;
 }
 
 .menu-item {
-    color: white;
-    margin: 10px 0;
-    font-size: 18px;
+    font-family: "Kantumruy Pro", sans-serif !important;
+    display: block;
+    font-size: 1.5rem;
     text-transform: uppercase;
+    margin-bottom: 20px;
+    color: #000;
+    text-decoration: none;
 }
 
 .menu-item:hover {
-    color: #4CAF50;
+    color: #4CAF50; 
 }
 
-.d-none {
-    display: none;
+.navbar-toggler {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    border: none;
 }
 
-.nav {
-    position: relative;
+.navbar-toggler-icon {
+    background-image: url('https://cdn-icons-png.flaticon.com/512/1828/1828859.png'); 
 }
+
+.menu-item:last-child {
+    margin-top: auto;
+    padding-bottom: 20px;
+}
+
+
+
+
 
 /* modal styles for index.html */
 
