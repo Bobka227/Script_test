@@ -1,0 +1,32 @@
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: url(../images/menu/recepts.png);
+    position: relative;
+    background-repeat:no-repeat;
+    background-position: center;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+.searchRecipe{
+    display: flex;
+    justify-content: center ;
+}
+
+.searchRecipe > input{
+    border-radius: 15vh;
+    width: 50%;
+    height: 4.5vh;
+}
+
+
+
+
+
+
+
