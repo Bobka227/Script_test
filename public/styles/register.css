@@ -16,7 +16,10 @@ body {
   align-items: center;
   font-family: "Montserrat", sans-serif;
   font-size: 12px;
-  background-color: #ecf0f3;
+  background: url(../images/menu/Registrace.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
   color: #a0a5a8;
 }
 
@@ -28,7 +31,7 @@ header{
 
 
 
-/**/
+
 .main {
   position: relative;
   width: 1000px;
@@ -147,9 +150,9 @@ header{
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 1.15px;
-  background-color: #4b70e2;
+  background-color: #99FA97;
   color: #f9f9f9;
-  box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
+  box-shadow: 4px 4px 16px #d1d9e6, -2px -2px 16px #f9f9f9;
   border: none;
   outline: none;
 }
@@ -177,7 +180,7 @@ header{
   padding: 50px;
   z-index: 200;
   transition: 1.25s;
-  background-color: #ecf0f3;
+  background-color: #99FA97;
   overflow: hidden;
   box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #f9f9f9;
 }
@@ -187,7 +190,7 @@ header{
   height: 500px;
   border-radius: 50%;
   background-color: #ecf0f3;
-  box-shadow: inset 8px 8px 12px #d1d9e6, inset -8px -8px 12px #f9f9f9;
+  box-shadow: inset 5px 5px 5px #d1d9e6, inset -8px -8px 12px #f9f9f9;
   bottom: -60%;
   left: -60%;
   transition: 1.25s;
@@ -210,6 +213,8 @@ header{
 }
 .switch__button {
   cursor: pointer;
+  background-color: #FFFFFF;
+  color: black;
 }
 .switch__button:hover {
   box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
