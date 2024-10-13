@@ -1,23 +1,61 @@
-/* burger menu styles */
+@import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&display=swap');
 
-.menu {
+*{
+    font-family: "Kantumruy Pro" !important;
+}
+
+
+.offcanvas {
+    width: 30vh !important; 
+    border-radius: 10px 0 0 10px; 
+}
+
+.offcanvas-body {
+    padding: 0; 
+}
+
+.list-unstyled {
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.menu-item {
+    font-family: "Kantumruy Pro", sans-serif !important;
+    display: block;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    color: #000;
+    text-decoration: none;
+}
+
+.menu-item:hover {
+    color: #4CAF50; 
+}
+
+.navbar-toggler {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 200px;
-    height: 100%;
-    background-color: white;
-    padding: 20px;
-    list-style-type: none;
+    top: 20px;
+    right: 10px;
+    border: none;
 }
 
-.burger-menu {
-    position: relative;
+.navbar-toggler-icon {
+    background-image: url('https://cdn-icons-png.flaticon.com/512/1828/1828859.png'); 
 }
+
+.menu-item:last-child {
+    margin-top: auto;
+    padding-bottom: 20px;
+}
+
+
+
+
 
 /* modal styles for index.html */
 
-.modal {
+.modal { 
     display: flex;
     justify-content: center;
     align-items: center;
