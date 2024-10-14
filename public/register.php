@@ -13,7 +13,8 @@ try {
     die("Ошибка подключения к базе данных: " . $e->getMessage());
 }
 
-function registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture) {
+function registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture): string
+{
     echo "Функция регистрации вызвана<br>"; // Отладка
 
     // Проверка на существующего пользователя по login или email
@@ -55,16 +56,25 @@ function registerUser($pdo, $username, $lastname, $email, $phone_number, $gender
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "POST запрос получен<br>"; // Отладка
-    $username = $_POST['username'];
-    $lastname = $_POST['lastname'];
-    $email = $_POST['email'];
-    $phone_number = $_POST['phone_number'];
-    $gender = $_POST['gender'];
-    $login = $_POST['login'];
-    $password = $_POST['password'];
-    $profile_picture = $_POST['profile_picture'] ?? null; // Опциональное поле
 
-    $result = registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture);
-    echo $result;
+    // Проверка, что все необходимые поля не пустые
+    if (!empty($_POST['username']) && !empty($_POST['lastname']) && !empty($_POST['email']) &&
+        !empty($_POST['phone_number']) && !empty($_POST['gender']) && !empty($_POST['login']) && !empty($_POST['password'])) {
+
+        $username = $_POST['username'];
+        $lastname = $_POST['lastname'];
+        $email = $_POST['email'];
+        $phone_number = $_POST['phone_number'];
+        $gender = $_POST['gender'];
+        $login = $_POST['login'];
+        $password = $_POST['password'];
+        $profile_picture = $_POST['profile_picture'] ?? null; // Опциональное поле
+
+        // Вызов функции регистрации
+        $result = registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture);
+        echo $result;
+}else {
+        echo "Все поля должны быть заполнены!";
+    }
 }
-?>
+
