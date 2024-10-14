@@ -13,17 +13,16 @@ try {
     die("Ошибка подключения к базе данных: " . $e->getMessage());
 }
 
-
-function registerUser($pdo, $username, $email, $password) {
+function registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture) {
     echo "Функция регистрации вызвана<br>"; // Отладка
 
-    // Проверка на существующего пользователя
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
-    $stmt->execute(['username' => $username, 'email' => $email]);
+    // Проверка на существующего пользователя по login или email
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE login = :login OR email = :email");
+    $stmt->execute(['login' => $login, 'email' => $email]);
 
     if ($stmt->rowCount() > 0) {
         echo "Пользователь уже существует<br>"; // Отладка
-        return "Пользователь с таким именем или email уже существует.";
+        return "Пользователь с таким логином или email уже существует.";
     }
 
     // Хеширование пароля
@@ -31,13 +30,19 @@ function registerUser($pdo, $username, $email, $password) {
     echo "Пароль захеширован<br>"; // Отладка
 
     // Вставка нового пользователя
-    $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
+    $stmt = $pdo->prepare("INSERT INTO users (username, lastname, email, phone_number, gender, login, password, profile_picture) 
+                           VALUES (:username, :lastname, :email, :phone_number, :gender, :login, :password, :profile_picture)");
 
     try {
         $stmt->execute([
             'username' => $username,
+            'lastname' => $lastname,
             'email' => $email,
-            'password' => $hashed_password
+            'phone_number' => $phone_number,
+            'gender' => $gender,
+            'login' => $login,
+            'password' => $hashed_password,
+            'profile_picture' => $profile_picture
         ]);
         echo "Данные успешно добавлены в базу данных<br>"; // Отладка
     } catch (PDOException $e) {
@@ -51,10 +56,15 @@ function registerUser($pdo, $username, $email, $password) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "POST запрос получен<br>"; // Отладка
     $username = $_POST['username'];
+    $lastname = $_POST['lastname'];
     $email = $_POST['email'];
+    $phone_number = $_POST['phone_number'];
+    $gender = $_POST['gender'];
+    $login = $_POST['login'];
     $password = $_POST['password'];
+    $profile_picture = $_POST['profile_picture'] ?? null; // Опциональное поле
 
-    $result = registerUser($pdo, $username, $email, $password);
+    $result = registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture);
     echo $result;
 }
 ?>
