@@ -71,7 +71,6 @@ main {
     transition: background-color 0.3s;
     background-color: #01321f;
     box-shadow: 1px 6px 25px #000000;
-    
 }
 
 .btnGetStarted:hover {
