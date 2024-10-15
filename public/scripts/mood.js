@@ -83,20 +83,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnAge = document.getElementById('btnAge');
 
     btnEmotion10.addEventListener('click', () => {
-        modal.classList.remove('d-none');
+        modal.classList.remove('modal-none');
+        modal.classList.add('modal-show');
     });
 
     btnCloseModal.addEventListener('click', () => {
-        modal.classList.add('d-none');
+        modal.classList.add('modal-none');
+        modal.classList.remove('modal-show');
     });
 
     btnAge.addEventListener('click', () => {
-        modal.classList.add('d-none');                // переделать
+        modal.classList.add('modal-none');
+        modal.classList.remove('modal-show');               // переделать
     });
 
     window.addEventListener('click', (e) => {
         if (e.target === modal) {
-            modal.classList.add('d-none');
+            modal.classList.add('modal-none');
+            modal.classList.remove('modal-show');
         }
     });
 });
