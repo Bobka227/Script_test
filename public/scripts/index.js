@@ -6,27 +6,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnGetStarted = document.querySelector('.btnGetStarted');
     const btnCloseModal = document.getElementById('btnCloseModal');
     const btnLogin = document.getElementById('btnLogin');
-    const btnSignup = document.getElementById('btnSignup');
 
     btnGetStarted.addEventListener('click', () => {
-        modal.classList.remove('d-none');
+        modal.classList.remove('modal-none');
+        modal.classList.add('modal-show');
     });
 
     btnCloseModal.addEventListener('click', () => {
-        modal.classList.add('d-none');
+        modal.classList.add('modal-none');
+        modal.classList.remove('modal-show');
     });
 
     btnLogin.addEventListener('click', () => {
-        window.location.href = 'pages/registration.html';
-    });
-
-    btnSignup.addEventListener('click', () => {
-        window.location.href = 'pages/registration.html';
+        window.location.href = 'pages/register.html';
     });
 
     window.addEventListener('click', (e) => {
         if (e.target === modal) {
-            modal.classList.add('d-none');
+            modal.classList.add('modal-none');
+            modal.classList.remove('modal-show');
         }
     });
 });
