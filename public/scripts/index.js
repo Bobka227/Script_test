@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnGetStarted = document.querySelector('.btnGetStarted');
     const btnCloseModal = document.getElementById('btnCloseModal');
     const btnLogin = document.getElementById('btnLogin');
-    const btnSignup = document.getElementById('btnSignup');
 
     btnGetStarted.addEventListener('click', () => {
         modal.classList.remove('modal-none');
