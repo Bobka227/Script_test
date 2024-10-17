@@ -34,7 +34,8 @@ body {
 }
 
 .emotions-list {
-    margin-top: 40px;
+    margin-top: 70px;
+    margin-bottom: 53px;
     gap: 15px;
     padding: 0 15px;
     list-style: none;
@@ -83,7 +84,43 @@ body {
 
 /* food-mood list */
 /* доделать */
+.foodList-ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    padding-left: 0;
+    margin-top: 60px;
+}
 
+.foodList-image {
+    background-color: grey;
+    border-radius: 15px;
+    width: 250px;
+    height: 400px;
+}
+
+.foodList-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.food-list-skip {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.food-list-skip img {
+    width: 20px;
+    height: 20px;
+}
+
+.food-list-skip button:hover {
+    background-color: aliceblue;
+}
 
 /* media */
 @media (max-width: 880px) {
