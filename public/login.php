@@ -20,6 +20,8 @@ try {
 
 
 
+
+
 function loginUser($pdo, $email, $password): string
 {
     echo "Функция входа вызвана<br>"; // Сообщение для отладки
