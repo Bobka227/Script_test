@@ -17,6 +17,9 @@ try {
     die("Ошибка подключения к базе данных: " . $e->getMessage());
 }
 
+
+
+
 function loginUser($pdo, $email, $password): string
 {
     echo "Функция входа вызвана<br>"; // Сообщение для отладки
