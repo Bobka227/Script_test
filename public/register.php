@@ -3,7 +3,7 @@
 $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
 $dbname = 'hoc3ablulex394pb';
 $username = 'emk2ggh76qbpq4ml';
-$password = 'hoc3ablulex394pb';
+$password = 'lf9c0g2qky76la6x';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
