@@ -59,7 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const titleElement = recipe.querySelector('h3');
         titleElement.addEventListener('click', function() {
             const query = this.textContent.trim();
-            addSearchQuery(query);
+            const imageURL = recipe.getElementsByClassName('history-item-img').src;
+            addSearchQuery(query, imageURL);
             searchBar.value = '';
             showSearchHistorySection();
         });
@@ -122,14 +123,20 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateHistoryDisplay() {
         const history = getSearchHistory();
         historyList.innerHTML = '';
-
+    
         history.slice(currentIndex, currentIndex + visibleCount).forEach((item, index) => {
-            const li = document.createElement('li');
-            li.classList.add('history-item');
-            li.textContent = item;
-            historyList.appendChild(li);
+            historyList.innerHTML += `
+            <li class="history-item">
+                <div class="history-item-image">
+                    <img src="${item.image}" alt="history item" class="history-item-img">
+                </div>
+                <div class="history-item-name">
+                    <p>${item.query}</p>
+                </div>
+            </li>
+            `;
         });
-
+    
         prevButton.style.display = currentIndex > 0 ? 'block' : 'none';
         nextButton.style.display = currentIndex + visibleCount < history.length ? 'block' : 'none';
     }
@@ -142,36 +149,23 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem('searchHistory', JSON.stringify(history));
     }
 
-    function addSearchQuery(query) {
+    function addSearchQuery(query, imageURL) {
         let history = getSearchHistory();
-        const existingIndex = history.indexOf(query);
-    
+        const existingIndex = history.findIndex(item => item.query === query);
+        
         if (existingIndex !== -1) {
             history.splice(existingIndex, 1);
         }
-    
-        history.push(query);
-    
+        
+        history.unshift({ query, image: imageURL });
+        
         if (history.length > 20) {
-            history.shift();
+            history.pop();
         }
-    
+        
         saveSearchHistory(history);
         updateHistoryDisplay();
     }
-
-    searchBar.addEventListener('keyup', function (event) {
-        if (event.key === 'Enter') {
-            const query = searchBar.value.trim();
-            if (query) {
-                addSearchQuery(query);
-                searchBar.value = '';
-                currentIndex = Math.max(0, getSearchHistory().length - visibleCount);
-                updateHistoryDisplay();
-            }
-            showSearchHistorySection();
-        }
-    });
 
     prevButton.addEventListener('click', function () {
         if (currentIndex > 0) {
@@ -197,15 +191,6 @@ document.addEventListener("DOMContentLoaded", function () {
         hideSearchHistorySection();
     }
 
-    searchBar.addEventListener('change', function () {
-        const query = searchBar.value.toLowerCase().trim();
-        if (query) {
-            addSearchQuery(query);
-            renderSearchHistory(getSearchHistory());
-            showSearchHistorySection();
-        }
-    });
-
     function showSearchHistorySection() {
         searchHistorySection.classList.remove('d-none');
     }
@@ -219,10 +204,33 @@ document.addEventListener("DOMContentLoaded", function () {
         historyList.innerHTML = '';
     
         history.forEach((item) => {
-            const li = document.createElement('li');
-            li.className = 'history-item';
-            li.textContent = item;
-            historyList.appendChild(li);
+            const listItem = document.createElement('li');
+            listItem.className = 'history-item';
+    
+            listItem.innerHTML = `
+                <div class="history-item-image">
+                    <img src="${item.image}" alt="history item" class="history-item-img">
+                </div>
+                <div class="history-item-name">
+                    <p>${item.query}</p>
+                </div>
+            `;
+    
+            historyList.appendChild(listItem);
         });
     }
+
+    historyList.addEventListener('click', function(event) {
+        const clickedElement = event.target;
+        if (clickedElement.classList.contains('history-item-img')) {
+            const query = clickedElement.closest('.history-item').querySelector('.history-item-name p').textContent;
+            searchBar.value = query;
+            searchBar.dispatchEvent(new Event('input'));
+        }
+        if (clickedElement.tagName === 'P' && clickedElement.closest('.history-item-name')) {
+            const query = clickedElement.textContent;
+            searchBar.value = query;
+            searchBar.dispatchEvent(new Event('input'));
+        }
+    });
 });
