@@ -74,14 +74,7 @@ body {
 }
 
 .filter-btn:hover {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.filter-btn.active {
-    background-color: #4CAF50;
-    color: white;
-    border-color: #4CAF50;
+    background-color: rgb(148, 255, 132);
 }
 
 
@@ -155,7 +148,7 @@ body {
     background-color: #d3d3d3;
     width: 90%;
     border-radius: 10px;
-    padding: 20px;
+    padding:5px;
     gap: 20px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -176,8 +169,8 @@ body {
 }
 
 .history-item {
-    min-width: 250px;
-    min-height: 250px;
+    min-width: 70px;
+    min-height: 70px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -202,8 +195,8 @@ body {
 }
 
 .history-item-image {
-    width: 230px;
-    height: 230px;
+    width: 100px;
+    height: 100px;
     margin-bottom: 20px;
     background-color: #8c8a8a;
 }
