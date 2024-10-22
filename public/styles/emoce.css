@@ -1,22 +1,156 @@
-*{
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
 
-
-
-.emotion-item {
-    margin: 10px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border: none;
-    cursor: pointer;
+body {
+    background: url(../images/menu/emotion_background.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    min-width: 100vh;
+    min-height: 100vh;
 }
 
-.recipe {
-    display: none;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
+.main {
+    height: 95vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* emotion section */
+.emotion-calculator, .food-mood-list {
+    margin-top: 50px;
+    background-color: white;
+    box-shadow: 0px 4px 30px rgba(56, 54, 54, 0.9);
+    width: 75%;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    min-width: 840px;
+}
+
+.emotions-list {
+    margin-top: 70px;
+    margin-bottom: 53px;
+    gap: 15px;
+    padding: 0 15px;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: 1fr 2fr 0.3fr;
+    align-items: center;
+    justify-items: center;
+}
+
+.emotion-item {
+    width: 8rem;
+    height: 8rem;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 50%;
+    border: none;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(78, 72, 72, 0.45);
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.calculate-btn, .back-to-emotion-list {
+    align-self: center;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 3.5vh;
+    color: white;
+    padding: 15px 50px;
+    border: none;
+    border-radius: 3vh;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: #08935e;
+    box-shadow: 1px 4px 6px rgba(78, 72, 72, 0.45);
+    width: fit-content;
+    max-width: 100%;
+    white-space: nowrap;
+}
+
+
+/* food-mood list */
+/* доделать */
+.foodList-ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    padding-left: 0;
+    margin-top: 60px;
+}
+
+.foodList-image {
+    background-color: grey;
+    border-radius: 15px;
+    width: 250px;
+    height: 400px;
+}
+
+.foodList-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.food-list-skip {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.food-list-skip img {
+    width: 20px;
+    height: 20px;
+}
+
+.food-list-skip button:hover {
+    background-color: aliceblue;
+}
+
+/* media */
+@media (max-width: 880px) {
+    .emotion-calculator, .food-mood-list {
+        min-width: 140px;
+        width: 65%;
+    }
+    
+    .emotions-list {
+        justify-self: center;
+        align-self: center;
+        margin-top: 20px;
+        gap: 45px;
+        padding: 0 5px;
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        align-items: center;
+        justify-items: center;
+        margin-bottom: 40px;
+    }
+
+    .emotion-item {
+        width: 6rem;
+        height: 6rem;
+    }
+
+    .emotion {
+        grid-column: 2;
+        grid-row: 4;
+    }
 }
