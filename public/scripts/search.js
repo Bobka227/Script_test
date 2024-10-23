@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentIndex = 0;
     const visibleCount = 5;
     const recipesSection = document.querySelector('.recipes');
-    const filterButtons = document.querySelectorAll('.filter-button');
+    const filterButtons = document.querySelectorAll('.filter-btn');
 
     // Функция для получения и отображения рецептов
     function fetchRecipes(filterType = '') {
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     recipeDiv.innerHTML = `
                         <h3>${recipe.name}</h3>
-                        <img src="${recipe.image}" alt="${recipe.name}">
+                        <img src="public/images/${recipe.image}" alt="${recipe.name}">
                         <p>Cooking Method: ${recipe.cooking_method}</p>
                         <p>Time Required: ${recipe.time_required} minutes</p>
                         <p>Type: ${recipe.type}</p>

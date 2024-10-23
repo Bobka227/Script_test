@@ -22,6 +22,13 @@ if ($conn->connect_error) {
 // Получаем тип рецепта из запроса, если он есть
 $type = isset($_GET['type']) ? $_GET['type'] : '';
 
+// Валидация типа (например, только разрешенные значения)
+$valid_types = ['spicy', 'vegan', 'vegetarian', 'quick', 'no-oven', 'drinks', 'breakfast', 'lunch', 'dinner'];
+if ($type && !in_array($type, $valid_types)) {
+    error_log("Неверный тип рецепта: " . $type);
+    die("Invalid recipe type");
+}
+
 // SQL-запрос с фильтрацией по типу рецепта
 if ($type) {
     $sql = $conn->prepare("SELECT * FROM recipes WHERE type = ?");
@@ -49,6 +56,7 @@ if ($result->num_rows > 0) {
 header('Content-Type: application/json');
 echo json_encode($recipes);
 
-// Закрытие соединения
+// Закрытие подготовленного запроса и соединения
+$sql->close();
 $conn->close();
 ?>
