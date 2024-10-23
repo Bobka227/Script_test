@@ -67,6 +67,57 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     filterButtons.forEach(button => {
+        // button.addEventListener('click', function () {
+        //     const category = this.getAttribute('data-category');
+        //
+        //     if (activeButton && activeButton !== button) {
+        //         activeButton.classList.remove('active');
+        //     }
+        //
+        //     if (activeFilter === category) {
+        //         button.classList.remove('active');
+        //         recipes.forEach(recipe => {
+        //             recipe.classList.add('d-none');
+        //             recipe.classList.remove('d-active');
+        //         });
+        //
+        //         newsBlock.classList.add('d-active');
+        //         newsBlock.classList.remove('d-none');
+        //
+        //         recipesSection.classList.add('d-none');
+        //         recipesSection.classList.remove('d-active');
+        //
+        //         activeFilter = null;
+        //         activeButton = null;
+        //     } else {
+        //         button.classList.add('active');
+        //         activeFilter = category;
+        //         activeButton = button;
+        //
+        //         recipesSection.classList.add('d-active');
+        //         recipesSection.classList.remove('d-none');
+        //         let hasFilteredRecipes = false;
+        //
+        //         recipes.forEach(recipe => {
+        //             if (recipe.getAttribute('data-category') === category) {
+        //                 recipe.classList.add('d-active');
+        //                 recipe.classList.remove('d-none');
+        //                 hasFilteredRecipes = true;
+        //             } else {
+        //                 recipe.classList.add('d-none');
+        //                 recipe.classList.remove('d-active');
+        //             }
+        //         });
+        //
+        //         if (hasFilteredRecipes) {
+        //             newsBlock.classList.add('d-none');
+        //             newsBlock.classList.remove('d-active');
+        //         } else {
+        //             newsBlock.classList.add('d-active');
+        //             newsBlock.classList.remove('d-none');
+        //         }
+        //     }
+        // });
         button.addEventListener('click', function () {
             const category = this.getAttribute('data-category');
 
@@ -76,49 +127,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (activeFilter === category) {
                 button.classList.remove('active');
-                recipes.forEach(recipe => {
-                    recipe.classList.add('d-none');
-                    recipe.classList.remove('d-active');
-                });
-
-                newsBlock.classList.add('d-active');
-                newsBlock.classList.remove('d-none');
-
-                recipesSection.classList.add('d-none');
-                recipesSection.classList.remove('d-active');
-
                 activeFilter = null;
                 activeButton = null;
+                recipesSection.innerHTML = ''; // Очищаем рецепты
+                newsBlock.classList.remove('d-none'); // Показываем новости
             } else {
                 button.classList.add('active');
                 activeFilter = category;
                 activeButton = button;
 
-                recipesSection.classList.add('d-active');
-                recipesSection.classList.remove('d-none');
-                let hasFilteredRecipes = false;
+                // AJAX-запрос на PHP для получения рецептов по категории
+                fetch(`fetch_recipes.php?category=${category}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Очистка секции рецептов
+                        recipesSection.innerHTML = '';
 
-                recipes.forEach(recipe => {
-                    if (recipe.getAttribute('data-category') === category) {
-                        recipe.classList.add('d-active');
-                        recipe.classList.remove('d-none');
-                        hasFilteredRecipes = true;
-                    } else {
-                        recipe.classList.add('d-none');
-                        recipe.classList.remove('d-active');
-                    }
-                });
+                        if (data.length > 0) {
+                            data.forEach(recipe => {
+                                const recipeElement = document.createElement('div');
+                                recipeElement.classList.add('recipe');
+                                recipeElement.setAttribute('data-category', recipe.category);
 
-                if (hasFilteredRecipes) {
-                    newsBlock.classList.add('d-none');
-                    newsBlock.classList.remove('d-active');
-                } else {
-                    newsBlock.classList.add('d-active');
-                    newsBlock.classList.remove('d-none');
-                }
+                                recipeElement.innerHTML = `
+                                    <h3>${recipe.title}</h3>
+                                    <p>${recipe.description}</p>
+                                `;
+                                recipesSection.appendChild(recipeElement);
+                            });
+
+                            newsBlock.classList.add('d-none'); // Скрываем новости
+                        } else {
+                            newsBlock.classList.remove('d-none'); // Показываем новости
+                        }
+                    })
+                    .catch(error => console.error('Ошибка:', error));
             }
         });
-    });
+
+
+});
 
     function updateHistoryDisplay() {
         const history = getSearchHistory();
