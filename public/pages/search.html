@@ -10,7 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script defer src="../scripts/search.js"></script>
-    <script defer src="../scripts/menu.js"></script>
     <title>JidloSmidlo</title>
 </head>
 <body>
@@ -41,26 +40,35 @@
     </header>
     
     <main>
-        <section class="searchRecipe">
+        <section class="search-recipe">
             <h1 class="d-none">Search for recipes</h1>
             <input type="text" id="search-bar" class="search-bar" placeholder="Search for recipes...">
         </section>
-        <section class="filtresList">
-            <h2 class="d-none">Search filters</h2>
-            <div class="filtre-container">
-                <button class="filter-btn" data-category="vegan">Vegan</button>
-                <button class="filter-btn" data-category="vegetarian">Vegetarian</button>
-            </div>
-            <div class="filtre-container">
-                <button class="filter-btn" data-category="spicy">Spicy</button>
-                <button class="filter-btn" data-category="quick">Quick</button>
-                <button class="filter-btn" data-category="no-oven">No Oven</button>
-            </div>
-            <div class="filtre-container">
-                <button class="filter-btn" data-category="drinks">Drinks</button>
-                <button class="filter-btn" data-category="breakfast">Breakfast</button>
-                <button class="filter-btn" data-category="lunch">Lunch</button>
-                <button class="filter-btn" data-category="dinner">Dinner</button>
+        <section class="filtres-list">
+            <div class="filtres-container">
+                <h2 class="d-none">Search filters</h2>
+                <div class="filtre-container">
+                    <button class="filter-btn" data-category="vegan">Vegan</button>
+                    <button class="filter-btn" data-category="vegetarian">Vegetarian</button>
+                </div>
+                <div class="filtre-container">
+                    <button class="filter-btn" data-category="spicy">Spicy</button>
+                    <button class="filter-btn" data-category="quick">Quick</button>
+                    <button class="filter-btn" data-category="no-oven">No Oven</button>
+                </div>
+                <div class="filtre-container">
+                    <button class="filter-btn" data-category="drinks">Drinks</button>
+                    <button class="filter-btn" data-category="breakfast">Breakfast</button>
+                    <button class="filter-btn" data-category="lunch">Lunch</button>
+                    <button class="filter-btn" data-category="dinner">Dinner</button>
+                </div>
+                <div class="filtre-container">
+                    <button class="filter-btn" data-category="italian">Italian</button>
+                    <button class="filter-btn" data-category="czech">Czech</button>
+                    <button class="filter-btn" data-category="kazakh">Kazakh</button>
+                    <button class="filter-btn" data-category="ukrainian">Ukrainian</button>
+                    <button class="filter-btn" data-category="asian">Asian</button>
+                </div>
             </div>
         </section> 
         
@@ -108,7 +116,7 @@
                 <p>Ingredients: ...</p>
             </div>        
         </section>
-        <section class="newsBlock" id="newsBlock">
+        <section class="news-block" id="newsBlock">
             <h3 class="d-none">Delicious news</h3>
             <article class="news-article">
                 <h4 class="d-none">News section</h4>
@@ -131,6 +139,29 @@
                 <img src="" alt="news image">   вставить изображения
                 <a href="#">Read more</a>       вставить ссылки -->
             </article>
+        </section>
+
+        <section class="search-history" id="searchHistorySection">
+            <h5 class="h2 title-history">History</h5>
+
+            <div class="history-block">
+                <button id="prevBtn" class="slide-history"><img src="" alt="sipka previous"></button>
+
+                <ul id="history-list" class="history-list">
+
+                    <!-- <li class="history-itemhistory-item">
+                        <div class="history-item-image">
+                            <img src="${item.image}" alt="history item" class="history-item-img">
+                        </div>
+                        <div class="history-item-name">
+                            <p>${item.query}</p>
+                        </div>
+                    </li> -->
+
+                </ul>
+
+                <button id="nextBtn" class="slide-history"><img src="" alt="sipka next"></button>
+            </div>
         </section>
     </main>
     <footer></footer>

@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="../styles/emoce.css">
 
     <script defer src="../scripts/mood.js"></script>
-    <script defer src="../scripts/menu.js"></script>
     <title>JidloSmidlo</title>
 </head>
 <body>
@@ -40,10 +39,10 @@
         </nav>
     </header>
     <body>
-        <main>
-            <section class="emotionCalculator" id="emotionCalculator">
+        <main class="main">
+            <section class="emotion-calculator" id="emotionCalculator">
                 <h1 class="d-none">Emotion calculator</h1>
-                <ul class="emotionsList" id="emotionsList">
+                <ul class="emotions-list" id="emotionsList">
                     <li>
                         <button class="emotion-item" id="emotion1" type="button"> emoce
                             <!-- смайлик эмоции -->
@@ -96,36 +95,41 @@
                     </li>
                 </ul>
     
-                <button class="calculateBtn" id="calculateBtn">calculate</button>
+                <button class="calculate-btn" id="calculateBtn">calculate</button>
     
-                <div id="modal" class="modal d-none">
-                    <div class="modal-content">
+                <div id="modal" class="modal custom-modal modal-none">
+                    <div class="modal-content custom-modal-content">
                         <p>This feature is intended only for 18+ users.</p>
                         <ul class="modal-buttons">
                             <li><button id="btnCloseModal" class="modal-btn">Close</button></li>
-                            <li><button id="btnNoRUnction" class="modal-btn d-none">Wow</button></li>
                             <li><button id="btnAge" class="modal-btn">18+</button></li>
                         </ul>
                     </div>
                 </div>            
             </section>
     
-            <section class="foodMoodList d-none" id="foodMoodList">
+            <section class="food-mood-list d-none" id="foodMoodList">
                 <h2 class="d-none">The menu for the day according to the emotion</h2>
-                <ul class="foodList-ul" id="foodList-container"> <!-- вставка html-кода в js --> </ul>
+                <ul class="foodList-ul" id="foodList-container">
+                    <!-- вставка html-кода в js -->
+                    
+                    <!-- <li class="foodList-li">
+                        <h3>${item.title}</h3>
+                        <img src="${item.img}" alt="${item.title} image">
+                    </li> -->
+
+                </ul>
     
-                <div class="foodListSkip">
-                    <button class="skip skip-left" id="skip-left">
-                        <!-- изображение стрелка --> skip left
+                <div class="food-list-skip">
+                    <button class="skip skip-left btn" id="skip-left">
+                        <img src="../images/mood/left-skip.png" alt="skip left">
                     </button>
-                    <button class="skip skip-right" id="skip-right">
-                        <!-- изображение стрелка --> skip right
+                    <button class="skip skip-right btn" id="skip-right">
+                        <img src="../images/mood/right-skip.png" alt="skip right">
                     </button>
                 </div>
     
-                <button class="backToEmotionList" id="backToEmotionList">
-                    <!-- изображение стрелка --> back
-                </button>
+                <button class="back-to-emotion-list" id="backToEmotionList">back</button>
             </section>
         </main>
         <footer></footer>

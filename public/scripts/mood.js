@@ -4,19 +4,19 @@ document.addEventListener("DOMContentLoaded", function () {
     
     const foodMood = {
         first: [
-            { title: 'Breakfast', img: 'images/breakfast1.jpg' },
-            { title: 'Lunch', img: 'images/lunch1.jpg' },
-            { title: 'Dinner', img: 'images/dinner1.jpg' }
+            { title: 'Breakfast', img: 'breakfast1.avif' },
+            { title: 'Lunch', img: 'lunch1.jpg' },
+            { title: 'Dinner', img: 'dinner1.jpg' }
         ],
         left: [
-            { title: 'Breakfast1', img: 'images/breakfast2.jpg' },
-            { title: 'Lunch', img: 'images/lunch2.jpg' },
-            { title: 'Dinner', img: 'images/dinner2.jpg' }
+            { title: 'Breakfast1', img: 'breakfast2.jpg' },
+            { title: 'Lunch', img: 'lunch2.jpg' },
+            { title: 'Dinner', img: 'dinner2.jpg' }
         ],
         right: [
-            { title: 'Breakfast2', img: 'images/breakfast3.jpg' },
-            { title: 'Lunch', img: 'images/lunch3.jpg' },
-            { title: 'Dinner', img: 'images/dinner3.jpg' }
+            { title: 'Breakfast2', img: 'breakfast3.jpg' },
+            { title: 'Lunch', img: 'lunch3.jpg' },
+            { title: 'Dinner', img: 'dinner3.jpg' }
         ]
     };
     
@@ -31,7 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const listItemHTML = `
             <li class="foodList-li">
                 <h3>${item.title}</h3>
-                <img src="${item.img}" alt="${item.title} image">
+                <div class="foodList-image">
+                    <img src="../images/mood/${item.img}" alt="${item.title} image">
+                </div>
             </li>
         `;
     
@@ -83,20 +85,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnAge = document.getElementById('btnAge');
 
     btnEmotion10.addEventListener('click', () => {
-        modal.classList.remove('d-none');
+        modal.classList.remove('modal-none');
+        modal.classList.add('modal-show');
     });
 
     btnCloseModal.addEventListener('click', () => {
-        modal.classList.add('d-none');
+        modal.classList.add('modal-none');
+        modal.classList.remove('modal-show');
     });
 
     btnAge.addEventListener('click', () => {
-        modal.classList.add('d-none');                // переделать
+        modal.classList.add('modal-none');
+        modal.classList.remove('modal-show');               // переделать
     });
 
     window.addEventListener('click', (e) => {
         if (e.target === modal) {
-            modal.classList.add('d-none');
+            modal.classList.add('modal-none');
+            modal.classList.remove('modal-show');
         }
     });
 });
