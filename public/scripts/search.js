@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchBar = document.getElementById('search-bar');
     const recipes = document.querySelectorAll('.recipe');
     const newsBlock = document.getElementById('newsBlock');
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const recipesSection = document.querySelector('.recipes');
+    // const filterButtons = document.querySelectorAll('.filter-btn');
+    // const recipesSection = document.querySelector('.recipes');
     let activeFilter = null;
     let activeButton = null;
 
@@ -13,6 +13,46 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextButton = document.getElementById('nextBtn');
     let currentIndex = 0;
     const visibleCount = 5;
+    const recipesSection = document.querySelector('.recipes');
+    const filterButtons = document.querySelectorAll('.filter-button');
+
+    // Функция для получения и отображения рецептов
+    function fetchRecipes(filterType = '') {
+        let url = '../recipes.php';
+        if (filterType) {
+            url += `?type=${filterType}`;
+        }
+
+        console.log(`Отправляем запрос на сервер с фильтром: ${filterType}`);
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log(`Получены рецепты для фильтра ${filterType}:`, data);
+
+                // Очищаем предыдущие рецепты
+                recipesSection.innerHTML = '';
+
+                // Выводим рецепты
+                data.forEach(recipe => {
+                    const recipeDiv = document.createElement('div');
+                    recipeDiv.classList.add('recipe');
+
+                    recipeDiv.innerHTML = `
+                        <h3>${recipe.name}</h3>
+                        <img src="${recipe.image}" alt="${recipe.name}">
+                        <p>Cooking Method: ${recipe.cooking_method}</p>
+                        <p>Time Required: ${recipe.time_required} minutes</p>
+                        <p>Type: ${recipe.type}</p>
+                    `;
+
+                    recipesSection.appendChild(recipeDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Ошибка при запросе рецептов:', error);
+            });
+    }
 
     searchBar.addEventListener('input', function () {
         const query = searchBar.value.toLowerCase().trim();
@@ -67,105 +107,58 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     filterButtons.forEach(button => {
-        // button.addEventListener('click', function () {
-        //     const category = this.getAttribute('data-category');
-        //
-        //     if (activeButton && activeButton !== button) {
-        //         activeButton.classList.remove('active');
-        //     }
-        //
-        //     if (activeFilter === category) {
-        //         button.classList.remove('active');
-        //         recipes.forEach(recipe => {
-        //             recipe.classList.add('d-none');
-        //             recipe.classList.remove('d-active');
-        //         });
-        //
-        //         newsBlock.classList.add('d-active');
-        //         newsBlock.classList.remove('d-none');
-        //
-        //         recipesSection.classList.add('d-none');
-        //         recipesSection.classList.remove('d-active');
-        //
-        //         activeFilter = null;
-        //         activeButton = null;
-        //     } else {
-        //         button.classList.add('active');
-        //         activeFilter = category;
-        //         activeButton = button;
-        //
-        //         recipesSection.classList.add('d-active');
-        //         recipesSection.classList.remove('d-none');
-        //         let hasFilteredRecipes = false;
-        //
-        //         recipes.forEach(recipe => {
-        //             if (recipe.getAttribute('data-category') === category) {
-        //                 recipe.classList.add('d-active');
-        //                 recipe.classList.remove('d-none');
-        //                 hasFilteredRecipes = true;
-        //             } else {
-        //                 recipe.classList.add('d-none');
-        //                 recipe.classList.remove('d-active');
-        //             }
-        //         });
-        //
-        //         if (hasFilteredRecipes) {
-        //             newsBlock.classList.add('d-none');
-        //             newsBlock.classList.remove('d-active');
-        //         } else {
-        //             newsBlock.classList.add('d-active');
-        //             newsBlock.classList.remove('d-none');
-        //         }
-        //     }
-        // });
         button.addEventListener('click', function () {
-            const category = this.getAttribute('data-category');
+            const filterType = this.getAttribute('data-category');
+            fetchRecipes(filterType);
 
             if (activeButton && activeButton !== button) {
                 activeButton.classList.remove('active');
             }
 
-            if (activeFilter === category) {
+            if (activeFilter === filterType) {
                 button.classList.remove('active');
+                recipes.forEach(recipe => {
+                    recipe.classList.add('d-none');
+                    recipe.classList.remove('d-active');
+                });
+
+                newsBlock.classList.add('d-active');
+                newsBlock.classList.remove('d-none');
+
+                recipesSection.classList.add('d-none');
+                recipesSection.classList.remove('d-active');
+
                 activeFilter = null;
                 activeButton = null;
-                recipesSection.innerHTML = ''; // Очищаем рецепты
-                newsBlock.classList.remove('d-none'); // Показываем новости
             } else {
                 button.classList.add('active');
-                activeFilter = category;
+                activeFilter = filterType;
                 activeButton = button;
 
-                // AJAX-запрос на PHP для получения рецептов по категории
-                fetch(`fetch_recipes.php?category=${category}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Очистка секции рецептов
-                        recipesSection.innerHTML = '';
+                recipesSection.classList.add('d-active');
+                recipesSection.classList.remove('d-none');
+                let hasFilteredRecipes = false;
 
-                        if (data.length > 0) {
-                            data.forEach(recipe => {
-                                const recipeElement = document.createElement('div');
-                                recipeElement.classList.add('recipe');
-                                recipeElement.setAttribute('data-category', recipe.category);
+                recipes.forEach(recipe => {
+                    if (recipe.getAttribute('data-category') === filterType) {
+                        recipe.classList.add('d-active');
+                        recipe.classList.remove('d-none');
+                        hasFilteredRecipes = true;
+                    } else {
+                        recipe.classList.add('d-none');
+                        recipe.classList.remove('d-active');
+                    }
+                });
 
-                                recipeElement.innerHTML = `
-                                    <h3>${recipe.title}</h3>
-                                    <p>${recipe.description}</p>
-                                `;
-                                recipesSection.appendChild(recipeElement);
-                            });
-
-                            newsBlock.classList.add('d-none'); // Скрываем новости
-                        } else {
-                            newsBlock.classList.remove('d-none'); // Показываем новости
-                        }
-                    })
-                    .catch(error => console.error('Ошибка:', error));
+                if (hasFilteredRecipes) {
+                    newsBlock.classList.add('d-none');
+                    newsBlock.classList.remove('d-active');
+                } else {
+                    newsBlock.classList.add('d-active');
+                    newsBlock.classList.remove('d-none');
+                }
             }
         });
-
-
 });
 
     function updateHistoryDisplay() {
@@ -281,4 +274,5 @@ document.addEventListener("DOMContentLoaded", function () {
             searchBar.dispatchEvent(new Event('input'));
         }
     });
+    fetchRecipes();
 });
