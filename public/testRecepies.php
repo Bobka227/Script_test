@@ -13,29 +13,20 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    echo "Соединение с базой данных успешно установлено!<br>";
-
     // Получение всех рецептов из базы данных
     $stmt = $pdo->query("SELECT id, name, pdf_link FROM recipes");
     $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    echo "Рецепты получены:<br>";
-    foreach ($recipes as $recipe) {
-        echo "ID: " . $recipe['id'] . ", Название: " . $recipe['name'] . "<br>";
-    }
 
     // Проверка и создание директории для QR-кодов
     $qrCodeDir = 'qr_codes';
     if (!is_dir($qrCodeDir)) {
         mkdir($qrCodeDir, 0777, true);
-        echo "Директория для QR-кодов создана.<br>";
-    } else {
-        echo "Директория для QR-кодов уже существует.<br>";
     }
 
-    // Генерация QR-кодов для каждого рецепта
+    // Генерация HTML-контента с рецептами и QR-кодами
     foreach ($recipes as $recipe) {
         try {
+            // Генерация QR-кода для каждого рецепта
             $qrCode = new QrCode($recipe['pdf_link']);
             $qrCode->setSize(300);
 
@@ -43,7 +34,11 @@ try {
             $qrCodePath = $qrCodeDir . '/qr_code_' . $recipe['id'] . '.png';
             $qrCode->writeFile($qrCodePath);
 
-            echo "QR-код для рецепта " . $recipe['name'] . " успешно создан и сохранён в " . $qrCodePath . "<br>";
+            // Вывод HTML для каждого рецепта
+            echo "<div>";
+            echo "<h3>Рецепт: " . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . "</h3>";
+            echo "<img src='$qrCodePath' alt='QR-код для " . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . "'>";
+            echo "</div><br>";
 
         } catch (Exception $e) {
             echo "Ошибка при генерации QR-кода для рецепта с ID " . $recipe['id'] . ": " . $e->getMessage() . "<br>";
@@ -58,4 +53,3 @@ try {
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
