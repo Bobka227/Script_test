@@ -23,6 +23,27 @@ document.addEventListener("DOMContentLoaded", function () {
             category: "dinner"
         },
         {
+            title: "y",
+            image: "images/spaghetti_carbonara.jpg",
+            ingredients: ["Spaghetti", "Bacon", "Eggs", "Parmesan", "Black pepper"],
+            description: "A classic Italian pasta dish made with eggs, cheese, pancetta, and pepper. Quick and satisfying.",
+            category: "dinner"
+        },
+        {
+            title: "z",
+            image: "images/spaghetti_carbonara.jpg",
+            ingredients: ["Spaghetti", "Bacon", "Eggs", "Parmesan", "Black pepper"],
+            description: "A classic Italian pasta dish made with eggs, cheese, pancetta, and pepper. Quick and satisfying.",
+            category: "dinner"
+        },
+        {
+            title: "k",
+            image: "images/spaghetti_carbonara.jpg",
+            ingredients: ["Spaghetti", "Bacon", "Eggs", "Parmesan", "Black pepper"],
+            description: "A classic Italian pasta dish made with eggs, cheese, pancetta, and pepper. Quick and satisfying.",
+            category: "dinner"
+        },
+        {
             title: "Vegan Avocado Toast",
             image: "images/avocado_toast.jpg",
             ingredients: ["Avocado", "Whole-grain bread", "Lime", "Salt", "Pepper", "Chili flakes"],

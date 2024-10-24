@@ -216,6 +216,8 @@ body {
 }
 
 .history-list {
+    display: flex;
+    justify-content: space-around;
     padding: 0;
     margin: 0;
     display: flex;
@@ -243,7 +245,7 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 5px;
+    padding: 35px;
 }
 
 .slide-history img {
@@ -262,4 +264,9 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+.history-item-name {
+    width: 100px;
+    height: 100px;
 }
