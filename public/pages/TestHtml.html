@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Рецепты</title>
+
+</head>
+<body>
+<!-- Здесь будет отображаться контент, загруженный через PHP -->
+<div id="content">
+    Загрузка рецептов...
+</div>
+
+<script>
+    // Используем fetch для загрузки данных из PHP файла
+    fetch('/testRecepies.php')
+        .then(response => response.text())
+        .then(data => {
+            // Вставляем полученные данные в div с id="content"
+            document.getElementById('content').innerHTML = data;
+        })
+        .catch(error => console.error('Error fetching PHP script:', error));
+</script>
+</body>
+</html>
