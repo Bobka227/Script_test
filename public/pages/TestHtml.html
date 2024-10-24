@@ -3,23 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Рецепты</title>
-
 </head>
 <body>
-<!-- Здесь будет отображаться контент, загруженный через PHP -->
 <div id="content">
     Загрузка рецептов...
 </div>
 
 <script>
-    // Используем fetch для загрузки данных из PHP файла
-    fetch('../testRecepies.php')
-        .then(response => response.text())
+    // Используем fetch с методом GET для запроса данных
+    fetch('testRecepies.php')
+        .then(response => response.json()) // Обрабатываем как JSON
         .then(data => {
-            // Вставляем полученные данные в div с id="content"
-            document.getElementById('content').innerHTML = data;
+            if (data.status === 'success') {
+                let content = '';
+                data.data.forEach(recipe => {
+                    content += `<div>
+                                    <h3>Рецепт: ${recipe.name}</h3>
+                                    <img src="${recipe.qr_code}" alt="QR-код для ${recipe.name}">
+                                </div><br>`;
+                });
+                document.getElementById('content').innerHTML = content;
+            } else {
+                document.getElementById('content').innerHTML = `<p>Ошибка: ${data.message}</p>`;
+            }
         })
-        .catch(error => console.error('Error fetching PHP script:', error));
+        .catch(error => console.error('Ошибка при получении данных:', error));
 </script>
 </body>
 </html>
+
