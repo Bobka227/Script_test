@@ -9,12 +9,12 @@ document.addEventListener("DOMContentLoaded", function () {
             { title: 'Dinner', img: 'dinner1.jpg' }
         ],
         left: [
-            { title: 'Breakfast1', img: 'breakfast2.jpg' },
+            { title: 'Breakfast', img: 'breakfast2.jpg' },
             { title: 'Lunch', img: 'lunch2.jpg' },
             { title: 'Dinner', img: 'dinner2.jpg' }
         ],
         right: [
-            { title: 'Breakfast2', img: 'breakfast3.jpg' },
+            { title: 'Breakfast', img: 'breakfast3.jpg' },
             { title: 'Lunch', img: 'lunch3.jpg' },
             { title: 'Dinner', img: 'dinner3.jpg' }
         ]
@@ -22,7 +22,25 @@ document.addEventListener("DOMContentLoaded", function () {
     
     const foodListContainer = document.getElementById('foodList-container');
     const foodMoodListSection = document.getElementById('foodMoodList');
+    const emotionButtons = document.querySelectorAll('.emotion-item');
     let currentMood = 'first';
+    let activeButton = null;
+
+    emotionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            if (activeButton && activeButton !== button) {
+                activeButton.classList.remove('active');
+            }
+
+            if (button.classList.contains('active')) {
+                button.classList.remove('active');
+                activeButton = null;
+            } else {
+                button.classList.add('active');
+                activeButton = button;
+            }
+        });
+    });
     
     function displayFoodMood(page) {
         foodListContainer.innerHTML = '';
@@ -30,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
         foodMood[page].forEach(item => {
             const listItemHTML = `
             <li class="foodList-li">
-                <h3>${item.title}</h3>
+                <h3 class="foodList-li-title">${item.title}</h3>
                 <div class="foodList-image">
                     <img src="../images/mood/${item.img}" alt="${item.title} image">
                 </div>
@@ -47,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (currentMood === 'right') {
             currentMood = 'first';
         } else {
-            back;
+            currentMood = 'right';
         }
         displayFoodMood(currentMood);
     });
@@ -58,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (currentMood === 'left') {
             currentMood = 'first';
         } else {
-            back;
+            currentMood = 'left';
         }
         displayFoodMood(currentMood);
     });

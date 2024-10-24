@@ -63,6 +63,11 @@ body {
     transition: all 0.2s;
 }
 
+.emotion-item.active {
+    background-color: #08935e;
+    color: white;
+}
+
 .calculate-btn, .back-to-emotion-list {
     align-self: center;
     text-transform: uppercase;
@@ -92,6 +97,16 @@ body {
     margin-top: 60px;
 }
 
+.foodList-li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.foodList-li:hover {
+    transform: scale(1.05);
+}
+
 .foodList-image {
     background-color: grey;
     border-radius: 15px;
@@ -116,6 +131,10 @@ body {
 .food-list-skip img {
     width: 20px;
     height: 20px;
+}
+
+.foodList-li-title {
+    text-transform: uppercase;
 }
 
 .food-list-skip button:hover {
