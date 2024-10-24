@@ -1,4 +1,6 @@
 <?php
+header('Content-Type: application/json'); // Указываем, что возвращаем JSON
+
 // Настройки базы данных
 $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
 $dbname = 'hoc3ablulex394pb';
@@ -7,6 +9,8 @@ $password = 'lf9c0g2qky76la6x';
 
 require 'vendor/autoload.php'; // Автозагрузка Composer
 use Endroid\QrCode\QrCode;
+
+$response = ['status' => 'error', 'message' => ''];
 
 try {
     // Соединение с базой данных
@@ -23,10 +27,12 @@ try {
         mkdir($qrCodeDir, 0777, true);
     }
 
-    // Генерация HTML-контента с рецептами и QR-кодами
+    $recipeData = [];
+
+    // Генерация QR-кодов и подготовка данных для ответа
     foreach ($recipes as $recipe) {
         try {
-            // Генерация QR-кода для каждого рецепта
+            // Генерация QR-кода
             $qrCode = new QrCode($recipe['pdf_link']);
             $qrCode->setSize(300);
 
@@ -34,20 +40,27 @@ try {
             $qrCodePath = $qrCodeDir . '/qr_code_' . $recipe['id'] . '.png';
             $qrCode->writeFile($qrCodePath);
 
-            // Вывод HTML для каждого рецепта
-            echo "<div>";
-            echo "<h3>Рецепт: " . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . "</h3>";
-            echo "<img src='$qrCodePath' alt='QR-код для " . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . "'>";
-            echo "</div><br>";
+            // Добавляем данные в ответ
+            $recipeData[] = [
+                'id' => $recipe['id'],
+                'name' => htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8'),
+                'qr_code' => $qrCodePath
+            ];
 
         } catch (Exception $e) {
-            echo "Ошибка при генерации QR-кода для рецепта с ID " . $recipe['id'] . ": " . $e->getMessage() . "<br>";
+            $response['message'] = "Ошибка при генерации QR-кода для рецепта с ID " . $recipe['id'] . ": " . $e->getMessage();
         }
     }
 
+    // Формирование ответа
+    $response['status'] = 'success';
+    $response['data'] = $recipeData;
+
 } catch (PDOException $e) {
-    echo "Ошибка подключения к базе данных: " . $e->getMessage() . "<br>";
+    $response['message'] = "Ошибка подключения к базе данных: " . $e->getMessage();
 }
+
+echo json_encode($response);
 
 // Включаем отображение ошибок для отладки
 ini_set('display_errors', 1);
