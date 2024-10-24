@@ -7,6 +7,51 @@ document.addEventListener("DOMContentLoaded", function () {
     let activeFilter = null;
     let activeButton = null;
 
+    const recipesAll = [
+        {
+            title: "Grilled Chicken Salad",
+            image: "images/grilled_chicken_salad.jpg",
+            ingredients: ["Chicken breast", "Lettuce", "Tomatoes", "Cucumber", "Olive oil", "Lemon juice"],
+            description: "A healthy and delicious salad with grilled chicken, fresh vegetables, and a light lemon dressing.",
+            category: "lunch"
+        },
+        {
+            title: "Spaghetti Carbonara",
+            image: "images/spaghetti_carbonara.jpg",
+            ingredients: ["Spaghetti", "Bacon", "Eggs", "Parmesan", "Black pepper"],
+            description: "A classic Italian pasta dish made with eggs, cheese, pancetta, and pepper. Quick and satisfying.",
+            category: "dinner"
+        },
+        {
+            title: "Vegan Avocado Toast",
+            image: "images/avocado_toast.jpg",
+            ingredients: ["Avocado", "Whole-grain bread", "Lime", "Salt", "Pepper", "Chili flakes"],
+            description: "A simple and delicious vegan toast with mashed avocado, lime, and chili flakes for a little kick.",
+            category: "breakfast"
+        },
+        {
+            title: "Beef Tacos",
+            image: "images/beef_tacos.jpg",
+            ingredients: ["Ground beef", "Taco shells", "Lettuce", "Cheese", "Sour cream", "Salsa"],
+            description: "Tasty beef tacos loaded with fresh toppings and packed with flavor, perfect for a quick lunch or dinner.",
+            category: "lunch"
+        },
+        {
+            title: "Pancakes with Maple Syrup",
+            image: "images/pancakes.jpg",
+            ingredients: ["Flour", "Milk", "Eggs", "Baking powder", "Butter", "Maple syrup"],
+            description: "Classic fluffy pancakes drizzled with maple syrup, ideal for a weekend breakfast or brunch.",
+            category: "breakfast"
+        },
+        {
+            title: "Chicken Stir Fry",
+            image: "images/chicken_stir_fry.jpg",
+            ingredients: ["Chicken breast", "Broccoli", "Carrots", "Soy sauce", "Garlic", "Ginger"],
+            description: "A quick and easy stir-fry with tender chicken and vegetables in a savory soy-garlic sauce.",
+            category: "dinner"
+        }
+    ];    
+
     const searchHistorySection = document.getElementById('searchHistorySection');
     const historyList = document.querySelector('.history-list');
     const prevButton = document.getElementById('prevBtn');
@@ -15,24 +60,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const visibleCount = 5;
 
     searchBar.addEventListener('input', function () {
+        const recipesList = document.querySelector('.recipes-list');
+        recipesList.innerHTML = '';
+
         const query = searchBar.value.toLowerCase().trim();
         
         if (query) {
             recipesSection.classList.add('d-active');
             recipesSection.classList.remove('d-none');
+            const filteredRecipes = recipesAll.filter(recipe => recipe.title.toLowerCase().includes(query));
             let hasSearchResults = false;
 
-            recipes.forEach(recipe => {
-                const title = recipe.querySelector('h3').textContent.toLowerCase();
-                if (title.includes(query)) {
-                    recipe.classList.add('d-active');
-                    recipe.classList.remove('d-none');
-                    hasSearchResults = true;
-                } else {
-                    recipe.classList.add('d-none');
-                    recipe.classList.remove('d-active');
-                }
-            });
+            if (filteredRecipes.length > 0) {
+                addRecipeCards(filteredRecipes);
+                hasSearchResults = true;
+            }
 
             if (hasSearchResults) {
                 newsBlock.classList.add('d-none');
@@ -45,25 +87,60 @@ document.addEventListener("DOMContentLoaded", function () {
             newsBlock.classList.add('d-active');
             newsBlock.classList.remove('d-none');
 
-            recipes.forEach(recipe => {
-                recipe.classList.add('d-none');
-                recipe.classList.remove('d-active');
-            });
-
             recipesSection.classList.add('d-none');
             recipesSection.classList.remove('d-active');
         }
     });
 
-    recipes.forEach(recipe => {
-        const titleElement = recipe.querySelector('h3');
-        titleElement.addEventListener('click', function() {
-            const query = this.textContent.trim();
-            const imageURL = recipe.getElementsByClassName('history-item-img').src;
-            addSearchQuery(query, imageURL);
-            searchBar.value = '';
-            showSearchHistorySection();
+    function addRecipeCards(recipes) {
+        const recipesList = document.querySelector('.recipes-list');
+        recipesList.innerHTML = '';
+    
+        recipes.forEach(recipe => {
+            const recipeCard = `
+                <li class="recipe" data-category="${recipe.category}">
+                    <div class="recipe-front">
+                        <img src="${recipe.image}" alt="${recipe.title} image" class="recipe-image">
+                        <h3 class="recipe-title">${recipe.title}</h3>
+                    </div>
+                    <div class="recipe-back d-none">
+                        <h3 class="recipes-ingredients">Ingredients:</h3>
+                        <ul class="recipes-ingredients-list">
+                            ${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
+                        </ul>
+                        <h3 class="recipes-recipe">Description:</h3>
+                        <p>${recipe.description}</p>
+                    </div>
+                </li>
+
+            `;
+            
+            recipesList.innerHTML += recipeCard;
         });
+    }
+
+    function flipCard(card) {
+        const front = card.querySelector('.recipe-front');
+        const back = card.querySelector('.recipe-back');
+
+        if (front.classList.contains('d-none')) {
+            front.classList.remove('d-none');
+            back.classList.add('d-none');
+        } else {
+            front.classList.add('d-none');
+            back.classList.remove('d-none');
+        }
+    }
+
+    document.querySelector('.recipes-list').addEventListener('click', function (e) {
+        const card = e.target.closest('.recipe');
+        if (card) {
+            flipCard(card);
+            
+            const query = card.querySelector('.recipe-title').textContent.trim();
+            const imageURL = card.querySelector('.recipe-image').src;
+            addSearchQuery(query, imageURL);
+        }
     });
 
     filterButtons.forEach(button => {
@@ -76,19 +153,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (activeFilter === category) {
                 button.classList.remove('active');
-                recipes.forEach(recipe => {
-                    recipe.classList.add('d-none');
-                    recipe.classList.remove('d-active');
-                });
-
                 newsBlock.classList.add('d-active');
                 newsBlock.classList.remove('d-none');
-
                 recipesSection.classList.add('d-none');
                 recipesSection.classList.remove('d-active');
 
                 activeFilter = null;
                 activeButton = null;
+
+                const recipesList = document.querySelector('.recipes-list');
+                recipesList.innerHTML = '';
             } else {
                 button.classList.add('active');
                 activeFilter = category;
@@ -96,20 +170,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 recipesSection.classList.add('d-active');
                 recipesSection.classList.remove('d-none');
-                let hasFilteredRecipes = false;
+                const filteredRecipes = recipesAll.filter(recipe => recipe.category === category);
 
-                recipes.forEach(recipe => {
-                    if (recipe.getAttribute('data-category') === category) {
-                        recipe.classList.add('d-active');
-                        recipe.classList.remove('d-none');
-                        hasFilteredRecipes = true;
-                    } else {
-                        recipe.classList.add('d-none');
-                        recipe.classList.remove('d-active');
-                    }
-                });
-
-                if (hasFilteredRecipes) {
+                if (filteredRecipes.length > 0) {
+                    addRecipeCards(filteredRecipes);
                     newsBlock.classList.add('d-none');
                     newsBlock.classList.remove('d-active');
                 } else {
