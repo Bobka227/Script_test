@@ -1,6 +1,7 @@
 {
   "require": {
     "php": "^8.3.12",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "ext-mysqli": "*"
   }
 }

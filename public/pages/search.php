@@ -75,69 +75,69 @@
         </section>
         <section class="recipes d-none">
             <h5 class="d-none">List of recipes</h5>
-            <ul class="recipes-list">
-                <!-- <li class="recipe" data-category="${recipe.category}">
-                    <div class="recipe-front">
-                        <img src="${recipe.image}" alt="${recipe.title} image" class="recipe-image">
-                        <h3 class="recipe-title">${recipe.title}</h3>
-                    </div>
-                    <div class="recipe-back d-none">
-                        <h3 class="recipes-ingredients">Ingredients:</h3>
-                        <ul class="recipes-ingredients-list">
-                            ${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
-                        </ul>
-                        <h3 class="recipes-recipe">Description:</h3>
-                        <p>${recipe.description}</p>
-                    </div>
-                </li> -->
-            </ul>
+            <div class="recipe" data-category="spicy">
+                <h3>Spicy Tacos</h3>
+                <p>Ingredients: ...</p>
+            </div>
+            <div class="recipe" data-category="vegan">
+                <h3>Vegan Salad</h3>
+                <p>Ingredients: ...</p>
+            </div>
+            <div class="recipe" data-category="vegetarian">
+                <h3>Vegetarian Pizza</h3>
+                <p>Ingredients: ...</p>
+            </div>
+            <div class="recipe" data-category="quick">
+                <h3>Quick Sandwich</h3>
+                <p>Ingredients: ...</p>
+            </div>
+            <div class="recipe" data-category="no-oven">
+                <h3>No Oven Cookies</h3>
+                <p>Ingredients: ...</p>
+            </div>
+            <div class="recipe" data-category="drinks">
+                <h3>Fresh Juice</h3>
+                <p>Ingredients: ...</p>
+            </div>
+            <div class="recipe" data-category="breakfast">
+                <h3>Pancakes</h3>
+                <p>Ingredients: ...</p>
+            </div>
+            <div class="recipe" data-category="lunch">
+                <h3>Lunch Bowl</h3>
+                <p>Ingredients: ...</p>
+            </div>
+            <div class="recipe" data-category="dinner">
+                <h3>Grilled Chicken</h3>
+                <p>Ingredients: ...</p>
+            </div>
+            <div class="recipe" data-category="drinks">
+                <h3>MilkShake</h3>
+                <p>Ingredients: ...</p>
+            </div>        
         </section>
         <section class="news-block" id="newsBlock">
             <h3 class="d-none">Delicious news</h3>
             <article class="news-article">
                 <h4 class="d-none">News section</h4>
-                <div class="news-info">
-                    <b class="news-title">Title</b>
-                    <p class="news-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                        Quam quibusdam magnam atque fuga doloribus amet distinctio, eaque laborum accusantium 
-                        aut repudiandae optio nesciunt modi, 
-                        dignissimos quaerat explicabo architecto nostrum minus!
-                    </p> 
-                    <br>
-                    <a href="https://www.foodandwine.com/birria-bombs-tiktok-8729361">Read more</a> 
-                </div>                  
-                <img src="../images/news/cat1.jpeg" alt="news image"> 
+                1
+            <!--<b>Title</b>                    вставить название
+                <img src="" alt="news image">   вставить изображения
+                <a href="#">Read more</a>       вставить ссылки -->
             </article>
             <article class="news-article">
                 <h4 class="d-none">News section</h4>
-                <div class="news-info">
-                    <b class="news-title">Title</b>
-                    <p class="news-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                        Quam quibusdam magnam atque fuga doloribus amet distinctio, eaque laborum accusantium 
-                        aut repudiandae optio nesciunt modi, 
-                        dignissimos quaerat explicabo architecto nostrum minus!
-                    </p> 
-                    <br>
-                    <a href="https://www.foodandwine.com/vegetable-storage-containers-bacterial-growth-8725806">Read more</a> 
-                </div>                  
-                <img src="../images/news/cat2.jpeg" alt="news image">
+                2
+            <!--<b>Title</b>                    вставить название
+                <img src="" alt="news image">   вставить изображения
+                <a href="#">Read more</a>       вставить ссылки -->
             </article>
             <article class="news-article">
                 <h4 class="d-none">News section</h4>
-                <div class="news-info">
-                    <b class="news-title">Title</b>
-                    <p class="news-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                        Quam quibusdam magnam atque fuga doloribus amet distinctio, eaque laborum accusantium 
-                        aut repudiandae optio nesciunt modi, 
-                        dignissimos quaerat explicabo architecto nostrum minus!
-                    </p> 
-                    <br>
-                    <a href="https://www.foodandwine.com/aldi-thanksgiving-basket-2024-8728597">Read more</a> 
-                </div>                  
-                <img src="../images/news/cat3.jpg" alt="news image">       
+                3
+            <!--<b>Title</b>                    вставить название
+                <img src="" alt="news image">   вставить изображения
+                <a href="#">Read more</a>       вставить ссылки -->
             </article>
         </section>
 
