@@ -11,7 +11,7 @@
 
 <script>
     // Используем fetch с методом GET для запроса данных
-    fetch('testRecepies.php')
+    fetch('../testRecepies.php')
         .then(response => response.json()) // Обрабатываем как JSON
         .then(data => {
             if (data.status === 'success') {
