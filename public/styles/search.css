@@ -102,6 +102,26 @@ body {
     padding: 2vh;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+}
+
+.news-info {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: start;
+}
+
+.news-article img {
+    width: 200px;
+    height: 190px;
+}
+
+.news-title {
+    text-transform: uppercase;
 }
 
 
@@ -135,6 +155,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
+    height: 457px;
 }
 
 .recipe:hover {
