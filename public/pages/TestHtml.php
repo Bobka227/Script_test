@@ -37,6 +37,7 @@
     use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
     use Endroid\QrCode\Encoding\Encoding;
     use Endroid\QrCode\Color\Color;
+    use Endroid\QrCode\QrCode;
 
     try {
         // Данные конфигурации для подключения к базе данных
@@ -65,23 +66,21 @@
 
         // Генерация QR-кодов для каждого рецепта
         foreach ($recipes as $recipe) {
-            $result = Builder::create()
-                ->writer(new PngWriter())
-                ->data($recipe['pdf_link'])
-                ->encoding(new Encoding('UTF-8'))
-                ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-                ->size(300)
-                ->margin(10)
-                ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
-                ->foregroundColor(new Color(0, 0, 0))
-                ->backgroundColor(new Color(255, 255, 255))
-                ->build();
+            // Создаем новый объект QrCode для каждого рецепта
+            $qrCode = QrCode::create($recipe['pdf_link'])
+                ->setEncoding('UTF-8')
+                ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                ->setSize(300)
+                ->setMargin(10)
+                ->setForegroundColor(new Color(0, 0, 0))
+                ->setBackgroundColor(new Color(255, 255, 255));
 
-            // Сохранение QR-кода в виде изображения с уникальным именем
+            // Создаем объект Writer для записи QR-кода в файл
+            $writer = new PngWriter();
             $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
-            $result->saveToFile($qrCodePath);
+            $writer->write($qrCode)->saveToFile($qrCodePath);
 
-            // Выводим QR-код и название рецепта на страницу
+            // Отображаем QR-код и название рецепта на странице
             echo '<div class="qr-code">';
             echo '<h2>' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '</h2>';
             echo '<img src="' . htmlspecialchars($qrCodePath, ENT_QUOTES, 'UTF-8') . '" alt="QR-код для ' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '">';
