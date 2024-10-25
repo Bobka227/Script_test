@@ -2,11 +2,10 @@
 header('Content-Type: application/json'); // Указываем, что возвращаем JSON
 
 // Настройки базы данных из переменных окружения
-$host = getenv('DB_HOST');
-$dbname = getenv('DB_NAME');
-$username = getenv('DB_USERNAME');
-$password = getenv('DB_PASSWORD');
-
+$host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
+$dbname = 'hoc3ablulex394pb';
+$username = 'emk2ggh76qbpq4ml';
+$password = 'lf9c0g2qky76la6x';
 require __DIR__ . '/vendor/autoload.php';
  // Автозагрузка Composer
 use Endroid\QrCode\QrCode;
