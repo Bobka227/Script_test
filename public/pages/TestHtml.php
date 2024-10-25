@@ -68,31 +68,25 @@
         }
 
         // Генерация QR-кодов для каждого рецепта
-        foreach ($recipes as $recipe) {
-            // Генерация QR-кода с использованием Builder
-            $result = Builder::fromQrCode(
-                (new \Endroid\QrCode\QrCode($recipe['pdf_link']))
-                    ->setEncoding(new Encoding('UTF-8'))
-                    ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
-                    ->setSize(300)
-                    ->setMargin(10)
-                    ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
-                    ->setForegroundColor(new Color(0, 0, 0))
-                    ->setBackgroundColor(new Color(255, 255, 255))
-            )
-                ->writer(new PngWriter())
-                ->build();
+       try{
+            foreach ($recipes as $recipe) {
+        $qrCode = new QrCode($recipe['pdf_link']);
+        $qrCode->setSize(300);
 
-            // Путь для сохранения QR-кода
-            $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
-            $result->saveToFile($qrCodePath);
+        $writer = new PngWriter();
+        $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
+        $writer->write($qrCode)->saveToFile($qrCodePath);
 
-            // Отображаем QR-код и название рецепта на странице
-            echo '<div class="qr-code">';
-            echo '<h2>' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '</h2>';
-            echo '<img src="' . htmlspecialchars($qrCodePath, ENT_QUOTES, 'UTF-8') . '" alt="QR-код для ' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '">';
-            echo '</div>';
-        }
+        // Выводим QR-код и название рецепта на страницу
+        echo '<div class="qr-code">';
+        echo '<h2>' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '</h2>';
+        echo '<img src="' . htmlspecialchars($qrCodePath, ENT_QUOTES, 'UTF-8') . '" alt="QR-код для ' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '">';
+        echo '</div>';
+
+} } catch (Exception $e) {
+    error_log("Ошибка: " . $e->getMessage());
+    echo "Ошибка: " . $e->getMessage();
+}
 
         echo "QR-коды успешно созданы и сохранены.";
 
