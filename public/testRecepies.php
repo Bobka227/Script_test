@@ -7,7 +7,8 @@ $dbname = getenv('DB_NAME');
 $username = getenv('DB_USERNAME');
 $password = getenv('DB_PASSWORD');
 
-require 'vendor/autoload.php'; // Автозагрузка Composer
+require __DIR__ . '/vendor/autoload.php';
+ // Автозагрузка Composer
 use Endroid\QrCode\QrCode;
 
 $response = ['status' => 'error', 'message' => ''];
