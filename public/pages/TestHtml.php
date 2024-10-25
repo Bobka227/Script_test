@@ -19,17 +19,30 @@
 <h1>Рецепты с QR-кодами</h1>
 <div id="qr-codes">
     <?php
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
+    // Создание файла лога ошибки
+    $logFile = 'error_log.txt';
+    ini_set('log_errors', 1);
+    ini_set('error_log', $logFile);
+
     // Подключение автозагрузчика Composer
     require 'vendor/autoload.php';
     use Endroid\QrCode\QrCode;
 
-    // Настройки базы данных из переменных окружения
     $host = getenv('s554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com');
-    $dbname = getenv('hoc3ablulex394pb');
+    $dbname = getenv('Dhoc3ablulex394pb');
     $username = getenv('emk2ggh76qbpq4ml');
     $password = getenv('lf9c0g2qky76la6x');
-
     try {
+        // Проверяем наличие переменных окружения
+        if (!$host || !$dbname || !$username || !$password) {
+            throw new Exception('Проверьте переменные окружения.');
+        }
+
+
         // Соединение с базой данных
         $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -73,10 +86,6 @@
         error_log("Ошибка: " . $e->getMessage());
         echo "Ошибка: " . $e->getMessage();
     }
-
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
     ?>
 </div>
 </body>
