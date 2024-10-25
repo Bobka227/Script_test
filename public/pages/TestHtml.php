@@ -24,10 +24,10 @@
     use Endroid\QrCode\QrCode;
 
     // Настройки базы данных из переменных окружения
-    $host = getenv('DB_HOST');
-    $dbname = getenv('DB_NAME');
-    $username = getenv('DB_USERNAME');
-    $password = getenv('DB_PASSWORD');
+    $host = getenv('s554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com');
+    $dbname = getenv('hoc3ablulex394pb');
+    $username = getenv('emk2ggh76qbpq4ml');
+    $password = getenv('lf9c0g2qky76la6x');
 
     try {
         // Соединение с базой данных
