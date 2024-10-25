@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Рецепты</title>
+</head>
+<body>
+<div id="content">
+    Загрузка рецептов...
+</div>
+
+<script>
+    // Используем fetch с методом GET для запроса данных
+    fetch('../testRecepies.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ошибка! Статус: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                let content = '';
+                data.data.forEach(recipe => {
+                    content += `<div>
+                                <h3>Рецепт: ${recipe.name}</h3>
+                                <img src="${recipe.qr_code}" alt="QR-код для ${recipe.name}">
+                            </div><br>`;
+                });
+                document.getElementById('content').innerHTML = content;
+            } else {
+                document.getElementById('content').innerHTML = `<p>Ошибка: ${data.message}</p>`;
+            }
+        })
+        .catch(error => console.error('Ошибка при получении данных:', error));
+</script>
+</body>
+</html>
+
