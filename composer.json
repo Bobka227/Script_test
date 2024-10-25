@@ -2,7 +2,6 @@
   "require": {
     "php": "^8.3",
     "ext-pdo": "*",
-    "ext-mysqli": "*",
-    "endroid/qr-code": "^6.0"
+    "ext-mysqli": "*"
   }
 }
