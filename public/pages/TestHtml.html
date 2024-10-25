@@ -12,15 +12,20 @@
 <script>
     // Используем fetch с методом GET для запроса данных
     fetch('../testRecepies.php')
-        .then(response => response.json()) // Обрабатываем как JSON
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ошибка! Статус: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.status === 'success') {
                 let content = '';
                 data.data.forEach(recipe => {
                     content += `<div>
-                                    <h3>Рецепт: ${recipe.name}</h3>
-                                    <img src="${recipe.qr_code}" alt="QR-код для ${recipe.name}">
-                                </div><br>`;
+                                <h3>Рецепт: ${recipe.name}</h3>
+                                <img src="${recipe.qr_code}" alt="QR-код для ${recipe.name}">
+                            </div><br>`;
                 });
                 document.getElementById('content').innerHTML = content;
             } else {
