@@ -28,9 +28,6 @@
     ini_set('log_errors', 1);
     ini_set('error_log', $logFile);
 
-    // Подключение автозагрузчика Composer
-    require __DIR__ . '/../../vendor/autoload.php';
-
     use Endroid\QrCode\Builder\Builder;
     use Endroid\QrCode\Writer\PngWriter;
     use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
@@ -38,6 +35,12 @@
     use Endroid\QrCode\Encoding\Encoding;
     use Endroid\QrCode\Color\Color;
     use Endroid\QrCode\QrCode;
+
+    if (class_exists(\Endroid\QrCode\QrCode::class)) {
+        echo "Библиотека endroid/qr-code установлена и подключена успешно.";
+    } else {
+        echo "Библиотека endroid/qr-code не установлена или не подключена.";
+    }
 
     try {
         // Данные конфигурации для подключения к базе данных
@@ -66,19 +69,23 @@
 
         // Генерация QR-кодов для каждого рецепта
         foreach ($recipes as $recipe) {
-            // Создаем новый объект QrCode для каждого рецепта
-            $qrCode = QrCode::create($recipe['pdf_link'])
-                ->setEncoding('UTF-8')
-                ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
-                ->setSize(300)
-                ->setMargin(10)
-                ->setForegroundColor(new Color(0, 0, 0))
-                ->setBackgroundColor(new Color(255, 255, 255));
+            // Генерация QR-кода с использованием Builder
+            $result = Builder::fromQrCode(
+                (new \Endroid\QrCode\QrCode($recipe['pdf_link']))
+                    ->setEncoding(new Encoding('UTF-8'))
+                    ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                    ->setSize(300)
+                    ->setMargin(10)
+                    ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                    ->setForegroundColor(new Color(0, 0, 0))
+                    ->setBackgroundColor(new Color(255, 255, 255))
+            )
+                ->writer(new PngWriter())
+                ->build();
 
-            // Создаем объект Writer для записи QR-кода в файл
-            $writer = new PngWriter();
+            // Путь для сохранения QR-кода
             $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
-            $writer->write($qrCode)->saveToFile($qrCodePath);
+            $result->saveToFile($qrCodePath);
 
             // Отображаем QR-код и название рецепта на странице
             echo '<div class="qr-code">';
