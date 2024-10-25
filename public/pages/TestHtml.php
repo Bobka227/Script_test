@@ -30,14 +30,24 @@
 
     // Подключение автозагрузчика Composer
     require __DIR__ . '/../../vendor/autoload.php';
-    use Endroid\QrCode\QrCode;
 
-    $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
-    $dbname = 'hoc3ablulex394pb';
-    $username = 'emk2ggh76qbpq4ml';
-    $password = 'lf9c0g2qky76la6x';
+    use Endroid\QrCode\Builder\Builder;
+    use Endroid\QrCode\Writer\PngWriter;
+    use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+
     try {
+        // Использование значений конфигурации для подключения к базе данных
+        $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
+        $dbname = 'hoc3ablulex394pb';
+        $username = 'emk2ggh76qbpq4ml';
+        $password = 'lf9c0g2qky76la6x';
 
+        // Проверяем наличие переменных конфигурации (необязательно, для доп. проверки)
+        if (empty($host) || empty($dbname) || empty($username) || empty($password)) {
+            throw new Exception('Проверьте переменные конфигурации.');
+        }
+
+        // Устанавливаем соединение с базой данных
         $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -57,12 +67,18 @@
 
         // Генерация QR-кодов для каждого рецепта
         foreach ($recipes as $recipe) {
-            $qrCode = new \Endroid\QrCode\QrCode($recipe['pdf_link']);
-            $qrCode->setSize(300);
+            $result = Builder::create()
+                ->writer(new PngWriter())
+                ->data($recipe['pdf_link'])
+                ->size(300)
+                ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                ->build();
 
+            // Сохраняем QR-код в виде изображения с уникальным именем
             $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
-            $qrCode->writeFile($qrCodePath);
+            $result->saveToFile($qrCodePath);
 
+            // Выводим QR-код и название рецепта на страницу
             echo '<div class="qr-code">';
             echo '<h2>' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '</h2>';
             echo '<img src="' . htmlspecialchars($qrCodePath, ENT_QUOTES, 'UTF-8') . '" alt="QR-код для ' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '">';
