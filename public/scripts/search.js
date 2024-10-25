@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     const searchBar = document.getElementById('search-bar');
-    const recipes = document.querySelectorAll('.recipe');
     const newsBlock = document.getElementById('newsBlock');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const recipesSection = document.querySelector('.recipes');
@@ -78,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const prevButton = document.getElementById('prevBtn');
     const nextButton = document.getElementById('nextBtn');
     let currentIndex = 0;
-    const visibleCount = 5;
+    let visibleCount = 5;
 
     searchBar.addEventListener('input', function () {
         const recipesList = document.querySelector('.recipes-list');
@@ -138,6 +137,15 @@ document.addEventListener("DOMContentLoaded", function () {
             
             recipesList.innerHTML += recipeCard;
         });
+    }
+
+    function updateVisibleCount() {
+        if (window.innerWidth <= 560) {
+            visibleCount = 3;
+        } else {
+            visibleCount = 5;
+        }
+        updateHistoryDisplay();
     }
 
     function flipCard(card) {
@@ -266,8 +274,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    updateHistoryDisplay();
-
     const initialHistory = getSearchHistory();
     if (initialHistory.length > 0) {
         showSearchHistorySection();
@@ -318,4 +324,9 @@ document.addEventListener("DOMContentLoaded", function () {
             searchBar.dispatchEvent(new Event('input'));
         }
     });
+
+    window.addEventListener('resize', updateVisibleCount);
+    updateVisibleCount();
+
+    updateHistoryDisplay();
 });
