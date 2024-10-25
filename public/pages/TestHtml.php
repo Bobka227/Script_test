@@ -34,18 +34,16 @@
     use Endroid\QrCode\Builder\Builder;
     use Endroid\QrCode\Writer\PngWriter;
     use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+    use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+    use Endroid\QrCode\Encoding\Encoding;
+    use Endroid\QrCode\Color\Color;
 
     try {
-        // Использование значений конфигурации для подключения к базе данных
+        // Данные конфигурации для подключения к базе данных
         $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
         $dbname = 'hoc3ablulex394pb';
         $username = 'emk2ggh76qbpq4ml';
         $password = 'lf9c0g2qky76la6x';
-
-        // Проверяем наличие переменных конфигурации (необязательно, для доп. проверки)
-        if (empty($host) || empty($dbname) || empty($username) || empty($password)) {
-            throw new Exception('Проверьте переменные конфигурации.');
-        }
 
         // Устанавливаем соединение с базой данных
         $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
@@ -70,11 +68,16 @@
             $result = Builder::create()
                 ->writer(new PngWriter())
                 ->data($recipe['pdf_link'])
-                ->size(300)
+                ->encoding(new Encoding('UTF-8'))
                 ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                ->size(300)
+                ->margin(10)
+                ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+                ->foregroundColor(new Color(0, 0, 0))
+                ->backgroundColor(new Color(255, 255, 255))
                 ->build();
 
-            // Сохраняем QR-код в виде изображения с уникальным именем
+            // Сохранение QR-кода в виде изображения с уникальным именем
             $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
             $result->saveToFile($qrCodePath);
 
