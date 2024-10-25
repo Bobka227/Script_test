@@ -1,11 +1,11 @@
 <?php
 header('Content-Type: application/json'); // Указываем, что возвращаем JSON
 
-// Настройки базы данных
-$host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
-$dbname = 'hoc3ablulex394pb';
-$username = 'emk2ggh76qbpq4ml';
-$password = 'lf9c0g2qky76la6x';
+// Настройки базы данных из переменных окружения
+$host = getenv('DB_HOST');
+$dbname = getenv('DB_NAME');
+$username = getenv('DB_USERNAME');
+$password = getenv('DB_PASSWORD');
 
 require 'vendor/autoload.php'; // Автозагрузка Composer
 use Endroid\QrCode\QrCode;
@@ -48,7 +48,7 @@ try {
             ];
 
         } catch (Exception $e) {
-            $response['message'] = "Ошибка при генерации QR-кода для рецепта с ID " . $recipe['id'] . ": " . $e->getMessage();
+            error_log("Ошибка при генерации QR-кода для рецепта с ID " . $recipe['id'] . ": " . $e->getMessage());
         }
     }
 
@@ -60,7 +60,13 @@ try {
     $response['message'] = "Ошибка подключения к базе данных: " . $e->getMessage();
 }
 
-echo json_encode($response);
+$jsonResponse = json_encode($response, JSON_UNESCAPED_UNICODE);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    error_log('Ошибка JSON: ' . json_last_error_msg());
+    echo json_encode(['status' => 'error', 'message' => 'Ошибка обработки данных.']);
+} else {
+    echo $jsonResponse;
+}
 
 // Включаем отображение ошибок для отладки
 ini_set('display_errors', 1);
