@@ -29,7 +29,7 @@
     ini_set('error_log', $logFile);
 
     // Подключение автозагрузчика Composer
-    require 'vendor/autoload.php';
+    require __DIR__ . '/../../vendor/autoload.php';
     use Endroid\QrCode\QrCode;
 
     $host = getenv('s554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com');
