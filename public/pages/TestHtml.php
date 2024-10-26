@@ -27,7 +27,8 @@
     $logFile = 'error_log.txt';
     ini_set('log_errors', 1);
     ini_set('error_log', $logFile);
-    require __DIR__ . '/vendor/autoload.php';
+    require __DIR__ . '/../../../vendor/autoload.php';
+
 
     use Endroid\QrCode\Builder\Builder;
     use Endroid\QrCode\Encoding\Encoding;
