@@ -143,6 +143,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 foodMood = await response.json();
                 console.log(foodMood);
 
+                // Инициализация массива настроений
                 Object.keys(foodMood).forEach(key => moods.push(key));
                 displayFoodMood(currentMood); // Отображаем начальное состояние
             } else {
@@ -194,6 +195,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (skipLeftButton) {
         skipLeftButton.addEventListener('click', () => {
+            // Двигаем индекс влево циклично
             currentMoodIndex = (currentMoodIndex - 1 + moods.length) % moods.length;
             currentMood = moods[currentMoodIndex];
             displayFoodMood(currentMood);
@@ -202,6 +204,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (skipRightButton) {
         skipRightButton.addEventListener('click', () => {
+            // Двигаем индекс вправо циклично
             currentMoodIndex = (currentMoodIndex + 1) % moods.length;
             currentMood = moods[currentMoodIndex];
             displayFoodMood(currentMood);
@@ -228,3 +231,4 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Загрузка данных при загрузке страницы
     await loadFoodMoodData();
 });
+
