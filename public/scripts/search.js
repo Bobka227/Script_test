@@ -1,11 +1,10 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     const searchBar = document.getElementById('search-bar');
     const newsBlock = document.getElementById('newsBlock');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const recipesSection = document.querySelector('.recipes');
     let activeFilter = null;
     let activeButton = null;
-
     const recipesAll = [
         {
             title: "Grilled Chicken Salad",
@@ -70,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
             description: "A quick and easy stir-fry with tender chicken and vegetables in a savory soy-garlic sauce.",
             category: "dinner"
         }
-    ];    
+    ];
 
     const searchHistorySection = document.getElementById('searchHistorySection');
     const historyList = document.querySelector('.history-list');
@@ -84,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
         recipesList.innerHTML = '';
 
         const query = searchBar.value.toLowerCase().trim();
-        
+
         if (query) {
             recipesSection.classList.add('d-active');
             recipesSection.classList.remove('d-none');
@@ -115,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function addRecipeCards(recipes) {
         const recipesList = document.querySelector('.recipes-list');
         recipesList.innerHTML = '';
-    
+
         recipes.forEach(recipe => {
             const recipeCard = `
                 <li class="recipe" data-category="${recipe.category}">
@@ -134,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </li>
 
             `;
-            
+
             recipesList.innerHTML += recipeCard;
         });
     }
@@ -165,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const card = e.target.closest('.recipe');
         if (card) {
             flipCard(card);
-            
+
             const query = card.querySelector('.recipe-title').textContent.trim();
             const imageURL = card.querySelector('.recipe-image').src;
             addSearchQuery(query, imageURL);
@@ -216,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateHistoryDisplay() {
         const history = getSearchHistory();
         historyList.innerHTML = '';
-    
+
         history.slice(currentIndex, currentIndex + visibleCount).forEach((item, index) => {
             historyList.innerHTML += `
             <li class="history-item">
@@ -229,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </li>
             `;
         });
-    
+
         prevButton.style.display = currentIndex > 0 ? 'block' : 'none';
         nextButton.style.display = currentIndex + visibleCount < history.length ? 'block' : 'none';
     }
@@ -245,17 +244,17 @@ document.addEventListener("DOMContentLoaded", function () {
     function addSearchQuery(query, imageURL) {
         let history = getSearchHistory();
         const existingIndex = history.findIndex(item => item.query === query);
-        
+
         if (existingIndex !== -1) {
             history.splice(existingIndex, 1);
         }
-        
-        history.unshift({ query, image: imageURL });
-        
+
+        history.unshift({query, image: imageURL});
+
         if (history.length > 20) {
             history.pop();
         }
-        
+
         saveSearchHistory(history);
         updateHistoryDisplay();
     }
@@ -293,11 +292,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function renderSearchHistory(history) {
         const historyList = document.getElementById('history-list');
         historyList.innerHTML = '';
-    
+
         history.forEach((item) => {
             const listItem = document.createElement('li');
             listItem.className = 'history-item';
-    
+
             listItem.innerHTML = `
                 <div class="history-item-image">
                     <img src="${item.image}" alt="history item" class="history-item-img">
@@ -306,12 +305,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     <p>${item.query}</p>
                 </div>
             `;
-    
+
             historyList.appendChild(listItem);
         });
     }
 
-    historyList.addEventListener('click', function(event) {
+    historyList.addEventListener('click', function (event) {
         const clickedElement = event.target;
         if (clickedElement.classList.contains('history-item-img')) {
             const query = clickedElement.closest('.history-item').querySelector('.history-item-name p').textContent;
