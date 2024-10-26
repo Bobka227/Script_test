@@ -28,13 +28,12 @@
     ini_set('log_errors', 1);
     ini_set('error_log', $logFile);
 
+
     use Endroid\QrCode\Builder\Builder;
-    use Endroid\QrCode\Writer\PngWriter;
-    use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
-    use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
     use Endroid\QrCode\Encoding\Encoding;
-    use Endroid\QrCode\Color\Color;
-    use Endroid\QrCode\QrCode;
+    use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+    use Endroid\QrCode\Label\Label;
+    use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 
     if (class_exists(\Endroid\QrCode\QrCode::class)) {
         echo "Библиотека endroid/qr-code установлена и подключена успешно.";
@@ -70,18 +69,22 @@
         // Генерация QR-кодов для каждого рецепта
        try{
             foreach ($recipes as $recipe) {
-        $qrCode = new QrCode($recipe['pdf_link']);
-        $qrCode->setSize(300);
+    $result = Builder::create()
+        ->data($recipe['pdf_link'])
+        ->encoding(new Encoding('UTF-8'))
+        ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+        ->size(300)
+        ->margin(10)
+        ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+        ->build();
 
-        $writer = new PngWriter();
-        $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
-        $writer->write($qrCode)->saveToFile($qrCodePath);
+    $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
+    file_put_contents($qrCodePath, $result->getString());
 
-        // Выводим QR-код и название рецепта на страницу
-        echo '<div class="qr-code">';
-        echo '<h2>' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '</h2>';
-        echo '<img src="' . htmlspecialchars($qrCodePath, ENT_QUOTES, 'UTF-8') . '" alt="QR-код для ' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '">';
-        echo '</div>';
+    echo '<div class="qr-code">';
+    echo '<h2>' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '</h2>';
+    echo '<img src="' . htmlspecialchars($qrCodePath, ENT_QUOTES, 'UTF-8') . '" alt="QR-код для ' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '">';
+    echo '</div>';
 
 } } catch (Exception $e) {
     error_log("Ошибка: " . $e->getMessage());
