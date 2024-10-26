@@ -126,50 +126,32 @@
 // });
 
 
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", function () {
     const foodListContainer = document.getElementById('foodList-container');
     const foodMoodListSection = document.getElementById('foodMoodList');
     const emotionButtons = document.querySelectorAll('.emotion-item');
     let currentMood = 'first';
     let activeButton = null;
-    let foodMood = {};  // Initialize foodMood as an empty object
+    let foodMood = { first: [], left: [], right: [] };
 
-    // Fetch data from the PHP API
-    async function fetchFoodMoodData() {
+    // Функция для загрузки данных из PHP-скрипта
+    async function loadFoodMoodData() {
         try {
-            const response = await fetch('getFoodMood.php');  // Make sure the path is correct
-            if (!response.ok) throw new Error('Network response was not ok');
-            foodMood = await response.json();
-            displayFoodMood(currentMood);
+            const response = await fetch('/../getFoodMood.php'); // Укажите путь к PHP-скрипту
+            if (response.ok) {
+                foodMood = await response.json();
+                displayFoodMood(currentMood); // Показать данные при загрузке
+            } else {
+                console.error("Ошибка загрузки данных:", response.statusText);
+            }
         } catch (error) {
-            console.error('Error fetching food mood data:', error);
+            console.error("Ошибка:", error);
         }
     }
 
-    // Call the fetch function
-    await fetchFoodMoodData();
-
-    // Add event listeners for the emotion buttons
-    emotionButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            if (activeButton && activeButton !== button) {
-                activeButton.classList.remove('active');
-            }
-
-            if (button.classList.contains('active')) {
-                button.classList.remove('active');
-                activeButton = null;
-            } else {
-                button.classList.add('active');
-                activeButton = button;
-            }
-        });
-    });
-
+    // Функция для отображения рецептов в зависимости от настроения
     function displayFoodMood(page) {
         foodListContainer.innerHTML = '';
-
-        if (!foodMood[page]) return;
 
         foodMood[page].forEach(item => {
             const listItemHTML = `
@@ -180,10 +162,22 @@ document.addEventListener("DOMContentLoaded", async function () {
                     </div>
                 </li>
             `;
-            foodListContainer.innerHTML += listItemHTML;
+            foodListContainer.insertAdjacentHTML('beforeend', listItemHTML);
         });
     }
 
+    // Обработчики для кнопок эмоций
+    emotionButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            if (activeButton && activeButton !== button) {
+                activeButton.classList.remove('active');
+            }
+            button.classList.toggle('active');
+            activeButton = button.classList.contains('active') ? button : null;
+        });
+    });
+
+    // Переключение между состояниями настроения
     document.getElementById('skip-left').addEventListener('click', () => {
         currentMood = currentMood === 'first' ? 'left' : currentMood === 'right' ? 'first' : 'right';
         displayFoodMood(currentMood);
@@ -194,6 +188,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         displayFoodMood(currentMood);
     });
 
+    // Переход к списку рецептов по выбранной эмоции
     document.getElementById('calculateBtn').addEventListener('click', () => {
         currentMood = 'first';
         displayFoodMood(currentMood);
@@ -201,37 +196,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById('emotionCalculator').classList.add('d-none');
     });
 
+    // Кнопка возврата к выбору эмоций
     document.getElementById('backToEmotionList').addEventListener('click', () => {
         foodMoodListSection.classList.add('d-none');
         document.getElementById('emotionCalculator').classList.remove('d-none');
     });
 
-    // Modal logic
-    const modal = document.getElementById('modal');
-    const btnCloseModal = document.getElementById('btnCloseModal');
-    const btnEmotion10 = document.getElementById('emotion10');
-    const btnAge = document.getElementById('btnAge');
-
-    btnEmotion10.addEventListener('click', () => {
-        modal.classList.remove('modal-none');
-        modal.classList.add('modal-show');
-    });
-
-    btnCloseModal.addEventListener('click', () => {
-        modal.classList.add('modal-none');
-        modal.classList.remove('modal-show');
-    });
-
-    btnAge.addEventListener('click', () => {
-        modal.classList.add('modal-none');
-        modal.classList.remove('modal-show');
-    });
-
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.add('modal-none');
-            modal.classList.remove('modal-show');
-        }
-    });
+    // Загрузка данных при загрузке страницы
+    loadFoodMoodData();
 });
-

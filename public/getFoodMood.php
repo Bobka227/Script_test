@@ -10,18 +10,30 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Получение всех рецептов из базы данных
-    $stmt = $pdo->query("SELECT id, name, pdf_link FROM recipes");
+    // SQL-запрос для получения данных рецептов и эмоций
+    $stmt = $pdo->query("
+        SELECT recipes.name AS title, recipes.image AS img, recipe_emotion.emotion_id 
+        FROM recipes 
+        JOIN recipe_emotion ON recipes.id = recipe_emotion.recipe_id
+    ");
     $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Формируем структуру данных для JSON
     $foodMoodData = [
         'first' => [],
         'left' => [],
         'right' => []
     ];
 
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $foodMoodData[$row['mood']][] = [
+    foreach ($recipes as $row) {
+        $mood = match ($row['emotion_id']) {
+            1 => 'first',
+            2 => 'left',
+            3 => 'right',
+            default => 'first'
+        };
+
+        $foodMoodData[$mood][] = [
             'title' => $row['title'],
             'img' => $row['img']
         ];
