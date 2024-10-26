@@ -1,3 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рецепты с QR-кодами</title>
+    <style>
+        .qr-code {
+            margin: 20px;
+            display: inline-block;
+        }
+        .qr-code img {
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+<h1>Рецепты с QR-кодами</h1>
 <div id="qr-codes">
     <?php
     ini_set('display_errors', 1);
@@ -60,3 +79,5 @@
     }
     ?>
 </div>
+</body>
+</html>
