@@ -27,10 +27,9 @@
     $logFile = 'error_log.txt';
     ini_set('log_errors', 1);
     ini_set('error_log', $logFile);
-    require __DIR__ . '/vendor/autoload.php';
 
-
-
+    // Подключение автозагрузки от Composer
+    require __DIR__ . '/../../vendor/autoload.php';
 
     use Endroid\QrCode\Builder\Builder;
     use Endroid\QrCode\Encoding\Encoding;
@@ -46,10 +45,10 @@
 
     try {
         // Данные конфигурации для подключения к базе данных
-        $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
-        $dbname = 'hoc3ablulex394pb';
-        $username = 'emk2ggh76qbpq4ml';
-        $password = 'lf9c0g2qky76la6x';
+        $host = 'HOST_PLACEHOLDER';
+        $dbname = 'DBNAME_PLACEHOLDER';
+        $username = 'USERNAME_PLACEHOLDER';
+        $password = 'PASSWORD_PLACEHOLDER';
 
         // Устанавливаем соединение с базой данных
         $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
@@ -70,29 +69,29 @@
         }
 
         // Генерация QR-кодов для каждого рецепта
-       try{
-            foreach ($recipes as $recipe) {
-    $result = Builder::create()
-        ->data($recipe['pdf_link'])
-        ->encoding(new Encoding('UTF-8'))
-        ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-        ->size(300)
-        ->margin(10)
-        ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
-        ->build();
+        foreach ($recipes as $recipe) {
+            try {
+                $result = Builder::create()
+                    ->data($recipe['pdf_link'])
+                    ->encoding(new Encoding('UTF-8'))
+                    ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                    ->size(300)
+                    ->margin(10)
+                    ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+                    ->build();
 
-    $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
-    file_put_contents($qrCodePath, $result->getString());
+                $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
+                file_put_contents($qrCodePath, $result->getString());
 
-    echo '<div class="qr-code">';
-    echo '<h2>' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '</h2>';
-    echo '<img src="' . htmlspecialchars($qrCodePath, ENT_QUOTES, 'UTF-8') . '" alt="QR-код для ' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '">';
-    echo '</div>';
-
-} } catch (Exception $e) {
-    error_log("Ошибка: " . $e->getMessage());
-    echo "Ошибка: " . $e->getMessage();
-}
+                echo '<div class="qr-code">';
+                echo '<h2>' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '</h2>';
+                echo '<img src="' . htmlspecialchars($qrCodePath, ENT_QUOTES, 'UTF-8') . '" alt="QR-код для ' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '">';
+                echo '</div>';
+            } catch (Exception $e) {
+                error_log("Ошибка: " . $e->getMessage());
+                echo "Ошибка: " . $e->getMessage();
+            }
+        }
 
         echo "QR-коды успешно созданы и сохранены.";
 
