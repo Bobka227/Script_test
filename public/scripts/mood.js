@@ -156,11 +156,11 @@ document.addEventListener("DOMContentLoaded", function () {
         foodMood[page].forEach(item => {
             const listItemHTML = `
                 <li class="foodList-li">
-                    <h3 class="foodList-li-title">${item.title}</h3>
-                    <div class="foodList-image">
-                        <img src="../images/mood/${item.img}" alt="${item.title} image">
-                    </div>
-                </li>
+                <h3 class="foodList-li-title">${item.title}</h3>
+                <div class="foodList-image">
+                    <img src="${item.img}" alt="${item.title} image">
+                </div>
+            </li>
             `;
             foodListContainer.insertAdjacentHTML('beforeend', listItemHTML);
         });
