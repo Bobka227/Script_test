@@ -126,27 +126,27 @@
 // });
 
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     const foodListContainer = document.getElementById('foodList-container');
     const foodMoodListSection = document.getElementById('foodMoodList');
     const emotionButtons = document.querySelectorAll('.emotion-item');
     let currentMood = 'first';
     let activeButton = null;
-    let foodMood = { first: [], left: [], right: [] };
+    let foodMood = {first: [], left: [], right: []};
 
     // Функция для загрузки данных из PHP-скрипта
-    async function loadFoodMoodData() {
-        try {
-            const response = await fetch('/../getFoodMood.php'); // Укажите путь к PHP-скрипту
-            if (response.ok) {
-                foodMood = await response.json();
-                displayFoodMood(currentMood); // Показать данные при загрузке
-            } else {
-                console.error("Ошибка загрузки данных:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Ошибка:", error);
+    try {
+        const response = await fetch('/../getFoodMood.php');
+        if (response.ok) {
+            foodMood = await response.json();
+            console.log(foodMood); // Проверяем, что данные загружены
+            displayFoodMood(currentMood);
+        } else {
+            console.error("Ошибка загрузки данных:", response.statusText);
         }
+    } catch (error) {
+        console.error("Ошибка:", error);
+
     }
 
     // Функция для отображения рецептов в зависимости от настроения
