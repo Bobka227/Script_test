@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Функция для загрузки данных из PHP-скрипта
     async function loadFoodMoodData() {
         try {
-            const response = await fetch('getFoodMood.php');
+            const response = await fetch('/../getFoodMood.php');
             if (response.ok) {
                 foodMood = await response.json();
                 console.log(foodMood); // Проверяем, что данные загружены
