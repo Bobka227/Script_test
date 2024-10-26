@@ -31,11 +31,14 @@
     // Подключение автозагрузки от Composer
     require __DIR__ . '/../../vendor/autoload.php';
 
+
     use Endroid\QrCode\Builder\Builder;
     use Endroid\QrCode\Encoding\Encoding;
     use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
     use Endroid\QrCode\Label\Label;
     use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+    use Endroid\QrCode\QrCode;
+    use Endroid\QrCode\Writer\PngWriter;
 
     if (class_exists(\Endroid\QrCode\QrCode::class)) {
         echo "Библиотека endroid/qr-code установлена и подключена успешно.";
@@ -69,16 +72,16 @@
         }
 
         // Генерация QR-кодов для каждого рецепта
+        $writer = new PngWriter();
         foreach ($recipes as $recipe) {
             try {
-                $result = Builder::create()
-                    ->data($recipe['pdf_link'])
-                    ->encoding(new Encoding('UTF-8'))
-                    ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-                    ->size(300)
-                    ->margin(10)
-                    ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
-                    ->build();
+                $qrCode = QrCode::create($recipe['pdf_link'])
+                    ->setEncoding(new Encoding('UTF-8'))
+                    ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                    ->setSize(300)
+                    ->setMargin(10);
+
+                $result = $writer->write($qrCode);
 
                 $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
                 file_put_contents($qrCodePath, $result->getString());
