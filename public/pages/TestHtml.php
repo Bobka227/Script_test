@@ -67,9 +67,14 @@
             // Сохраняем QR-код в файл
             $filePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
             file_put_contents($filePath, $result->getString());
+
+            // Отображаем изображение на странице
+            echo "<div class='qr-code'>";
+            echo "<h2>{$recipe['name']}</h2>";
+            echo "<img src='$filePath' alt='QR-код для {$recipe['name']}'>";
+            echo "</div>";
         }
 
-        echo "QR-коды успешно созданы и сохранены.";
     } catch (PDOException $e) {
         error_log("Ошибка соединения с БД: " . $e->getMessage());
         echo "Ошибка соединения с базой данных.";
