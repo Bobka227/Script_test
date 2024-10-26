@@ -23,37 +23,20 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    // Создание файла лога ошибки
-    $logFile = 'error_log.txt';
-    ini_set('log_errors', 1);
-    ini_set('error_log', $logFile);
-
-    // Подключение автозагрузки от Composer
     require __DIR__ . '/../../vendor/autoload.php';
 
-
-    use Endroid\QrCode\Builder\Builder;
-    use Endroid\QrCode\Encoding\Encoding;
-    use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
-    use Endroid\QrCode\Label\Label;
-    use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
     use Endroid\QrCode\QrCode;
     use Endroid\QrCode\Writer\PngWriter;
-
-    if (class_exists(\Endroid\QrCode\QrCode::class)) {
-        echo "Библиотека endroid/qr-code установлена и подключена успешно.";
-    } else {
-        echo "Библиотека endroid/qr-code не установлена или не подключена.";
-    }
+    use Endroid\QrCode\Color\Color;
+    use Endroid\QrCode\Encoding\Encoding;
+    use Endroid\QrCode\ErrorCorrectionLevel;
+    // Конфигурация для подключения к базе данных
+    $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
+    $dbname = 'hoc3ablulex394pb';
+    $username = 'emk2ggh76qbpq4ml';
+    $password = 'lf9c0g2qky76la6x';
 
     try {
-        // Данные конфигурации для подключения к базе данных
-        $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
-        $dbname = 'hoc3ablulex394pb';
-        $username = 'emk2ggh76qbpq4ml';
-        $password = 'lf9c0g2qky76la6x';
-
-        // Устанавливаем соединение с базой данных
         $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -61,46 +44,37 @@
         $stmt = $pdo->query("SELECT id, name, pdf_link FROM recipes");
         $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (!$recipes) {
-            throw new Exception("Рецепты не найдены");
-        }
-
-        // Создание папки для QR-кодов, если она не существует
         $qrCodeDir = 'qr_codes/';
-        if (!is_dir($qrCodeDir) && !mkdir($qrCodeDir, 0777, true) && !is_dir($qrCodeDir)) {
-            throw new Exception("Не удалось создать директорию для QR-кодов: $qrCodeDir");
+        if (!is_dir($qrCodeDir)) {
+            mkdir($qrCodeDir, 0777, true);
         }
 
-        // Генерация QR-кодов для каждого рецепта
-        $writer = new PngWriter();
         foreach ($recipes as $recipe) {
-            try {
-                $qrCode = QrCode::create($recipe['pdf_link'])
-                    ->setEncoding(new Encoding('UTF-8'))
-                    ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
-                    ->setSize(300)
-                    ->setMargin(10);
 
+                $qrCode = new QrCode(
+                    data: 'Текст для QR-кода',                     // Данные для кодирования
+                    size: 300,                                     // Размер QR-кода
+                    margin: 10,                                    // Отступ
+                    encoding: new Encoding('UTF-8'),               // Кодировка
+
+                    foregroundColor: new Color(0, 0, 0),           // Цвет QR-кода
+                    backgroundColor: new Color(255, 255, 255)      // Цвет фона
+                );
+
+// Используйте PngWriter для генерации изображения
+                $writer = new PngWriter();
                 $result = $writer->write($qrCode);
 
-                $qrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
-                file_put_contents($qrCodePath, $result->getString());
+// Вывод изображения в браузере
+                header('Content-Type: ' . $result->getMimeType());
+                echo $result->getString();
 
-                echo '<div class="qr-code">';
-                echo '<h2>' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '</h2>';
-                echo '<img src="' . htmlspecialchars($qrCodePath, ENT_QUOTES, 'UTF-8') . '" alt="QR-код для ' . htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8') . '">';
-                echo '</div>';
-            } catch (Exception $e) {
-                error_log("Ошибка: " . $e->getMessage());
-                echo "Ошибка: " . $e->getMessage();
-            }
         }
 
         echo "QR-коды успешно созданы и сохранены.";
-
     } catch (PDOException $e) {
-        error_log("Ошибка PDO: " . $e->getMessage());
-        echo "Ошибка соединения с базой данных";
+        error_log("Ошибка соединения с БД: " . $e->getMessage());
+        echo "Ошибка соединения с базой данных.";
     } catch (Exception $e) {
         error_log("Ошибка: " . $e->getMessage());
         echo "Ошибка: " . $e->getMessage();

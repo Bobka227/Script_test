@@ -1,1 +1,14 @@
 [25-Oct-2024 23:09:58 UTC] Ошибка: Проверьте переменные окружения.
+[26-Oct-2024 00:31:52 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Endroid\QrCode\Builder\Builder::create() in /Users/shabossova/PhpstormProjects/Script_test/public/pages/TestHtml.php:73
+Stack trace:
+#0 {main}
+  thrown in /Users/shabossova/PhpstormProjects/Script_test/public/pages/TestHtml.php on line 73
+[26-Oct-2024 00:35:38 UTC] Ошибка PDO: SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for HOST_PLACEHOLDER failed: nodename nor servname provided, or not known
+[26-Oct-2024 00:35:58 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Endroid\QrCode\QrCode::setEncoding() in /Users/shabossova/PhpstormProjects/Script_test/public/pages/TestHtml.php:82
+Stack trace:
+#0 {main}
+  thrown in /Users/shabossova/PhpstormProjects/Script_test/public/pages/TestHtml.php on line 82
+[26-Oct-2024 00:38:22 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Endroid\QrCode\Builder\Builder::data() in /Users/shabossova/PhpstormProjects/Script_test/public/pages/TestHtml.php:85
+Stack trace:
+#0 {main}
+  thrown in /Users/shabossova/PhpstormProjects/Script_test/public/pages/TestHtml.php on line 85
