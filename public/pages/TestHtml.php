@@ -45,10 +45,10 @@
 
     try {
         // Данные конфигурации для подключения к базе данных
-        $host = 'HOST_PLACEHOLDER';
-        $dbname = 'DBNAME_PLACEHOLDER';
-        $username = 'USERNAME_PLACEHOLDER';
-        $password = 'PASSWORD_PLACEHOLDER';
+        $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
+        $dbname = 'hoc3ablulex394pb';
+        $username = 'emk2ggh76qbpq4ml';
+        $password = 'lf9c0g2qky76la6x';
 
         // Устанавливаем соединение с базой данных
         $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
