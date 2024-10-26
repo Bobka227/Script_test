@@ -3,6 +3,7 @@
     "php": "^8.3",
     "ext-pdo": "*",
     "ext-mysqli": "*",
+    "ext-gd": "*",
     "endroid/qr-code": "^6.0"
   }
 }
