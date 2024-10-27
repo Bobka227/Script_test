@@ -135,6 +135,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     let activeButton = null;
     let foodMood = {};
     const moods = [];
+    const itemsPerPage = 3; // Количество элементов на странице
 
     async function loadFoodMoodData() {
         try {
@@ -145,7 +146,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 // Инициализация массива настроений
                 Object.keys(foodMood).forEach(key => moods.push(key));
-                displayFoodMood(currentMood); // Отображаем начальное состояние
+                displayFoodMood(currentMood, 0); // Отображаем начальное состояние
             } else {
                 console.error("Ошибка загрузки данных:", response.statusText);
             }
@@ -154,14 +155,18 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    function displayFoodMood(page) {
+    function displayFoodMood(page, pageIndex) {
         if (!foodListContainer || !foodMood[page]) {
             console.error("Данные для отображения отсутствуют или контейнер не найден");
             return;
         }
 
         foodListContainer.innerHTML = '';
-        foodMood[page].forEach(item => {
+        const start = pageIndex * itemsPerPage;
+        const end = start + itemsPerPage;
+        const itemsToDisplay = foodMood[page].slice(start, end); // Получаем только элементы для текущей страницы
+
+        itemsToDisplay.forEach(item => {
             const listItemHTML = `
                 <li class="foodList-li">
                     <h3 class="foodList-li-title">${item.title}</h3>
@@ -172,6 +177,24 @@ document.addEventListener("DOMContentLoaded", async function () {
             `;
             foodListContainer.insertAdjacentHTML('beforeend', listItemHTML);
         });
+
+        updatePaginationControls(page, pageIndex); // Обновляем управление пагинацией
+    }
+
+    function updatePaginationControls(page, pageIndex) {
+        const totalItems = foodMood[page].length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        // Скрыть или показать кнопки в зависимости от текущей страницы
+        const skipLeftButton = document.getElementById('skip-left');
+        const skipRightButton = document.getElementById('skip-right');
+
+        if (skipLeftButton) {
+            skipLeftButton.style.display = pageIndex === 0 ? 'none' : 'block'; // Скрыть кнопку "влево", если первая страница
+        }
+        if (skipRightButton) {
+            skipRightButton.style.display = pageIndex === totalPages - 1 ? 'none' : 'block'; // Скрыть кнопку "вправо", если последняя страница
+        }
     }
 
     emotionButtons.forEach((button, index) => {
@@ -184,7 +207,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             currentMood = moods[index];
             currentMoodIndex = index;
-            displayFoodMood(currentMood);
+            displayFoodMood(currentMood, 0); // Сбросить на первую страницу
         });
     });
 
@@ -196,7 +219,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             // Двигаем индекс влево циклично
             currentMoodIndex = (currentMoodIndex - 1 + moods.length) % moods.length;
             currentMood = moods[currentMoodIndex];
-            displayFoodMood(currentMood);
+            displayFoodMood(currentMood, 0); // Сброс на первую страницу
         });
     }
 
@@ -205,7 +228,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             // Двигаем индекс вправо циклично
             currentMoodIndex = (currentMoodIndex + 1) % moods.length;
             currentMood = moods[currentMoodIndex];
-            displayFoodMood(currentMood);
+            displayFoodMood(currentMood, 0); // Сброс на первую страницу
         });
     }
 
@@ -216,7 +239,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         calculateBtn.addEventListener('click', () => {
             currentMood = 'first';
             currentMoodIndex = moods.indexOf(currentMood);
-            displayFoodMood(currentMood);
+            displayFoodMood(currentMood, 0); // Сброс на первую страницу
             foodMoodListSection?.classList.remove('d-none');
             document.getElementById('emotionCalculator')?.classList.add('d-none');
         });
@@ -232,4 +255,3 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Загрузка данных при загрузке страницы
     await loadFoodMoodData();
 });
-
