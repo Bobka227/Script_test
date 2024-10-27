@@ -126,7 +126,7 @@
 // });
 
 
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData() {
     const foodListContainer = document.getElementById('foodList-container');
     const foodMoodListSection = document.getElementById('foodMoodList');
     const emotionButtons = document.querySelectorAll('.emotion-item');
@@ -143,7 +143,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             if (response.ok) {
                 foodMood = await response.json();
                 console.log(foodMood);
-
                 // Инициализация массива настроений
                 Object.keys(foodMood).forEach(key => moods.push(key));
                 displayFoodMood(currentMood, 0); // Отображаем начальное состояние
@@ -160,7 +159,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             console.error("Данные для отображения отсутствуют или контейнер не найден");
             return;
         }
-
         foodListContainer.innerHTML = '';
         const start = pageIndex * itemsPerPage;
         const end = start + itemsPerPage;
@@ -184,28 +182,30 @@ document.addEventListener("DOMContentLoaded", async function () {
     function updatePaginationControls(page, pageIndex) {
         const totalItems = foodMood[page].length;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
-
         const skipLeftButton = document.getElementById('skip-left');
         const skipRightButton = document.getElementById('skip-right');
+
+        if (!skipLeftButton || !skipRightButton) return;
 
         // Скрыть или показать кнопки в зависимости от текущей страницы
         skipLeftButton.style.display = pageIndex === 0 ? 'none' : 'block';
         skipRightButton.style.display = pageIndex === totalPages - 1 ? 'none' : 'block';
     }
 
-    emotionButtons.forEach((button, index) => {
-        button.addEventListener('click', function () {
-            if (activeButton && activeButton !== button) {
-                activeButton.classList.remove('active');
-            }
-            button.classList.toggle('active');
-            activeButton = button.classList.contains('active') ? button : null;
-
-            currentMood = moods[index];
-            currentMoodIndex = index;
-            displayFoodMood(currentMood, 0); // Сброс на первую страницу
+    if (emotionButtons) {
+        emotionButtons.forEach((button, index) => {
+            button.addEventListener('click', function () {
+                if (activeButton && activeButton !== button) {
+                    activeButton.classList.remove('active');
+                }
+                button.classList.toggle('active');
+                activeButton = button.classList.contains('active') ? button : null;
+                currentMood = moods[index];
+                currentMoodIndex = index;
+                displayFoodMood(currentMood, 0); // Сброс на первую страницу
+            });
         });
-    });
+    }
 
     const skipLeftButton = document.getElementById('skip-left');
     const skipRightButton = document.getElementById('skip-right');
@@ -249,3 +249,5 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Загрузка данных при загрузке страницы
     await loadFoodMoodData();
 });
+
+// Вызов функции загрузки данн
