@@ -185,16 +185,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         const totalItems = foodMood[page].length;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-        // Скрыть или показать кнопки в зависимости от текущей страницы
         const skipLeftButton = document.getElementById('skip-left');
         const skipRightButton = document.getElementById('skip-right');
 
-        if (skipLeftButton) {
-            skipLeftButton.style.display = pageIndex === 0 ? 'none' : 'block'; // Скрыть кнопку "влево", если первая страница
-        }
-        if (skipRightButton) {
-            skipRightButton.style.display = pageIndex === totalPages - 1 ? 'none' : 'block'; // Скрыть кнопку "вправо", если последняя страница
-        }
+        // Скрыть или показать кнопки в зависимости от текущей страницы
+        skipLeftButton.style.display = pageIndex === 0 ? 'none' : 'block';
+        skipRightButton.style.display = pageIndex === totalPages - 1 ? 'none' : 'block';
     }
 
     emotionButtons.forEach((button, index) => {
@@ -207,7 +203,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             currentMood = moods[index];
             currentMoodIndex = index;
-            displayFoodMood(currentMood, 0); // Сбросить на первую страницу
+            displayFoodMood(currentMood, 0); // Сброс на первую страницу
         });
     });
 
@@ -216,7 +212,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (skipLeftButton) {
         skipLeftButton.addEventListener('click', () => {
-            // Двигаем индекс влево циклично
             currentMoodIndex = (currentMoodIndex - 1 + moods.length) % moods.length;
             currentMood = moods[currentMoodIndex];
             displayFoodMood(currentMood, 0); // Сброс на первую страницу
@@ -225,7 +220,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (skipRightButton) {
         skipRightButton.addEventListener('click', () => {
-            // Двигаем индекс вправо циклично
             currentMoodIndex = (currentMoodIndex + 1) % moods.length;
             currentMood = moods[currentMoodIndex];
             displayFoodMood(currentMood, 0); // Сброс на первую страницу
