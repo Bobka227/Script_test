@@ -137,6 +137,10 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
     const itemsPerPage = 3;
 
     async function loadFoodMoodData(mood = 'first') {
+        if (!moods.includes(mood)) {
+            console.error("Неверное настроение:", mood);
+            return;
+        }
         try {
             const response = await fetch(`/../getFoodMood.php?emotion=${mood}`);
             console.log("Запрашиваемое настроение:", mood);
