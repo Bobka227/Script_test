@@ -10,30 +10,33 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // SQL-запрос для получения данных рецептов и эмоций
-    $stmt = $pdo->query("
+    $emotionId = isset($_GET['emotion_id']) ? (int)$_GET['emotion_id'] : 0;
+
+    // SQL-запрос для получения данных рецептов, фильтрованных по emotion_id
+    $query = "
         SELECT recipes.name AS title, recipes.image AS img, recipe_emotion.emotion_id 
         FROM recipes 
         JOIN recipe_emotion ON recipes.id = recipe_emotion.recipe_id
-    ");
+    ";
+
+    if ($emotionId > 0) {
+        $query .= " WHERE recipe_emotion.emotion_id = :emotionId";
+    }
+
+    $stmt = $pdo->prepare($query);
+
+    if ($emotionId > 0) {
+        $stmt->bindParam(':emotionId', $emotionId, PDO::PARAM_INT);
+    }
+
+    $stmt->execute();
     $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Формируем структуру данных для JSON
-    $foodMoodData = [
-        'first' => [],
-        'left' => [],
-        'right' => []
-    ];
+    $foodMoodData = [];
 
     foreach ($recipes as $row) {
-        $mood = match ($row['emotion_id']) {
-            1 => 'first',
-            2 => 'left',
-            3 => 'right',
-            default => 'first'
-        };
-
-        $foodMoodData[$mood][] = [
+        $foodMoodData[] = [
             'title' => $row['title'],
             'img' => $row['img']
         ];
@@ -43,3 +46,4 @@ try {
 } catch (PDOException $e) {
     echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
 }
+?>

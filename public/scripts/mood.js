@@ -133,35 +133,33 @@ document.addEventListener("DOMContentLoaded", async function () {
     let currentMood = 'first';
     let currentMoodIndex = 0;
     let activeButton = null;
-    let foodMood = {};
-    const moods = [];
+    const moods = ['first', 'left', 'right']; // Атрибуты для слайдера с рецептами
 
-    async function loadFoodMoodData() {
+    async function loadFoodMoodData(emotionId) {
         try {
-            const response = await fetch('/../getFoodMood.php');
+            const response = await fetch(`/getFoodMood.php?emotion_id=${emotionId}`);
             if (response.ok) {
-                foodMood = await response.json();
-                console.log(foodMood);
-
-                // Инициализация массива настроений
-                Object.keys(foodMood).forEach(key => moods.push(key));
-                displayFoodMood(currentMood); // Отображаем начальное состояние
+                const data = await response.json();
+                console.log(data);
+                return data;
             } else {
                 console.error("Ошибка загрузки данных:", response.statusText);
+                return [];
             }
         } catch (error) {
             console.error("Ошибка:", error);
+            return [];
         }
     }
 
-    function displayFoodMood(page) {
-        if (!foodListContainer || !foodMood[page]) {
+    function displayFoodMood(foodData) {
+        if (!foodListContainer || !foodData) {
             console.error("Данные для отображения отсутствуют или контейнер не найден");
             return;
         }
 
         foodListContainer.innerHTML = '';
-        foodMood[page].forEach(item => {
+        foodData.forEach(item => {
             const listItemHTML = `
                 <li class="foodList-li">
                     <h3 class="foodList-li-title">${item.title}</h3>
@@ -175,7 +173,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     emotionButtons.forEach((button, index) => {
-        button.addEventListener('click', function () {
+        button.addEventListener('click', async function () {
             if (activeButton && activeButton !== button) {
                 activeButton.classList.remove('active');
             }
@@ -184,7 +182,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             currentMood = moods[index];
             currentMoodIndex = index;
-            displayFoodMood(currentMood);
+            const foodData = await loadFoodMoodData(index + 1); // Передача emotion_id в запрос (index + 1, предположим что эмоции 1, 2, 3)
+            displayFoodMood(foodData);
         });
     });
 
@@ -192,20 +191,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     const skipRightButton = document.getElementById('skip-right');
 
     if (skipLeftButton) {
-        skipLeftButton.addEventListener('click', () => {
+        skipLeftButton.addEventListener('click', async () => {
             // Двигаем индекс влево циклично
             currentMoodIndex = (currentMoodIndex - 1 + moods.length) % moods.length;
             currentMood = moods[currentMoodIndex];
-            displayFoodMood(currentMood);
+            const foodData = await loadFoodMoodData(currentMoodIndex + 1); // Index сделаем +1 для получения правильного emotion_id
+            displayFoodMood(foodData);
         });
     }
 
     if (skipRightButton) {
-        skipRightButton.addEventListener('click', () => {
+        skipRightButton.addEventListener('click', async () => {
             // Двигаем индекс вправо циклично
             currentMoodIndex = (currentMoodIndex + 1) % moods.length;
             currentMood = moods[currentMoodIndex];
-            displayFoodMood(currentMood);
+            const foodData = await loadFoodMoodData(currentMoodIndex + 1); // Index сделаем +1 для получения правильного emotion_id
+            displayFoodMood(foodData);
         });
     }
 
@@ -213,10 +214,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     const backToEmotionList = document.getElementById('backToEmotionList');
 
     if (calculateBtn) {
-        calculateBtn.addEventListener('click', () => {
+        calculateBtn.addEventListener('click', async () => {
             currentMood = 'first';
             currentMoodIndex = moods.indexOf(currentMood);
-            displayFoodMood(currentMood);
+            const foodData = await loadFoodMoodData(currentMoodIndex + 1);
+            displayFoodMood(foodData);
             foodMoodListSection?.classList.remove('d-none');
             document.getElementById('emotionCalculator')?.classList.add('d-none');
         });
@@ -230,5 +232,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // Загрузка данных при загрузке страницы
-    await loadFoodMoodData();
+    const initialFoodData = await loadFoodMoodData(currentMoodIndex + 1);
+    displayFoodMood(initialFoodData);
 });
