@@ -190,8 +190,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const skipLeftButton = document.getElementById('skip-left');
     const skipRightButton = document.getElementById('skip-right');
-    const calculateBtn = document.getElementById('calculateBtn');
-    const backToEmotionList = document.getElementById('backToEmotionList');
 
     if (skipLeftButton) {
         skipLeftButton.addEventListener('click', () => {
@@ -210,6 +208,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             displayFoodMood(currentMood);
         });
     }
+
+    const calculateBtn = document.getElementById('calculateBtn');
+    const backToEmotionList = document.getElementById('backToEmotionList');
 
     if (calculateBtn) {
         calculateBtn.addEventListener('click', () => {

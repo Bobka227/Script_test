@@ -25,14 +25,15 @@ try {
         'right' => []
     ];
 
-    foreach ($recipes as $row) {
-        $mood = match ($row['emotion_id']) {
-            1 => 'first',
-            2 => 'left',
-            3 => 'right',
-            default => 'first'
-        };
+    $moodMapping = [
+        1 => 'first',
+        2 => 'left',
+        3 => 'right',
+        // Добавьте дополнительные эмоции по мере необходимости
+    ];
 
+    foreach ($recipes as $row) {
+        $mood = $moodMapping[$row['emotion_id']] ?? 'first'; // Используйте 'first' по умолчанию
         $foodMoodData[$mood][] = [
             'title' => $row['title'],
             'img' => $row['img']
