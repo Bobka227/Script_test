@@ -18,6 +18,8 @@ try {
     ");
     $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    file_put_contents('debug_log.txt', print_r($recipes, true));
+
     // Формируем структуру данных для JSON
     $foodMoodData = [
         'first' => [],
@@ -26,8 +28,8 @@ try {
     ];
 
     $moodMapping = [
-        1 => 'first',
-        2 => 'left',
+        1 => 'sad',
+        2 => 'happy',
         3 => 'right',
         // Добавьте дополнительные эмоции по мере необходимости
     ];
