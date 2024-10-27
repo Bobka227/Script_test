@@ -126,55 +126,47 @@
 // });
 
 
-document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData() {
+document.addEventListener("DOMContentLoaded", async function () {
     const foodListContainer = document.getElementById('foodList-container');
     const foodMoodListSection = document.getElementById('foodMoodList');
     const emotionButtons = document.querySelectorAll('.emotion-item');
+    const moods = ['first', 'sad', 'happy']; // Define available moods here
     let currentMood = 'first';
     let currentMoodIndex = 0;
     let activeButton = null;
-    const moods = [];
     const itemsPerPage = 3;
 
+    // Load food mood data based on the selected mood
     async function loadFoodMoodData(mood = 'first') {
         if (!moods.includes(mood)) {
-            console.error("Неверное настроение:", mood);
+            console.error("Invalid mood:", mood);
             return;
         }
         try {
             const response = await fetch(`/../getFoodMood.php?emotion=${mood}`);
-            console.log("Запрашиваемое настроение:", mood);
-
             if (response.ok) {
                 const recipes = await response.json();
-                console.log("Полученные рецепты:", recipes);
-
-                if (recipes.error) {
-                    console.error("Ошибка:", recipes.error);
-                } else {
-                    displayFoodMood(recipes, mood, 0);
-                }
+                displayFoodMood(recipes, mood, 0);
             } else {
-                console.error("Ошибка загрузки данных:", response.statusText);
+                console.error("Data loading error:", response.statusText);
             }
         } catch (error) {
-            console.error("Ошибка:", error);
+            console.error("Fetch error:", error);
         }
     }
 
+    // Display the paginated list of recipes based on mood
     function displayFoodMood(recipes, mood, pageIndex) {
-        const recipesContainer = document.getElementById("foodList-container");
-        recipesContainer.innerHTML = '';
+        foodListContainer.innerHTML = '';
 
-        // Пагинация: показываем только `itemsPerPage` рецептов
         const start = pageIndex * itemsPerPage;
         const end = start + itemsPerPage;
         const paginatedRecipes = recipes.slice(start, end);
 
-        if (!paginatedRecipes || paginatedRecipes.length === 0) {
+        if (!paginatedRecipes.length) {
             const noDataMessage = document.createElement("p");
             noDataMessage.textContent = "No recipes available for this mood.";
-            recipesContainer.appendChild(noDataMessage);
+            foodListContainer.appendChild(noDataMessage);
             return;
         }
 
@@ -182,90 +174,72 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
             const recipeElement = document.createElement("div");
             recipeElement.className = "recipe";
             recipeElement.innerHTML = `
-            <h3>${recipe.title}</h3>
-            <img src="${recipe.img}" alt="${recipe.title}">
-        `;
-            recipesContainer.appendChild(recipeElement);
+                <h3>${recipe.title}</h3>
+                <img src="${recipe.img}" alt="${recipe.title}">
+            `;
+            foodListContainer.appendChild(recipeElement);
         });
 
         updatePaginationControls(recipes, pageIndex);
     }
 
-
+    // Set up pagination controls
     function updatePaginationControls(recipes, pageIndex) {
-        const totalItems = recipes.length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const totalPages = Math.ceil(recipes.length / itemsPerPage);
         const skipLeftButton = document.getElementById('skip-left');
         const skipRightButton = document.getElementById('skip-right');
 
-        if (!skipLeftButton || !skipRightButton) return;
-
-        // Навигация с цикличностью
         skipLeftButton.onclick = () => {
-            const newPageIndex = (pageIndex - 1 + totalPages) % totalPages; // Переход к последней странице с первой
+            const newPageIndex = (pageIndex - 1 + totalPages) % totalPages;
             displayFoodMood(recipes, currentMood, newPageIndex);
         };
 
         skipRightButton.onclick = () => {
-            const newPageIndex = (pageIndex + 1) % totalPages; // Переход к первой странице с последней
+            const newPageIndex = (pageIndex + 1) % totalPages;
             displayFoodMood(recipes, currentMood, newPageIndex);
         };
     }
 
-    if (emotionButtons) {
-        emotionButtons.forEach((button, index) => {
-            button.addEventListener('click', function () {
-                if (activeButton && activeButton !== button) {
-                    activeButton.classList.remove('active');
-                }
-                button.classList.toggle('active');
-                activeButton = button.classList.contains('active') ? button : null;
-                currentMood = button.dataset.mood;
-                currentMoodIndex = index;
-                loadFoodMoodData(currentMood);
-            });
-        });
-    }
-
-    const skipLeftButton = document.getElementById('skip-left');
-    const skipRightButton = document.getElementById('skip-right');
-
-    if (skipLeftButton) {
-        skipLeftButton.addEventListener('click', () => {
-            currentMoodIndex = (currentMoodIndex - 1 + moods.length) % moods.length;
-            currentMood = moods[currentMoodIndex];
+    // Set up mood buttons to load data on selection
+    emotionButtons.forEach((button, index) => {
+        button.addEventListener('click', function () {
+            if (activeButton && activeButton !== button) {
+                activeButton.classList.remove('active');
+            }
+            button.classList.toggle('active');
+            activeButton = button.classList.contains('active') ? button : null;
+            currentMood = button.dataset.mood;
+            currentMoodIndex = index;
             loadFoodMoodData(currentMood);
         });
-    }
+    });
 
-    if (skipRightButton) {
-        skipRightButton.addEventListener('click', () => {
-            currentMoodIndex = (currentMoodIndex + 1) % moods.length;
-            currentMood = moods[currentMoodIndex];
-            loadFoodMoodData(currentMood);
-        });
-    }
+    // Set up page skip buttons for navigating moods
+    document.getElementById('skip-left')?.addEventListener('click', () => {
+        currentMoodIndex = (currentMoodIndex - 1 + moods.length) % moods.length;
+        currentMood = moods[currentMoodIndex];
+        loadFoodMoodData(currentMood);
+    });
 
-    const calculateBtn = document.getElementById('calculateBtn');
-    const backToEmotionList = document.getElementById('backToEmotionList');
+    document.getElementById('skip-right')?.addEventListener('click', () => {
+        currentMoodIndex = (currentMoodIndex + 1) % moods.length;
+        currentMood = moods[currentMoodIndex];
+        loadFoodMoodData(currentMood);
+    });
 
-    if (calculateBtn) {
-        calculateBtn.addEventListener('click', () => {
-            currentMood = 'first';
-            currentMoodIndex = moods.indexOf(currentMood);
-            loadFoodMoodData(currentMood);
-            foodMoodListSection?.classList.remove('d-none');
-            document.getElementById('emotionCalculator')?.classList.add('d-none');
-        });
-    }
+    // Calculate button logic
+    document.getElementById('calculateBtn')?.addEventListener('click', () => {
+        loadFoodMoodData(currentMood);
+        foodMoodListSection.classList.remove('d-none');
+        document.getElementById('emotionCalculator')?.classList.add('d-none');
+    });
 
-    if (backToEmotionList) {
-        backToEmotionList.addEventListener('click', () => {
-            foodMoodListSection?.classList.add('d-none');
-            document.getElementById('emotionCalculator')?.classList.remove('d-none');
-        });
-    }
+    // Back button logic
+    document.getElementById('backToEmotionList')?.addEventListener('click', () => {
+        foodMoodListSection.classList.add('d-none');
+        document.getElementById('emotionCalculator')?.classList.remove('d-none');
+    });
 
-    // Загрузка данных при загрузке страницы
-    await loadFoodMoodData();
+    // Initial load
+    await loadFoodMoodData(currentMood);
 });
