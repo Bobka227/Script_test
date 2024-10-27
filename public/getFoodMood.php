@@ -10,40 +10,36 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Получаем emotion_id из параметров запроса
-    $selectedEmotion = $_GET['emotion'] ?? null;
-    $moodMapping = [
-        'sad' => 1,
-        'happy' => 2,
-        'fear' => 3,
-        'disgust' => 4,
-        'inspired' => 5,
-        'merry' => 6,
-        'lost' => 7,
-        'calm' => 8,
-        'angry' => 9,
-        'horny' => 10,
+    // SQL-запрос для получения данных рецептов и эмоций
+    $stmt = $pdo->query("
+        SELECT recipes.name AS title, recipes.image AS img, recipe_emotion.emotion_id 
+        FROM recipes 
+        JOIN recipe_emotion ON recipes.id = recipe_emotion.recipe_id
+    ");
+    $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Формируем структуру данных для JSON
+    $foodMoodData = [
+        'first' => [],
+        'left' => [],
+        'right' => []
     ];
 
-    // Проверяем, существует ли запрошенная эмоция
-    if ($selectedEmotion && isset($moodMapping[$selectedEmotion])) {
-        $emotionId = $moodMapping[$selectedEmotion];
-        file_put_contents('debug_log.txt', "Полученная эмоция: " . ($selectedEmotion ?? 'null') . PHP_EOL, FILE_APPEND);
-        // Запрос только для заданной эмоции
-        $stmt = $pdo->prepare("
-            SELECT recipes.name AS title, recipes.image AS img 
-            FROM recipes 
-            JOIN recipe_emotion ON recipes.id = recipe_emotion.recipe_id
-            WHERE recipe_emotion.emotion_id = :emotion_id
-        ");
-        $stmt->execute(['emotion_id' => $emotionId]);
-        $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($recipes as $row) {
+        $mood = match ($row['emotion_id']) {
+            1 => 'first',
+            2 => 'left',
+            3 => 'right',
+            default => 'first'
+        };
 
-        echo json_encode($recipes);
-    } else {
-        echo json_encode(['error' => 'Invalid emotion']);
+        $foodMoodData[$mood][] = [
+            'title' => $row['title'],
+            'img' => $row['img']
+        ];
     }
+
+    echo json_encode($foodMoodData);
 } catch (PDOException $e) {
     echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
 }
-?>
