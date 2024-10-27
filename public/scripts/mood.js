@@ -156,7 +156,9 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
     }
 
     function displayFoodMood(recipes, page, pageIndex) {
-        const recipesContainer = document.getElementById("recipesContainer");
+
+        const foodMoodList = document.getElementById("foodMoodList");
+        const recipesContainer = document.getElementById("foodList-container");
         recipesContainer.innerHTML = '';
 
         recipes.forEach(recipe => {
