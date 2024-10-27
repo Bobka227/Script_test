@@ -130,6 +130,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const foodListContainer = document.getElementById('foodList-container');
     const foodMoodListSection = document.getElementById('foodMoodList');
     const emotionButtons = document.querySelectorAll('.emotion-item');
+    console.log(emotionButtons);
     let currentMood = 'first';
     let currentMoodIndex = 0;
     let activeButton = null;
@@ -180,9 +181,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             button.classList.toggle('active');
             activeButton = button.classList.contains('active') ? button : null;
 
-            currentMood = moods[index];
-            currentMoodIndex = index;
-            const foodData = await loadFoodMoodData(index + 1); // Передача emotion_id в запрос (index + 1, предположим что эмоции 1, 2, 3)
+            // currentMood = moods[index];
+            // currentMoodIndex = index;
+            const emotionId = button.getAttribute('data-emotian-id');
+            const foodData = await loadFoodMoodData(emotionId); // Передача emotion_id в запрос (index + 1, предположим что эмоции 1, 2, 3)
             displayFoodMood(foodData);
         });
     });
