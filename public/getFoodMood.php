@@ -30,8 +30,14 @@ try {
     $moodMapping = [
         1 => 'sad',
         2 => 'happy',
-        3 => 'right',
-        // Добавьте дополнительные эмоции по мере необходимости
+        3 => 'fear',
+        4 => 'disgust',
+        5 => 'inspired',
+        6 => 'merry',
+        7 => 'lost',
+        8 => 'calm',
+        9 => 'angry',
+        10 => 'horny',
     ];
 
     foreach ($recipes as $row) {
