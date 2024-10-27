@@ -140,8 +140,11 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
         try {
             const response = await fetch(`/../getFoodMood.php?emotion=${mood}`);
             console.log("Запрашиваемое настроение:", mood);
+
             if (response.ok) {
                 const recipes = await response.json();
+                console.log("Полученные рецепты:", recipes);
+
                 if (recipes.error) {
                     console.error("Ошибка:", recipes.error);
                 } else {
@@ -155,24 +158,35 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
         }
     }
 
-    function displayFoodMood(recipes, page, pageIndex) {
-
-        const foodMoodList = document.getElementById("foodMoodList");
+    function displayFoodMood(recipes, mood, pageIndex) {
         const recipesContainer = document.getElementById("foodList-container");
         recipesContainer.innerHTML = '';
 
-        recipes.forEach(recipe => {
+        // Пагинация: показываем только `itemsPerPage` рецептов
+        const start = pageIndex * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedRecipes = recipes.slice(start, end);
+
+        if (!paginatedRecipes || paginatedRecipes.length === 0) {
+            const noDataMessage = document.createElement("p");
+            noDataMessage.textContent = "No recipes available for this mood.";
+            recipesContainer.appendChild(noDataMessage);
+            return;
+        }
+
+        paginatedRecipes.forEach(recipe => {
             const recipeElement = document.createElement("div");
             recipeElement.className = "recipe";
             recipeElement.innerHTML = `
-                <h3>${recipe.title}</h3>
-                <img src="${recipe.img}" alt="${recipe.title}">
-            `;
+            <h3>${recipe.title}</h3>
+            <img src="${recipe.img}" alt="${recipe.title}">
+        `;
             recipesContainer.appendChild(recipeElement);
         });
 
         updatePaginationControls(recipes, pageIndex);
     }
+
 
     function updatePaginationControls(recipes, pageIndex) {
         const totalItems = recipes.length;
@@ -182,8 +196,16 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
 
         if (!skipLeftButton || !skipRightButton) return;
 
-        skipLeftButton.style.display = pageIndex === 0 ? 'none' : 'block';
-        skipRightButton.style.display = pageIndex === totalPages - 1 ? 'none' : 'block';
+        // Навигация с цикличностью
+        skipLeftButton.onclick = () => {
+            const newPageIndex = (pageIndex - 1 + totalPages) % totalPages; // Переход к последней странице с первой
+            displayFoodMood(recipes, currentMood, newPageIndex);
+        };
+
+        skipRightButton.onclick = () => {
+            const newPageIndex = (pageIndex + 1) % totalPages; // Переход к первой странице с последней
+            displayFoodMood(recipes, currentMood, newPageIndex);
+        };
     }
 
     if (emotionButtons) {
