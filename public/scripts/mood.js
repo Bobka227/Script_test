@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    // Display the paginated list of recipes based on mood
+    // Display the list of recipes for the selected mood
     function displayFoodMood(recipes, mood, pageIndex) {
         foodListContainer.innerHTML = '';
 
@@ -179,25 +179,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             `;
             foodListContainer.appendChild(recipeElement);
         });
-
-        updatePaginationControls(recipes, pageIndex);
-    }
-
-    // Set up pagination controls
-    function updatePaginationControls(recipes, pageIndex) {
-        const totalPages = Math.ceil(recipes.length / itemsPerPage);
-        const skipLeftButton = document.getElementById('skip-left');
-        const skipRightButton = document.getElementById('skip-right');
-
-        skipLeftButton.onclick = () => {
-            const newPageIndex = (pageIndex - 1 + totalPages) % totalPages;
-            displayFoodMood(recipes, currentMood, newPageIndex);
-        };
-
-        skipRightButton.onclick = () => {
-            const newPageIndex = (pageIndex + 1) % totalPages;
-            displayFoodMood(recipes, currentMood, newPageIndex);
-        };
     }
 
     // Set up mood buttons to load data on selection
@@ -212,19 +193,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             currentMoodIndex = index;
             loadFoodMoodData(currentMood);
         });
-    });
-
-    // Set up page skip buttons for navigating moods
-    document.getElementById('skip-left')?.addEventListener('click', () => {
-        currentMoodIndex = (currentMoodIndex - 1 + moods.length) % moods.length;
-        currentMood = moods[currentMoodIndex];
-        loadFoodMoodData(currentMood);
-    });
-
-    document.getElementById('skip-right')?.addEventListener('click', () => {
-        currentMoodIndex = (currentMoodIndex + 1) % moods.length;
-        currentMood = moods[currentMoodIndex];
-        loadFoodMoodData(currentMood);
     });
 
     // Calculate button logic
