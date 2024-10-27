@@ -171,11 +171,11 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
             recipesContainer.appendChild(recipeElement);
         });
 
-        updatePaginationControls(page, pageIndex);
+        updatePaginationControls(recipes, pageIndex);
     }
 
-    function updatePaginationControls(page, pageIndex) {
-        const totalItems = foodMood[page] ? foodMood[page].length : 0;
+    function updatePaginationControls(recipes, pageIndex) {
+        const totalItems = recipes.length;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
         const skipLeftButton = document.getElementById('skip-left');
         const skipRightButton = document.getElementById('skip-right');
