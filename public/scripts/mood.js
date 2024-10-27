@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
             const response = await fetch('/../getFoodMood.php');
             if (response.ok) {
                 foodMood = await response.json();
-                console.log(foodMood);
+                console.log("Food Mood Data:", foodMood); // Логирование данных
                 // Инициализация массива настроений
                 Object.keys(foodMood).forEach(key => moods.push(key));
                 displayFoodMood(currentMood, 0); // Отображаем начальное состояние
@@ -165,6 +165,7 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
         const itemsToDisplay = foodMood[page].slice(start, end); // Получаем только элементы для текущей страницы
 
         itemsToDisplay.forEach(item => {
+            console.log("Displaying item:", item); // Логирование элемента
             const listItemHTML = `
                 <li class="foodList-li">
                     <h3 class="foodList-li-title">${item.title}</h3>
@@ -176,20 +177,18 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
             foodListContainer.insertAdjacentHTML('beforeend', listItemHTML);
         });
 
-        updatePaginationControls(page, pageIndex); // Обновляем управление пагинацией
-    }
+        function updatePaginationControls(page, pageIndex) {
+            const totalItems = foodMood[page].length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const skipLeftButton = document.getElementById('skip-left');
+            const skipRightButton = document.getElementById('skip-right');
 
-    function updatePaginationControls(page, pageIndex) {
-        const totalItems = foodMood[page].length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        const skipLeftButton = document.getElementById('skip-left');
-        const skipRightButton = document.getElementById('skip-right');
+            if (!skipLeftButton || !skipRightButton) return;
 
-        if (!skipLeftButton || !skipRightButton) return;
-
-        // Скрыть или показать кнопки в зависимости от текущей страницы
-        skipLeftButton.style.display = pageIndex === 0 ? 'none' : 'block';
-        skipRightButton.style.display = pageIndex === totalPages - 1 ? 'none' : 'block';
+            // Скрыть или показать кнопки в зависимости от текущей страницы
+            skipLeftButton.style.display = pageIndex === 0 ? 'none' : 'block';
+            skipRightButton.style.display = pageIndex === totalPages - 1 ? 'none' : 'block';
+        }
     }
 
     if (emotionButtons) {
