@@ -28,7 +28,7 @@ try {
     // Проверяем, существует ли запрошенная эмоция
     if ($selectedEmotion && isset($moodMapping[$selectedEmotion])) {
         $emotionId = $moodMapping[$selectedEmotion];
-
+        file_put_contents('debug_log.txt', "Полученная эмоция: " . ($selectedEmotion ?? 'null') . PHP_EOL, FILE_APPEND);
         // Запрос только для заданной эмоции
         $stmt = $pdo->prepare("
             SELECT recipes.name AS title, recipes.image AS img 

@@ -138,7 +138,8 @@ document.addEventListener("DOMContentLoaded", async function fetchFoodMoodData()
 
     async function loadFoodMoodData(mood = 'first') {
         try {
-            const response = await fetch(`/../getFoodMood.php?emotion=${mood}`);
+            const response = await fetch(`/../getFoodMood.php?emotion=${mood}`);ё
+            console.log("Запрашиваемое настроение:", mood);
             if (response.ok) {
                 const recipes = await response.json();
                 if (recipes.error) {
