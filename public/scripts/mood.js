@@ -247,7 +247,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async function loadFoodMoodData(emotionId) {
         try {
-            const response = await fetch(`/getFoodMood.php?emotion_id=${emotionId}`);
+            const response = await fetch(`./getFoodMood.php?emotion_id=${emotionId}`);
             if (response.ok) {
                 const data = await response.json();
                 return data;
