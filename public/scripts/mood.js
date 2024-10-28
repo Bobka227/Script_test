@@ -302,4 +302,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         foodMoodListSection.classList.add('d-none');
         document.getElementById('emotionCalculator').classList.remove('d-none');
     });
+
+
 });
