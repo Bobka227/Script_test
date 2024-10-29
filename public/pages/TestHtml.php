@@ -50,14 +50,27 @@
         }
 
         foreach ($recipes as $recipe) {
+            // Проверяем, есть ли уже QR-код
+            $existingQrCodePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
+
+            // Если QR-код уже существует, проверяем, нужно ли его обновлять
+            if (file_exists($existingQrCodePath)) {
+                $currentPdfLink = $recipe['pdf_link'];
+
+                // Если PDF-ссылка уже обновлена, просто пропустите создание QR-кода
+                if ($currentPdfLink === $recipe['pdf_link']) {
+                    continue; // Пропускаем дальнейшие действия для этого рецепта
+                }
+            }
+
             // Создаем QR-код для каждого рецепта
             $qrCode = new QrCode(
-                data: $recipe['pdf_link'],                    // Данные для кодирования, например, PDF-ссылка
-                encoding: new Encoding('UTF-8'),                                     // Размер QR-кода
-                size: 300,                                    // Отступ
-                margin: 10,               // Кодировка
-                foregroundColor: new Color(0, 0, 0),           // Цвет QR-кода
-                backgroundColor: new Color(255, 255, 255)      // Цвет фона
+                data: $recipe['pdf_link'],
+                encoding: new Encoding('UTF-8'),
+                size: 300,
+                margin: 10,
+                foregroundColor: new Color(0, 0, 0),
+                backgroundColor: new Color(255, 255, 255)
             );
 
             // Используем PngWriter для генерации изображения
@@ -65,13 +78,18 @@
             $result = $writer->write($qrCode);
 
             // Сохраняем QR-код в файл
-            $filePath = $qrCodeDir . 'qr_code_' . $recipe['id'] . '.png';
-            file_put_contents($filePath, $result->getString());
+            file_put_contents($existingQrCodePath, $result->getString());
+
+            // Сохраняем путь QR-кода в базе данных
+            $updateStmt = $pdo->prepare("UPDATE recipes SET qr_code_link = :qrCodeLink WHERE id = :recipeId");
+            $updateStmt->bindParam(':qrCodeLink', $existingQrCodePath);
+            $updateStmt->bindParam(':recipeId', $recipe['id']);
+            $updateStmt->execute();
 
             // Отображаем изображение на странице
             echo "<div class='qr-code'>";
             echo "<h2>{$recipe['name']}</h2>";
-            echo "<img src='$filePath' alt='QR-код для {$recipe['name']}'>";
+            echo "<img src='$existingQrCodePath' alt='QR-код для {$recipe['name']}'>";
             echo "</div>";
         }
 
