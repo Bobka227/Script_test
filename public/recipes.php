@@ -23,7 +23,7 @@ if ($conn->connect_error) {
 $type = isset($_GET['type']) ? $_GET['type'] : '';
 
 // Валидация типа (например, только разрешенные значения)
-$valid_types = ['spicy', 'vegan', 'vegetarian', 'quick', 'no-oven', 'drinks', 'breakfast', 'lunch', 'dinner'];
+$valid_types = ['spicy', 'vegan', 'vegetarian', 'quick', 'no-oven', 'drinks', 'sweet', 'grilled', 'soups', 'Italian', 'Czech', 'Kazakh', 'Ukrainian', 'Asian'];
 if ($type && !in_array($type, $valid_types)) {
     error_log("Неверный тип рецепта: " . $type);
     die("Invalid recipe type");
