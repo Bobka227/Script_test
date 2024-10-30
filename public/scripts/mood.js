@@ -262,6 +262,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     function displayFoodMood(foodData) {
+        console.log(foodData);
         foodListContainer.innerHTML = '';
         foodData.forEach(item => {
             const listItemHTML = `
