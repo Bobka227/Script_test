@@ -1,13 +1,13 @@
 <?php
 header('Content-Type: application/json');
 
-$host = '185.22.67.9';
-$dbname = 'anya';
-$username = 'anya';
-$password = 'anya';
+$host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
+$dbname = 'hoc3ablulex394pb';
+$username = 'emk2ggh76qbpq4ml';
+$password = 'lf9c0g2qky76la6x';
 
 try {
-    $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $username, $password);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $emotionId = isset($_GET['emotion_id']) ? (int)$_GET['emotion_id'] : 0;
