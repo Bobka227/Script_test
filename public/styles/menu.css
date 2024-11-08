@@ -4,7 +4,9 @@
     font-family: "Kantumruy Pro" !important;
 }
 
-
+.navbar-toggler{
+    z-index: 1;
+}
 .offcanvas {
     width: 30vh !important; 
     border-radius: 10px 0 0 10px; 

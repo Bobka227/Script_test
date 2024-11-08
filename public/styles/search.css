@@ -348,3 +348,16 @@ body {
         font-size: 10px;
     }
 }
+
+@media (max-width: 460px) {
+    .filtre-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3 колонки одинаковой ширины */
+        gap: 10px; /* Отступы между элементами */
+
+    }
+
+    .filtre-container > * {
+        width: 100%; 
+    }
+}

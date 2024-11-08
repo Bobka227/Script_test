@@ -1,0 +1,74 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background: url(../images/menu/My_profile.png);
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    min-height: 100vh;
+    color: #333;
+}
+
+
+.profile-container {
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+}
+.avatar-container {
+    margin-bottom: 100px;
+}
+
+.profile-pic {
+    width: 200px;
+    height: 200px;
+    background-color: #ccc; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%; 
+    overflow: hidden;
+
+}
+
+.profile-name {
+    text-align: start;
+    font-weight: bold;
+}
+
+.buttons-changer{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.profile-option {
+    background-color: #e0e0e0;
+    border: none;
+    width: 100%;
+    padding: 15px;
+    margin-top: 35px;
+    border-radius: 16px;
+    text-align: start;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.profile-option:hover {
+    background-color: #d0d0d0;
+}
+.logout-button {
+    display: flex;
+    margin-top: 30px;
+    background-color: #e0e0e0;
+    color: #333;
+    font-weight: bold;
+}
+.logout-button:hover {
+    background-color: #df2020;
+}
