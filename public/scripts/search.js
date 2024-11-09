@@ -566,5 +566,3 @@ document.addEventListener('DOMContentLoaded', async function () {
 	window.addEventListener('resize', updateVisibleCount)
 	updateVisibleCount()
 })
-
-
