@@ -431,27 +431,23 @@ document.addEventListener('DOMContentLoaded', async function () {
 		recipes.forEach(recipe => {
 			const title = recipe.name
 			const description = recipe.pdf_link
-				? `<a href="${recipe.pdf_link}" target="_blank">Recipe link</a>`
+				? `<a href="${recipe.pdf_link}" target="_blank">Ссылка на рецепт</a>`
 				: 'Описание отсутствует'
 			const image = recipe.image || 'placeholder.jpg'
 			const qrCodeLink = recipe.qr_code_link
-				? `data:image/png;base64,${recipe.qr_code_link}`
-				: null
+				? `<img src="data:image/png;base64,${recipe.qr_code_link}" alt="QR-код для ${title}" class="qr-code" style="object-fit: cover; width: 100%; height: 100%;">`
+				: ''
 
 			const recipeCard = `
-                <li class="recipe" data-category="${recipe.type || ''}">
+                <li class="recipe" data-id="${recipe.id}" data-name="${title}">
                     <div class="recipe-card">
                         <div class="recipe-front">
-                            <img src="${image}" alt="${title} image" class="recipe-image">
+                            <img src="${image}" alt="${title} image" class="recipe-image" style="object-fit: cover; width: 100%; height: 100%;">
                             <h3 class="recipe-title">${title}</h3>
                         </div>
                         <div class="recipe-back d-none">
                             <h3 class="recipe-title">${title}</h3>
-                            ${
-															qrCodeLink
-																? `<img src="${qrCodeLink}" alt="QR-код для ${title}" class="qr-code">`
-																: ''
-														}
+                            ${qrCodeLink}
                             <p class="recipe-link">${description}</p>
                         </div>
                     </div>
@@ -474,6 +470,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 				} else {
 					front.classList.add('d-none')
 					back.classList.remove('d-none')
+					// Добавляем в историю после клика на карточку
+					const recipeName = this.dataset.name
+					const recipeImage = this.querySelector('.recipe-image').src
+					addRecipeToHistory(recipeName, recipeImage)
 				}
 			})
 		})
@@ -498,12 +498,12 @@ document.addEventListener('DOMContentLoaded', async function () {
 			.slice(currentIndex, currentIndex + visibleCount)
 			.forEach((item, index) => {
 				historyList.innerHTML += `
-            <li class="history-item">
-                <div class="history-item-image">
-                    <img src="${item.image}" alt="history item" class="history-item-img">
+            <li class="history-item" style="flex: 1; text-align: center; background: rgba(255, 255, 255, 0.8);">
+                <div class="history-item-image" style="object-fit: cover; width: 100%; height: 150px;">
+                    <img src="${item.image}" alt="history item" class="history-item-img" style="object-fit: cover; width: 100%; height: 100%;">
                 </div>
                 <div class="history-item-name">
-                    <p>${item.query}</p>
+                    <p>${item.name}</p>
                 </div>
             </li>
             `
@@ -523,15 +523,15 @@ document.addEventListener('DOMContentLoaded', async function () {
 		localStorage.setItem('searchHistory', JSON.stringify(history))
 	}
 
-	function addSearchQuery(query, imageURL) {
+	function addRecipeToHistory(name, imageURL) {
 		let history = getSearchHistory()
-		const existingIndex = history.findIndex(item => item.query === query)
+		const existingIndex = history.findIndex(item => item.name === name)
 
 		if (existingIndex !== -1) {
 			history.splice(existingIndex, 1)
 		}
 
-		history.unshift({ query, image: imageURL })
+		history.unshift({ name, image: imageURL })
 
 		if (history.length > 20) {
 			history.pop()

@@ -19,8 +19,9 @@ if ($conn->connect_error) {
     error_log("Успешное подключение к базе данных.");
 }
 
-// Получаем тип рецепта из запроса, если он есть
+// Получаем тип рецепта и поисковый запрос из GET-запроса, если они есть
 $type = isset($_GET['type']) ? $_GET['type'] : '';
+$query = isset($_GET['query']) ? $_GET['query'] : '';
 
 // Валидация типа (например, только разрешенные значения)
 $valid_types = ['spicy', 'vegan', 'vegetarian', 'quick', 'no oven', 'drinks', 'sweet', 'grilled', 'soups', 'Italian', 'Czech', 'Kazakh', 'Ukrainian', 'Asian'];
@@ -29,12 +30,30 @@ if ($type && !in_array($type, $valid_types)) {
     die("Invalid recipe type");
 }
 
-// SQL-запрос с фильтрацией по типу рецепта
+// Формируем SQL-запрос с фильтрацией по типу рецепта и текстовому запросу
+$sql_query = "SELECT * FROM recipes WHERE 1=1";
+$params = [];
+$types = '';
+
 if ($type) {
-    $sql = $conn->prepare("SELECT * FROM recipes WHERE type = ?");
-    $sql->bind_param("s", $type);
-} else {
-    $sql = $conn->prepare("SELECT * FROM recipes");
+    $sql_query .= " AND type = ?";
+    $params[] = $type;
+    $types .= 's';
+}
+
+if ($query) {
+    $sql_query .= " AND (name LIKE ? OR name  LIKE ?)";
+    $query_param = '%' . $query . '%';
+    $params[] = $query_param;
+    $params[] = $query_param;
+    $types .= 'ss';
+}
+
+// Подготавливаем SQL-запрос
+$sql = $conn->prepare($sql_query);
+
+if ($params) {
+    $sql->bind_param($types, ...$params);
 }
 
 // Выполняем запрос
@@ -60,3 +79,4 @@ echo json_encode($recipes);
 $sql->close();
 $conn->close();
 ?>
+
