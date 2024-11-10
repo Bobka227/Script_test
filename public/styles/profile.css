@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 body {
-    background: url(../images/menu/My_profile.png);
+    background: url(../images/menu/My_profile.png) fixed;
     position: relative;
     background-repeat: no-repeat;
     background-position: center;
