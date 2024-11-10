@@ -14,9 +14,15 @@
     <link rel="stylesheet" type="text/css" href="../styles/register.css"><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
 
     
-
+    <title>FoodMood</title>
   </head>
   <body>
+    <?php
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+  require __DIR__ . '/../../vendor/autoload.php';
+?>
     <header class="header">
         <nav class="navbar">
             <div class="container-fluid">
