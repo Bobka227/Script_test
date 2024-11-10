@@ -80,8 +80,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         recipes.forEach(recipe => {
 			const title = recipe.name;
 			const description = recipe.pdf_link
-				? `<a href="${recipe.pdf_link}" target="_blank">Ссылка на рецепт</a>`
-				: 'Описание отсутствует';
+				? `<a href="${recipe.pdf_link}" target="_blank">Recipe link</a>`
+				: 'Описание отсутствует'
 			const image = recipe.image || 'placeholder.jpg';
 			const qrCodeLink = recipe.qr_code_link
 				? `<img src="data:image/png;base64,${recipe.qr_code_link}" alt="QR-код для ${title}" class="qr-code" style="object-fit: cover; width: 100%; height: 100%;">`
