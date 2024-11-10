@@ -5,7 +5,7 @@
 }
 
 body {
-    background: url(../images/menu/emotion_background.png);
+    background: url(../images/menu/emotion_background.png) fixed;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
