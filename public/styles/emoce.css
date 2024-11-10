@@ -20,6 +20,7 @@ body {
     align-items: center;
 }
 
+
 /* emotion section */
 .emotion-calculator, .food-mood-list {
     margin-top: 50px;
@@ -85,8 +86,8 @@ body {
     white-space: nowrap;
 }
 
+
 /* food-mood list */
-/* доделать */
 .foodList-ul {
     list-style: none;
     display: flex;
@@ -148,6 +149,13 @@ body {
 .food-list-skip button:hover {
     background-color: aliceblue;
 }
+
+
+/* modal */
+.modal-calculate {
+    padding: 0 !important;
+}
+
 
 /* media */
 @media (max-width: 880px) {
