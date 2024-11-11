@@ -5,7 +5,7 @@
 }
 
 body {
-    background: url(../images/menu/recepts.png);
+    background: url(../images/menu/recepts.png) fixed;
     position: relative;
     background-repeat:no-repeat;
     background-position: center;
@@ -141,6 +141,7 @@ body {
     gap: 20px;
     width: 100%;
     max-width: 1200px;
+    flex-wrap: wrap;    
 }
 
 .recipe {
@@ -355,4 +356,11 @@ body {
     .filtre-container > * {
         width: 100%; 
     }
+}
+@media (max-width: 360px) {
+   .recipes-list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+   }
 }

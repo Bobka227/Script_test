@@ -1,3 +1,7 @@
+
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/menu.css">
     <link rel="stylesheet" href="styles/style.css">
-    <link rel="icon" href="images/logo_browser/Logo_browser.png" type="image/png">
+    <link rel="icon" href="images/logo_browser/logo_browser_2.png" type="image/png">
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -33,11 +37,14 @@
                     </div>
                     <div class="offcanvas-body">
                         <ul class="list-unstyled">
-                            <li><a href="pages/register.html" class="menu-item">Sign In/Sign Up</a></li>
+                            <?php if(isset($_SESSION['username'])): ?>
+                                <li><a href="pages/profile.php" class="menu-item">Profile</a></li>
+                            <?php else: ?>
+                                <li><a href="pages/register.php" class="menu-item">Sign In/Sign Up</a></li>
+                            <?php endif; ?>        
                             <li><a href="pages/search.html" class="menu-item">Food Recipes</a></li>
                             <li><a href="pages/mood.html" class="menu-item">Mood Recipes</a></li>
                             <li><a href="pages/TestHtml.php" class="menu-item">Help</a></li>
-                            <li><a href="pages/profile.html" class="menu-item">Profile</a></li>
                         </ul>
                     </div>
                 </div>
@@ -68,7 +75,7 @@
         </section>
         <section class="promo">
             <h2 class="d-none">Promo Image</h2>
-            <img src="../public/images/menu/salad.png" alt="promo image" class="promo-image">
+            <img src="images/menu/salad.png" alt="promo image" class="promo-image">
         </section>
     </main>
     <footer></footer>

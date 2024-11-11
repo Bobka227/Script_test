@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     btnLogin.addEventListener('click', () => {
-        window.location.href = 'pages/register.html';
+        window.location.href = 'pages/register.php';
     });
 
     window.addEventListener('click', (e) => {
