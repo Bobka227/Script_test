@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
 $dbname = 'hoc3ablulex394pb';
@@ -46,6 +47,14 @@ function registerUser($pdo, $username, $lastname, $email, $phone_number, $gender
             'profile_picture' => $profile_picture
         ]);
         echo "Данные успешно добавлены в базу данных<br>"; // Отладка
+
+        // Установка сессии для нового пользователя
+        $_SESSION['user_id'] = $pdo->lastInsertId(); // ID нового пользователя
+        $_SESSION['username'] = $username;
+
+        // Перенаправление на страницу профиля
+        header("Location: ../pages/profile.php");
+        exit();
     } catch (PDOException $e) {
         echo "Ошибка вставки данных: " . $e->getMessage() . "<br>"; // Отладка
         return "Ошибка при регистрации.";
@@ -68,13 +77,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $gender = $_POST['gender'];
         $login = $_POST['login'];
         $password = $_POST['password'];
-        $profile_picture = $_POST['profile_picture'] ?? null; // Опциональное поле
+        
+        // Обработка изображения профиля (если загружено)
+        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+            $profile_picture = 'uploads/' . basename($_FILES['profile_picture']['name']);
+            move_uploaded_file($_FILES['profile_picture']['tmp_name'], $profile_picture);
+        } else {
+            $profile_picture = null; // Если нет изображения, значение будет null
+        }
 
         // Вызов функции регистрации
         $result = registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture);
         echo $result;
-}else {
+    } else {
         echo "Все поля должны быть заполнены!";
     }
 }
-
+?>

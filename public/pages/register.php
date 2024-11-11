@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (isset($_SESSION['username'])) {
+    // Если пользователь уже авторизован, перенаправляем его на главную страницу или профиль
+    header("Location: profile.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="es" dir="ltr">
   <head>
@@ -17,12 +25,6 @@
     <title>FoodMood</title>
   </head>
   <body>
-    <?php
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-  require __DIR__ . '/../../vendor/autoload.php';
-?>
     <header class="header">
         <nav class="navbar">
             <div class="container-fluid">
@@ -37,7 +39,7 @@
                     </div>
                     <div class="offcanvas-body">
                         <ul class="list-unstyled">
-                            <li><a href="../index.html" class="menu-item">Main Page</a></li>
+                            <li><a href="../index_startPage.php" class="menu-item">Main Page</a></li>
                             <li><a href="register.html" class="menu-item">Sign In/Sign Up</a></li>
                             <li><a href="search.html" class="menu-item">Food Recipes</a></li>
                             <li><a href="mood.html" class="menu-item">Mood Recipes</a></li>
@@ -52,7 +54,7 @@
 
     <div class="main">
       <div class="container a-container" id="a-container">
-        <form class="form" id="a-form" action="../register.php" method="POST">
+        <form class="form" id="a-form" action="../register_script.php" method="POST" enctype="multipart/form-data">
           <h2 class="form_title title">Create Account</h2>
           <input class="form__input" type="text"  name="username"  placeholder="Name" required>
           <input class="form__input" type="text"  name="lastname"  placeholder="Last Name" required>
