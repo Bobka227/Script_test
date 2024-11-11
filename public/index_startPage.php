@@ -1,3 +1,7 @@
+
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,11 +37,14 @@
                     </div>
                     <div class="offcanvas-body">
                         <ul class="list-unstyled">
-                            <li><a href="pages/register.html" class="menu-item">Sign In/Sign Up</a></li>
+                            <?php if(isset($_SESSION['username'])): ?>
+                                <li><a href="pages/profile.php" class="menu-item">Profile</a></li>
+                            <?php else: ?>
+                                <li><a href="pages/register.php" class="menu-item">Sign In/Sign Up</a></li>
+                            <?php endif; ?>        
                             <li><a href="pages/search.html" class="menu-item">Food Recipes</a></li>
                             <li><a href="pages/mood.html" class="menu-item">Mood Recipes</a></li>
                             <li><a href="pages/TestHtml.php" class="menu-item">Help</a></li>
-                            <li><a href="pages/profile.html" class="menu-item">Profile</a></li>
                         </ul>
                     </div>
                 </div>
