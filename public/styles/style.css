@@ -82,15 +82,18 @@ main {
     width: 160px ;
     margin-left: 60px;
     margin-top: 300px;
-    transform: rotate(-110deg)
+    transform: rotate(-110deg);
 }
 
 .promo img {
     max-width: 400%;
     height: auto;
     border-radius: 10px;
+    animation: mymove 5s infinite;
 }
-
+@keyframes mymove {
+    50% {transform: rotate(30deg);}
+  }
 
 @media (max-width: 767px) {
     body{
@@ -138,3 +141,4 @@ main {
         box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
     }
 }
+
