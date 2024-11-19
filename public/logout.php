@@ -3,6 +3,7 @@ session_start();
 session_unset(); 
 session_destroy(); 
 
-header("Location: register.php"); 
+// Возвращаем JSON-ответ
+echo json_encode(['status' => 'success']);
 exit();
 ?>

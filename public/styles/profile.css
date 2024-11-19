@@ -35,6 +35,17 @@ body {
     overflow: hidden;
 
 }
+.profile-pic img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.profile-pic img:hover {
+    opacity: 0.8;
+}
 
 .profile-name {
     text-align: start;
