@@ -15,14 +15,11 @@ try {
 
 function loginUser($pdo, $email, $password): string
 {
-    echo "Функция входа вызвана<br>"; // Отладка
-
     // Проверка на существующего пользователя по email
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
 
     if ($stmt->rowCount() === 0) {
-        echo "Пользователь не найден<br>"; // Отладка
         return "Вход не успешен.";
     }
 
@@ -30,17 +27,18 @@ function loginUser($pdo, $email, $password): string
 
     // Проверка пароля
     if (password_verify($password, $user['password'])) {
-        echo "Пользователь успешно аутентифицирован<br>"; // Отладка
-        return "Вход успешен!";
+        // Установка сессии пользователя
+        $_SESSION['username'] = $user['username']; // Или используйте другое поле для имени пользователя
+
+        // Перенаправление на главную страницу
+        header("Location: /index.php");
+        exit(); // Важно завершить скрипт после перенаправления
     } else {
-        echo "Неправильный пароль<br>"; // Отладка
         return "Вход не успешен.";
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo "POST запрос получен<br>"; // Отладка
-
     // Проверка, что все необходимые поля не пустые
     if (!empty($_POST['email']) && !empty($_POST['password'])) {
         $email = $_POST['email'];
@@ -48,7 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Вызов функции входа
         $result = loginUser($pdo, $email, $password);
-        echo $result;
+
+        if ($result === "Вход не успешен.") {
+            echo $result;
+        }
+        // Если вход успешен, перенаправление уже произошло в функции loginUser
     } else {
         echo "Все поля должны быть заполнены!";
     }
