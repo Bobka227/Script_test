@@ -8,16 +8,16 @@ $password = 'lf9c0g2qky76la6x';
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Подключение к базе данных успешно!<br>"; // Отладка
+    // echo "Подключение к базе данных успешно!<br>"; // Можно удалить отладочный вывод
 } catch (PDOException $e) {
     die("Ошибка подключения к базе данных: " . $e->getMessage());
 }
 
-function loginUser($pdo, $email, $password): string
+function loginUser($pdo, $login, $password): string
 {
-    // Проверка на существующего пользователя по email
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
-    $stmt->execute(['email' => $email]);
+    // Проверка на существующего пользователя по email, имени пользователя или логину
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :login OR username = :login OR login = :login");
+    $stmt->execute(['login' => $login]);
 
     if ($stmt->rowCount() === 0) {
         return "Вход не успешен.";
@@ -28,10 +28,11 @@ function loginUser($pdo, $email, $password): string
     // Проверка пароля
     if (password_verify($password, $user['password'])) {
         // Установка сессии пользователя
-        $_SESSION['username'] = $user['username']; // Или используйте другое поле для имени пользователя
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['login'] = $user['login']; // Добавлено
 
-        // Перенаправление на главную страницу
-        header("Location: /index.php");
+        // Перенаправление на профиль
+        header("Location: /profile.php"); // Измените путь, если необходимо
         exit(); // Важно завершить скрипт после перенаправления
     } else {
         return "Вход не успешен.";
@@ -40,12 +41,12 @@ function loginUser($pdo, $email, $password): string
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Проверка, что все необходимые поля не пустые
-    if (!empty($_POST['email']) && !empty($_POST['password'])) {
-        $email = $_POST['email'];
+    if (!empty($_POST['login']) && !empty($_POST['password'])) {
+        $login = $_POST['login'];
         $password = $_POST['password'];
 
         // Вызов функции входа
-        $result = loginUser($pdo, $email, $password);
+        $result = loginUser($pdo, $login, $password);
 
         if ($result === "Вход не успешен.") {
             echo $result;
@@ -55,5 +56,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Все поля должны быть заполнены!";
     }
 }
-
-
+?>
