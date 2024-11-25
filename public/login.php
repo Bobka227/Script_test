@@ -8,14 +8,13 @@ $password = 'lf9c0g2qky76la6x';
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    // echo "Подключение к базе данных успешно!<br>"; // Можно удалить отладочный вывод
+    // echo "Подключение к базе данных успешно!<br>";
 } catch (PDOException $e) {
     die("Ошибка подключения к базе данных: " . $e->getMessage());
 }
 
 function loginUser($pdo, $login, $password): string
 {
-    // Проверка на существующего пользователя по email, имени пользователя или логину
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :login OR username = :login OR login = :login");
     $stmt->execute(['login' => $login]);
 
@@ -25,15 +24,15 @@ function loginUser($pdo, $login, $password): string
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Проверка пароля
+    
     if (password_verify($password, $user['password'])) {
-        // Установка сессии пользователя
+       
         $_SESSION['username'] = $user['username'];
         $_SESSION['login'] = $user['login']; // Добавлено
 
-        // Перенаправление на профиль
-        header("Location: /profile.php"); // Измените путь, если необходимо
-        exit(); // Важно завершить скрипт после перенаправления
+        
+        header("Location: ../pages/profile.php"); 
+        exit(); 
     } else {
         return "Вход не успешен.";
     }

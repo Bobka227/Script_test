@@ -142,6 +142,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             addSearchQuery(query, imageURL);
         }
     });
+    
 
 	filterButtons.forEach(button => {
         button.addEventListener('click', async function () {
@@ -256,7 +257,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         historyList.innerHTML = '';
 
         history.forEach((item) => {
-            const listItem = document.createElement('li');
+            const listItem = document.createElement('li'); 
             listItem.className = 'history-item';
 
             listItem.innerHTML = `

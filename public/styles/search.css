@@ -155,11 +155,26 @@ body {
     justify-content: space-between;
     cursor: pointer;
     height: 457px;
+    perspective: 1000px;
+    backface-visibility: hidden;
 }
+@keyframes flip {
+    0% {
+        transform: rotateY(0deg); 
+    }
+    100% {
+        transform: rotateY(180deg); 
+    }
+}
+
+
+
 
 .recipe:hover {
     transform: scale(1.05);
+    
 }
+
 
 .recipe img {
     width: 100%;
@@ -183,6 +198,7 @@ body {
 .recipe-back.active {
     display: block;
 }
+
 
 .recipes-ingredients, .recipes-recipe {
     margin: 15px 0;
@@ -284,7 +300,7 @@ body {
     margin-top: 10px;
     font-size: 14px;
     font-weight: bold;
-}
+} 
 
 @media (max-width: 1200px) {
     .slide-history {
