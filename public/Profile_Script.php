@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Проверяем, авторизован ли пользователь
+
 if (!isset($_SESSION['username'])) {
     // Если нет, возвращаем ошибку
     echo json_encode(['status' => 'error', 'message' => 'Пользователь не авторизован']);
