@@ -1,4 +1,41 @@
- 
+<?php
+session_start(); // Инициализация сессии
+
+// Проверяем, авторизован ли пользователь
+if (!isset($_SESSION['login'])) {
+    // Если нет, перенаправляем на страницу входа
+    header("Location: register.php");
+    exit();
+}
+
+// Получаем логин пользователя из сессии
+$current_login = $_SESSION['login'];
+
+// Подключение к базе данных
+$host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
+$dbname = 'hoc3ablulex394pb';
+$db_username = 'emk2ggh76qbpq4ml';
+$db_password = 'lf9c0g2qky76la6x';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $db_username, $db_password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Отладочный вывод удалён
+} catch (PDOException $e) {
+    die("Ошибка подключения к базе данных: " . $e->getMessage());
+}
+
+// Получаем информацию о пользователе из базы данных
+$stmt = $pdo->prepare("SELECT * FROM users WHERE login = :login");
+$stmt->execute(['login' => $current_login]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($user && !empty($user['profile_picture'])) {
+    $avatarPath = '../' . $user['profile_picture'];
+} else {
+    $avatarPath = '../images/default_avatar.png'; // Путь к аватарке по умолчанию
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +45,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="icon" href="../images/logo_browser/logo_browser_2.png" type="image/png">
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="../styles/menu.css" />
   <link rel="stylesheet" href="../styles/profile.css" />
 
@@ -42,54 +78,159 @@
 
   <div class="profile-container">
     <div class="avatar-container">
-      <div class="profile-pic"><img src="#" alt="avatar" class="ava-img"></div>
-      <div class="profile-name" id="profile-name"><?php echo htmlspecialchars($username); ?></div>
+      <div class="profile-pic">
+        <img src="display_avatar.php" alt="avatar" class="ava-img" id="avatarImage" data-bs-toggle="modal" data-bs-target="#avatarModal">
+      </div>
+      <div style="font-size: 50px;" class="profile-name" id="profile-name"><?php echo htmlspecialchars($user['username'] . ' ' . $user['lastname']); ?></div>
     </div>
 
     <div class="buttons-changer">
-      <button class="profile-option">CHANGE PASSWORD</button>
-      <button class="profile-option">CHANGE EMAIL</button>
-      <button class="profile-option">CHANGE PHONE NUMBER</button>
-      <button class="profile-option">CHANGE OWN INFORMATION</button> 
+      <button class="profile-option change-password">CHANGE PASSWORD</button>
+      <button class="profile-option change-email">CHANGE EMAIL</button>
+      <button class="profile-option change-phone">CHANGE PHONE NUMBER</button>
+      <button class="profile-option change-info">CHANGE PERSONAL INFORMATION</button> 
     </div>
 
     <!-- Кнопка выхода -->
-    <button class="btn logout-button"><a href="../logout.php"></a>LOG OUT</button>
+    <button class="btn logout-button" id="logout-button" data-bs-toggle="modal" data-bs-target="#logoutModal">LOG OUT</button>
+  </div>
+
+  <!-- Модальное окно для подтверждения выхода -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Logout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to log out?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" id="confirmLogout" class="btn btn-danger">Log Out</button>
+        </div>
+      </div>
     </div>
+  </div>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.9/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Модальное окно для изменения пароля -->
+  <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="changePasswordForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Password</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="password" name="current_password" placeholder="Current Password" required class="form-control mb-2">
+            <input type="password" name="new_password" placeholder="New Password" required class="form-control mb-2">
+            <input type="password" name="confirm_password" placeholder="Confirm New Password" required class="form-control">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Change Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    $(document).ready(function() {
-      // Загрузка имени пользователя
-      $.ajax({
-        url: 'get_login.php',
-        method: 'GET',
-        dataType: 'json',
-        success: function(response) {
-          $('#profile-name').text(response.login);
-        },
-        error: function() {
-          $('#profile-name').text('Error loading user data');
-        }
-      });
+  <!-- Модальное окно для изменения email -->
+  <div class="modal fade" id="changeEmailModal" tabindex="-1" aria-labelledby="changeEmailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="changeEmailForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Email</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="email" name="new_email" placeholder="New Email" required class="form-control">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Change Email</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
-      // Обработчик клика для выхода из аккаунта
-      $('#logout-button').on('click', function() {
-        $.ajax({
-          url: '../logout.php',
-          method: 'GET',
-          success: function() {
-            window.location.href = 'register.php'; // Перенаправление на страницу входа
-          },
-          error: function() {
-            alert('Error logging out');
-          }
-        });
-      });
-    });
-  </script>
+  <!-- Модальное окно для изменения номера телефона -->
+  <div class="modal fade" id="changePhoneModal" tabindex="-1" aria-labelledby="changePhoneModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="changePhoneForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Phone Number</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="text" name="new_phone" placeholder="New Phone Number" required class="form-control">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Change Phone Number</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно для изменения личной информации -->
+  <div class="modal fade" id="changeInfoModal" tabindex="-1" aria-labelledby="changeInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="changeInfoForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Personal Information</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="text" name="new_username" placeholder="New First Name" required class="form-control mb-2">
+            <input type="text" name="new_lastname" placeholder="New Last Name" required class="form-control mb-2">
+            <select name="new_gender" required class="form-control mb-2">
+              <option value="">Select Gender</option>
+              <option value="male" <?php if ($user['gender'] == 'male') echo 'selected'; ?>>Male</option>
+              <option value="female" <?php if ($user['gender'] == 'female') echo 'selected'; ?>>Female</option>
+            </select>
+            <input type="text" name="new_login" placeholder="New Login" required class="form-control" value="<?php echo htmlspecialchars($user['login']); ?>">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Change Information</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно для загрузки аватара -->
+  <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="avatarForm" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h5 class="modal-title">Upload Avatar</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="file" name="avatar" id="avatarInput" accept="image/*" required class="form-control">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Upload</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Подключение скриптов -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../scripts/profile.js"></script>
 </body>
 </html>
