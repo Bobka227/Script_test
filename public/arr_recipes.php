@@ -1,59 +1,53 @@
 <?php
-// Подключение к базе данных
-include 'db_connection.php';
+header('Content-Type: application/json');
 
 $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
 $dbname = 'hoc3ablulex394pb';
 $username = 'emk2ggh76qbpq4ml';
 $password = 'lf9c0g2qky76la6x';
 
-$conn = new mysqli($host, $username, $password, $dbname);
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$emotion_id = isset($_GET['emotion_id']) ? intval($_GET['emotion_id']) : 0;
+    // Получение параметра emotion_id из запроса
+    $emotion_id = isset($_GET['emotion_id']) ? intval($_GET['emotion_id']) : 0;
 
-if ($emotion_id === 0) {
-    echo json_encode([]);
-    exit;
-}
+    if ($emotion_id > 0) {
+        // Запрос на выборку блюд, связанных с данной эмоцией
+        $stmt = $pdo->prepare("
+            SELECT r.id, r.name, r.time, r.image
+            FROM recipes r
+            JOIN recipe_emotion re ON r.id = re.recipe_id
+            WHERE re.emotion_id = :emotion_id
+        ");
+        $stmt->execute(['emotion_id' => $emotion_id]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// SQL-запрос для получения данных
-$query = "
-    SELECT 
-        time AS meal_type,
-        name AS title,
-        image AS img
-    FROM recipes
-    WHERE emotion_id = $emotion_id
-    ORDER BY meal_type
-";
-
-$result = mysqli_query($conn, $query);
-
-if (!$result) {
-    echo json_encode([]);
-    exit;
-}
-
-// Группировка данных по типам приема пищи
-$menuVariants = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $mealType = $row['meal_type']; // breakfast, lunch, dinner
-    $menuVariants[$mealType][] = [
-        'title' => $row['title'],
-        'img' => $row['img']
+        $groupedData = [];
+foreach ($results as $recipe) {
+    $groupedData[$recipe['time']][] = [
+        'id' => $recipe['id'],
+        'name' => $recipe['name'],
+        'image' => $recipe['image'] // Добавлено поле image
     ];
 }
 
-// Формирование 3 вариантов меню
-$finalData = [];
-for ($i = 0; $i < 3; $i++) {
-    $variant = [
-        'breakfast' => $menuVariants['breakfast'][$i] ?? null,
-        'lunch' => $menuVariants['lunch'][$i] ?? null,
-        'dinner' => $menuVariants['dinner'][$i] ?? null,
-    ];
-    $finalData[] = $variant;
-}
+        // Подготовка трех вариантов меню
+        $variants = [];
+        for ($i = 0; $i < 3; $i++) {
+            $variant = [];
+            foreach (['breakfast', 'lunch', 'dinner'] as $mealTime) {
+                $variant[$mealTime] = $groupedData[$mealTime][$i % count($groupedData[$mealTime])] ?? null;
+            }
+            $variants[] = $variant;
+        }
 
-// Возврат данных в формате JSON
-echo json_encode($finalData);
+        echo json_encode($variants);
+    } else {
+        echo json_encode([]);
+    }
+} catch (PDOException $e) {
+    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+}
+?>

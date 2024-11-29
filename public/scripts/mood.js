@@ -12,12 +12,13 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async function loadFoodMoodData(emotionId) {
         try {
-            const response = await fetch(`../arr_recipes.php?emotion_id=${emotionId}`);
+            const response = await fetch(`/arr_recipes.php?emotion_id=${emotionId}`);
             if (response.ok) {
                 const data = await response.json();
+                console.log("Загруженные данные:", data);
                 return data;
             } else {
-                console.error("Ошибка загрузки данных:", response.statusText);
+                console.error("Ошибка загрузки данных:", response.status, response.statusText);
                 return [];
             }
         } catch (error) {
@@ -30,16 +31,16 @@ document.addEventListener("DOMContentLoaded", async function () {
         foodListContainer.innerHTML = '';
         const currentVariant = foodData[currentVariantIndex];
         if (!currentVariant) return;
-
+    
         const categories = ['breakfast', 'lunch', 'dinner'];
         categories.forEach(category => {
             const meal = currentVariant[category];
             if (meal) {
                 const listItemHTML = `
                     <li class="foodList-li">
-                        <h3 class="food-category">${category.charAt(0).toUpperCase() + category.slice(1)}</h3>
+                        <h3 class="food-category">${category.toUpperCase()}</h3>
                         <div class="foodList-image">
-                            <img src="${meal.img}" alt="${meal.title}">
+                            <img src="${meal.image}" alt="${meal.name}">
                         </div>
                     </li>
                 `;
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         });
     }
+    
 
     emotionButtons.forEach(button => {
         button.addEventListener('click', function () {
@@ -93,4 +95,45 @@ document.addEventListener("DOMContentLoaded", async function () {
         foodMoodListSection.classList.add('d-none');
         document.getElementById('emotionCalculator').classList.remove('d-none');
     });
+
+    // modal 
+
+    const modal = document.getElementById('modal'); 
+    const modalCalculate = document.getElementById('modal-calculate'); 
+    const btnCloseModal = document.getElementById('btnCloseModal'); 
+    const btnEmotion10 = document.getElementById('emotion10'); 
+    const modalCalculateBtn = document.getElementById('btnCloseModalCalculate'); 
+    const btnAge = document.getElementById('btnAge'); 
+
+    function showCalculateModal() { 
+        modalCalculate.classList.remove('modal-none'); 
+        modalCalculate.classList.add('modal-show'); 
+    } 
+
+    btnEmotion10.addEventListener('click', () => { 
+        modal.classList.remove('modal-none'); 
+        modal.classList.add('modal-show'); 
+    }); 
+
+    btnCloseModal.addEventListener('click', () => { 
+        modal.classList.add('modal-none'); 
+        modal.classList.remove('modal-show'); 
+    }); 
+
+    modalCalculateBtn.addEventListener('click', () => { 
+        modalCalculate.classList.remove('modal-show'); 
+        modalCalculate.classList.add('modal-none'); 
+    }); 
+
+    btnAge.addEventListener('click', () => { 
+        modal.classList.add('modal-none'); 
+        modal.classList.remove('modal-show');               // переделать 
+    }); 
+
+    window.addEventListener('click', (e) => { 
+        if (e.target === modal) { 
+            modal.classList.add('modal-none'); 
+            modal.classList.remove('modal-show'); 
+        } 
+    }); 
 });
