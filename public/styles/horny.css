@@ -1,0 +1,28 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: url(../images/horny/p-om-idor.jpg) fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.rajce {
+    max-width: 500px;
+    max-height: 500px;
+}
+
+.volk {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
