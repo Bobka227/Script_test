@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async function loadFoodMoodData(emotionId) {
         try {
-            const response = await fetch(/arr_recipes.php?emotion_id=${emotionId});
+            const response = await fetch(`/arr_recipes.php?emotion_id=${emotionId}`);
             if (response.ok) {
                 const data = await response.json();
                 console.log("Загруженные данные:", data);
