@@ -1,6 +1,8 @@
 <?php
 header('Content-Type: application/json');
+session_start(); // Используем сессии для отслеживания
 
+// Подключение к базе данных
 $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
 $dbname = 'hoc3ablulex394pb';
 $username = 'emk2ggh76qbpq4ml';
@@ -10,51 +12,71 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Получаем emotion_id из GET-запроса
     $emotionId = isset($_GET['emotion_id']) ? (int)$_GET['emotion_id'] : 0;
-    $time = isset($_GET['time']) ? $_GET['time'] : '';
 
-    // SQL query to get recipe data filtered by emotion_id and time
-    $query = "
-        SELECT recipes.name AS title, recipes.image AS img, recipe_emotion.emotion_id, recipes.time 
-        FROM recipes 
-        JOIN recipe_emotion ON recipes.id = recipe_emotion.recipe_id
-    ";
-
-    $conditions = [];
-    if ($emotionId > 0) {
-        $conditions[] = "recipe_emotion.emotion_id = :emotionId";
-    }
-    if (!empty($time)) {
-        $conditions[] = "recipes.time = :time";
+    // Если emotion_id некорректный
+    if ($emotionId <= 0) {
+        echo json_encode(['error' => 'Invalid emotion ID.']);
+        exit;
     }
 
-    if (count($conditions) > 0) {
-        $query .= ' WHERE ' . implode(' AND ', $conditions);
+    // Инициализация данных для текущей эмоции
+    if (!isset($_SESSION['shown_recipes'])) {
+        $_SESSION['shown_recipes'] = [];
     }
-
-    $stmt = $pdo->prepare($query);
-
-    if ($emotionId > 0) {
-        $stmt->bindParam(':emotionId', $emotionId, PDO::PARAM_INT);
-    }
-    if (!empty($time)) {
-        $stmt->bindParam(':time', $time, PDO::PARAM_STR);
-    }
-
-    $stmt->execute();
-    $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    $foodMoodData = [];
-    foreach ($recipes as $row) {
-        $foodMoodData[] = [
-            'title' => $row['title'],
-            'img' => $row['img'],
-            'time' => $row['time']
+    if (!isset($_SESSION['shown_recipes'][$emotionId])) {
+        $_SESSION['shown_recipes'][$emotionId] = [
+            'recipes' => [], // ID уже показанных рецептов
+            'count' => 0     // Количество перелистываний
         ];
     }
 
-    echo json_encode($foodMoodData);
+    // Проверяем, достигнуто ли максимальное количество перелистываний
+    if ($_SESSION['shown_recipes'][$emotionId]['count'] >= 3) {
+        echo json_encode(['error' => 'You have reached the maximum number of views for this emotion.']);
+        exit;
+    }
+
+    // Получаем список уже показанных рецептов
+    $shownRecipes = $_SESSION['shown_recipes'][$emotionId]['recipes'];
+
+    // SQL-запрос: случайный выбор блюд, исключая уже показанные
+    $query = "
+        SELECT recipes.id, recipes.name AS title, recipes.image AS img, recipes.time 
+        FROM recipes 
+        JOIN recipe_emotion ON recipes.id = recipe_emotion.recipe_id
+        WHERE recipe_emotion.emotion_id = :emotionId
+          AND recipes.id NOT IN (" . (count($shownRecipes) > 0 ? implode(',', $shownRecipes) : "NULL") . ")
+        ORDER BY RAND()
+        LIMIT 3
+    ";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':emotionId', $emotionId, PDO::PARAM_INT);
+    $stmt->execute();
+
+    // Извлекаем данные
+    $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Если блюд меньше 3, значит больше нечего показывать
+    if (count($recipes) < 3) {
+        echo json_encode(['error' => 'Not enough recipes to display.']);
+        exit;
+    }
+
+    // Увеличиваем счетчик перелистываний
+    $_SESSION['shown_recipes'][$emotionId]['count']++;
+
+    // Добавляем ID показанных рецептов в список
+    foreach ($recipes as $recipe) {
+        $_SESSION['shown_recipes'][$emotionId]['recipes'][] = $recipe['id'];
+    }
+
+    // Возвращаем результат
+    echo json_encode($recipes);
 } catch (PDOException $e) {
+    // Обработка ошибок
     echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
 }
 ?>

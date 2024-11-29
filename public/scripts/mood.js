@@ -13,14 +13,13 @@ document.addEventListener("DOMContentLoaded", async function () {
             const response = await fetch(`/getFoodMood.php?emotion_id=${emotionId}`);
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
-                return data;
+                return data; // Массив рецептов
             } else {
-                console.error("Ошибка загрузки данных:", response.statusText);
+                console.error('Ошибка загрузки данных:', response.statusText);
                 return [];
             }
         } catch (error) {
-            console.error("Ошибка:", error);
+            console.error('Ошибка:', error);
             return [];
         }
     }
@@ -41,6 +40,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     async function displayFoodMood(currentMoodData) {
+        const foodListContainer = document.getElementById('foodList-container');
         foodListContainer.innerHTML = '';
     
         if (!currentMoodData || currentMoodData.length === 0) {
@@ -49,18 +49,23 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     
         currentMoodData.forEach(item => {
+            const title = item.title || 'Без названия';
+            const img = item.img || 'default-image-path.png'; // Укажите путь к изображению по умолчанию
+            const time = item.time || 'Не указано';
+    
             const listItemHTML = `
                 <li class="foodList-li">
-                    <h3 class="foodList-li-title">${item.name}</h3>
+                    <h3 class="foodList-li-title">${title}</h3>
                     <div class="foodList-image">
-                        <img src="../images/mood/${item.img}" alt="${item.name} image">
+                        <img src="${img}" alt="${title} image">
                     </div>
+                    <p>Время приема пищи: ${time}</p>
                 </li>
             `;
-
             foodListContainer.innerHTML += listItemHTML;
         });
     }
+    
 
     const skipLeftButton = document.getElementById('skip-left');
     const skipRightButton = document.getElementById('skip-right');
