@@ -127,7 +127,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     btnAge.addEventListener('click', () => { 
         modal.classList.add('modal-none'); 
-        modal.classList.remove('modal-show');               // переделать 
+        modal.classList.remove('modal-show');
+        window.location.href = 'frontendSlay.html'; 
     }); 
 
     window.addEventListener('click', (e) => { 
