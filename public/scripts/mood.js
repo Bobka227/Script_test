@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async function loadFoodMoodData(emotionId) {
         try {
-            const response = await fetch(`/arr_recipes.php?emotion_id=${emotionId}`);
+            const response = await fetch(/arr_recipes.php?emotion_id=${emotionId});
             if (response.ok) {
                 const data = await response.json();
                 console.log("Загруженные данные:", data);
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 return [];
             }
         } catch (error) {
-            console.error('Ошибка:', error);
+            console.error("Ошибка:", error);
             return [];
         }
     }
@@ -96,9 +96,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById('emotionCalculator').classList.remove('d-none');
     });
 
-    // modal 
-
-    const modal = document.getElementById('modal'); 
+    // modal
+const modal = document.getElementById('modal'); 
     const modalCalculate = document.getElementById('modal-calculate'); 
     const btnCloseModal = document.getElementById('btnCloseModal'); 
     const btnEmotion10 = document.getElementById('emotion10'); 
