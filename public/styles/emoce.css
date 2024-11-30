@@ -68,6 +68,12 @@ body {
     color: white;
 }
 
+.emotion-item img {
+    width: 90px;
+    height: 90px;
+    border-radius: 5.5vh;
+}
+
 .calculate-btn, .back-to-emotion-list {
     align-self: center;
     text-transform: uppercase;
