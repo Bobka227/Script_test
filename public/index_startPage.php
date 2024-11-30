@@ -44,7 +44,7 @@ session_start();
                             <?php endif; ?>        
                             <li><a href="pages/search.html" class="menu-item">Food Recipes</a></li>
                             <li><a href="pages/mood.html" class="menu-item">Mood Recipes</a></li>
-                            <li><a href="pages/TestHtml.php" class="menu-item">Help</a></li>
+                            <li><a href="pages/help.html" class="menu-item">Help</a></li>
                         </ul>
                     </div>
                 </div>
