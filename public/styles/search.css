@@ -83,7 +83,6 @@ body {
 }
 
 
-
 /* news block */
 .news-block {
     margin-top: 40px;
@@ -158,6 +157,7 @@ body {
     perspective: 1000px;
     backface-visibility: hidden;
 }
+
 @keyframes flip {
     0% {
         transform: rotateY(0deg); 
@@ -167,14 +167,9 @@ body {
     }
 }
 
-
-
-
 .recipe:hover {
     transform: scale(1.05);
-    
 }
-
 
 .recipe img {
     width: 100%;
@@ -367,16 +362,16 @@ body {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
-
     }
+
     .filtre-container > * {
         width: 100%; 
     }
 }
 @media (max-width: 360px) {
-   .recipes-list{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-   }
+    .recipes-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
 }
