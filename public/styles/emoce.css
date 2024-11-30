@@ -69,9 +69,9 @@ body {
 }
 
 .emotion-item img {
-    width: 50px;
-    height: 50px;
-    border-radius: 3vh;
+    width: 90px;
+    height: 90px;
+    border-radius: 5.5vh;
 }
 
 .calculate-btn, .back-to-emotion-list {
