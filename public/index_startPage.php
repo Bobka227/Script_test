@@ -44,7 +44,7 @@ session_start();
                                 <li><a href="pages/register.php" class="menu-item">Sign In/Sign Up</a></li>
                             <?php endif; ?>        
                             <li><a href="pages/search.php" class="menu-item">Food Recipes</a></li>
-                            <li><a href="pages/mood.html" class="menu-item">Mood Recipes</a></li>
+                            <li><a href="pages/mood.php" class="menu-item">Mood Recipes</a></li>
                             <li><a href="pages/TestHtml.php" class="menu-item">Help</a></li>
                         </ul>
                     </div>
@@ -69,7 +69,7 @@ session_start();
                     <p>This feature is intended only for registered users.</p>
                     <ul class="modal-buttons">
                         <li><button id="btnCloseModal" class="modal-btn">Close</button></li>
-                        <li><button id="btnLogin" class="modal-btn">Sign in or Sign up</button></li>
+                        <li><button style="text-transform: uppercase;" id="btnLogin" class="modal-btn">Sign up or try</button></li>
                     </ul>
                 </div>
             </div>
