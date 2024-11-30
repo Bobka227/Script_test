@@ -69,7 +69,7 @@ session_start();
                     <p>This feature is intended only for registered users.</p>
                     <ul class="modal-buttons">
                         <li><button id="btnCloseModal" class="modal-btn">Close</button></li>
-                        <li><button id="btnLogin" class="modal-btn">Sign in or Sign up</button></li>
+                        <li><button style="text-transform: uppercase;" id="btnLogin" class="modal-btn">Sign up or try</button></li>
                     </ul>
                 </div>
             </div>
