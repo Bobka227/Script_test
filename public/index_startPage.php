@@ -45,7 +45,7 @@ session_start();
                             <?php endif; ?>        
                             <li><a href="pages/search.php" class="menu-item">Food Recipes</a></li>
                             <li><a href="pages/mood.html" class="menu-item">Mood Recipes</a></li>
-                            <li><a href="pages/TestHtml.php" class="menu-item">Help</a></li>
+                            <li><a href="pages/help.html" class="menu-item">Help</a></li>
                         </ul>
                     </div>
                 </div>
@@ -79,8 +79,40 @@ session_start();
             <img src="images/menu/salad.png" alt="promo image" class="promo-image">
         </section>
     </main>
-    <footer>
-    </footer>
+
+    <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 footer-section">
+                        <h5>About FoodMood</h5>
+                        <p>FoodMood is your personal food assistant, helping you explore new recipes and customize your meal plans according to your mood. Discover delicious recipes, whether you're happy, sad, or anything in between!</p>
+                    </div>
+                    <div class="col-md-4 footer-section">
+                        <h5>Quick Links</h5>
+                        <ul class="footer-links">
+                            <li><a href="index_startPage.html">Main Page</a></li>
+                            <li><a href="pages/register.php">Sign In/Sign Up</a></li>
+                            <li><a href="pages/search.php">Food Recipes</a></li>
+                            <li><a href="pages/mood.php">Mood Recipes</a></li>
+                            <li><a href="pages/help.html">Help</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 footer-section">
+                        <h5>Contact Us</h5>
+                        <p>Email: <a href="mailto:support@FoodMood.com">support@FoodMood.com</a></p>
+                        <p>Phone: +420 777 430 106</p>
+                        <div class ="footer-social-links">
+                            <a href="#"><img src="../images/footer/facebookdefault.svg" alt="Facebook"></a>
+                            <a href="#"><img src="../images/footer/instadefault.svg" alt="Instagram"></a>
+                            <a href="#"><img src="../images/footer/youtubedefault.svg" alt="YouTube"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>© 2024 FoodMood. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
 
     <script  defer src="scripts/scroll.js"></script>
 </body>
