@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,24 +11,29 @@
     <link rel="stylesheet" href="../styles/help.css">
 
     <script defer src="../scripts/search.js"></script>
-    <title>JidloSmidlo</title>
+    <script defer src="../scripts/help.js"></script>
+    <title>FoodMood</title>
 </head>
+
 <body>
     <header class="header">
         <nav class="navbar">
             <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                    aria-controls="offcanvasRight">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-    
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+                    aria-labelledby="offcanvasRightLabel">
                     <div class="offcanvas-header">
                         <h5 id="offcanvasRightLabel">Menu</h5>
-                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
                         <ul class="list-unstyled">
-                            <li><a href="../index.html" class="menu-item">Main Page</a></li>
+                            <li><a href="../index_startPage.php" class="menu-item">Main Page</a></li>
                             <li><a href="register.html" class="menu-item">Sign In/Sign Up</a></li>
                             <li><a href="search.html" class="menu-item">Food Recipes</a></li>
                             <li><a href="mood.html" class="menu-item">Mood Recipes</a></li>
@@ -39,10 +45,126 @@
         </nav>
     </header>
     <main>
+
         <section>
-            <h1 class="title">lorem</h1>
+            <div class="title-container">
+                <h1 class="title">Nápověda a Často Kladené Otázky</h1>
+                <p class="title-text">Vítejte v sekci nápovědy FoodMood! Zde najdete odpovědi na nejčastěji kladené otázky týkající se používání našeho webu. 
+                    Pokud potřebujete další pomoc, neváhejte nás kontaktovat prostřednictvím kontaktních informací uvedených níže.</p>
+            </div>
         </section>
+        
+
+        <section class="Q-A">
+            <ul class="ul-questions">
+                <li class="li-questions">
+                    <p class="h2 q-title">Jak se mohu zaregistrovat na FoodMood?</p>
+                    <button class="open-answer-btn">
+                        <img src="../images/help/arrow.png" alt="go to answer">
+                    </button>
+                    <p class="q-answer-text d-none">Pro registraci klikněte na tlačítko "Sign In/Sign Up" v horní části stránky. Poté vyplňte své údaje a vytvořte si účet.</p>
+                </li>
+                <li class="li-questions">
+                    <p class="h2 q-title">Je používání FoodMood zdarma?</p>
+                    <button class="open-answer-btn">
+                        <img src="../images/help/arrow.png" alt="go to answer">
+                    </button>
+                    <p class="q-answer-text d-none">Ano, základní funkce FoodMood jsou zcela zdarma. Můžete se zaregistrovat a začít objevovat recepty bez jakýchkoliv nákladů.</p>
+                </li>
+                <li class="li-questions">
+                    <p class="h2 q-title">Jak mohu přidat svůj vlastní recept?</p>
+                    <button class="open-answer-btn">
+                        <img src="../images/help/arrow.png" alt="go to answer">
+                    </button>
+                    <p class="q-answer-text d-none">Chcete-li přidat svůj vlastní recept, musíte se nejdříve přihlásit. Poté přejděte na sekci "Food Recipes" a klikněte na "Přidat recept".</p>
+                </li>
+                <li class="li-questions">
+                    <p class="h2 q-title">Jaké typy receptů mohu najít na FoodMood?</p>
+                    <button class="open-answer-btn">
+                        <img src="../images/help/arrow.png" alt="go to answer">
+                    </button>
+                    <p class="q-answer-text d-none">Na FoodMood najdete širokou škálu receptů, včetně vegetariánských, veganských, bezlepkových a mnoha dalších kategorií podle vašeho výběru.</p>
+                </li>
+                <li class="li-questions">
+                    <p class="h2 q-title">Jak mohu vytvořit denní plán jídla podle nálady?</p>
+                    <button class="open-answer-btn">
+                        <img src="../images/help/arrow.png" alt="go to answer">
+                    </button>
+                    <p class="q-answer-text d-none">Přejděte do sekce "Mood Recipes" a vyberte si svou aktuální náladu. FoodMood vám automaticky doporučí denní plán jídla, který se k vám hodí.</p>
+                </li>
+                <li class="li-questions">
+                    <p class="h2 q-title">Mohu uložit své oblíbené recepty?</p>
+                    <button class="open-answer-btn">
+                        <img src="../images/help/arrow.png" alt="go to answer">
+                    </button>
+                    <p class="q-answer-text d-none">Ano, přihlaste se ke svému účtu a klikněte na tlačítko "Uložit" vedle receptu, který chcete uložit do svého seznamu oblíbených.</p>
+                </li>
+                <li class="li-questions">
+                    <p class="h2 q-title">Jak mohu sdílet recepty s přáteli?</p>
+                    <button class="open-answer-btn">
+                        <img src="../images/help/arrow.png" alt="go to answer">
+                    </button>
+                    <p class="q-answer-text d-none">Můžete sdílet recepty kliknutím na ikonu sdílení pod receptem. Recept lze sdílet e-mailem nebo na sociálních sítích, jako jsou Facebook nebo Twitter.</p>
+                </li>
+                <li class="li-questions">
+                    <p class="h2 q-title">Co mám dělat, když mám problém s registrací?</p>
+                    <button class="open-answer-btn">
+                        <img src="../images/help/arrow.png" alt="go to answer">
+                    </button>
+                    <p class="q-answer-text d-none">Pokud máte problém s registrací, kontaktujte nás na support@FoodMood.com a my vám rádi pomůžeme.</p>
+                </li>
+                <li class="li-questions">
+                    <p class="h2 q-title">Jaké jsou výhody vytvoření účtu?</p>
+                    <button class="open-answer-btn">
+                        <img src="../images/help/arrow.png" alt="go to answer">
+                    </button>
+                    <p class="q-answer-text d-none">Vytvořením účtu získáte možnost ukládat oblíbené recepty, vytvářet vlastní recepty a přizpůsobit své denní plány jídla podle vaší nálady a preferencí.</p>
+                </li>
+                <li class="li-questions">
+                    <p class="h2 q-title">Mohu vyhledávat recepty podle ingrediencí?</p>
+                    <button class="open-answer-btn">
+                        <img src="../images/help/arrow.png" alt="go to answer">
+                    </button>
+                    <p class="q-answer-text d-none">Ano, můžete použít vyhledávací lištu na stránce "Food Recipes" a zadat ingredience, které máte k dispozici, abyste našli odpovídající recepty.</p>
+                </li>
+            </ul>
+        </section>
+        
+
     </main>
-    <footer></footer>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 footer-section">
+                    <h5>About FoodMood</h5>
+                    <p>FoodMood is your personal food assistant, helping you explore new recipes and customize your meal plans according to your mood. Discover delicious recipes, whether you're happy, sad, or anything in between!</p>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index_startPage.html">Main Page</a></li>
+                        <li><a href="register.php">Sign In/Sign Up</a></li>
+                        <li><a href="search.php">Food Recipes</a></li>
+                        <li><a href="mood.php">Mood Recipes</a></li>
+                        <li><a href="help.html">Help</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h5>Contact Us</h5>
+                    <p>Email: <a href="mailto:support@FoodMood.com">support@FoodMood.com</a></p>
+                    <p>Phone: +420 777 430 106</p>
+                    <div class ="footer-social-links">
+                        <a href="#"><img src="../images/footer/facebookdefault.svg" alt="Facebook"></a>
+                        <a href="#"><img src="../images/footer/instadefault.svg" alt="Instagram"></a>
+                        <a href="#"><img src="../images/footer/youtubedefault.svg" alt="YouTube"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 FoodMood. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
