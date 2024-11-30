@@ -11,6 +11,7 @@ session_start();
     <link rel="stylesheet" href="styles/menu.css">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="icon" href="images/logo_browser/logo_browser_2.png" type="image/png">
+    <link rel="stylesheet" href="styles/scrollBar.css">
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -42,7 +43,7 @@ session_start();
                             <?php else: ?>
                                 <li><a href="pages/register.php" class="menu-item">Sign In/Sign Up</a></li>
                             <?php endif; ?>        
-                            <li><a href="pages/search.html" class="menu-item">Food Recipes</a></li>
+                            <li><a href="pages/search.php" class="menu-item">Food Recipes</a></li>
                             <li><a href="pages/mood.html" class="menu-item">Mood Recipes</a></li>
                             <li><a href="pages/TestHtml.php" class="menu-item">Help</a></li>
                         </ul>
@@ -78,6 +79,9 @@ session_start();
             <img src="images/menu/salad.png" alt="promo image" class="promo-image">
         </section>
     </main>
-    <footer></footer>
+    <footer>
+    </footer>
+
+    <script  defer src="scripts/scroll.js"></script>
 </body>
 </html>

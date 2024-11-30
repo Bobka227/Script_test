@@ -53,7 +53,8 @@ function registerUser($pdo, $username, $lastname, $email, $phone_number, $gender
         $_SESSION['username'] = $username;
 
         // Перенаправление на страницу профиля
-        header("Location: ../pages/profile.php");
+        header("Location: pages/profile.php");
+
         exit();
     } catch (PDOException $e) {
         echo "Ошибка вставки данных: " . $e->getMessage() . "<br>"; // Отладка
