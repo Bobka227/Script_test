@@ -3,6 +3,7 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
     background: url(../images/menu/My_profile.png) fixed;
     position: relative;
@@ -86,4 +87,26 @@ body {
 
 .logout-button:hover {
     background-color: #df2020;
+}
+
+.phone-number {
+    display: flex;
+    justify-content: start;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.btn-info{
+    margin-top: 20px;
+    display: flex;
+    justify-content: start;
+    background-color: #cccccc !important;
+    text-transform: uppercase;
+    color: #333;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }

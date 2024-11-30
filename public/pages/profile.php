@@ -2,14 +2,14 @@
 session_start(); // Инициализация сессии
 
 // Проверяем, авторизован ли пользователь
-if (!isset($_SESSION['login'])) {
+if (!isset($_SESSION['username'])) {
     // Если нет, перенаправляем на страницу входа
     header("Location: register.php");
     exit();
 }
 
 // Получаем логин пользователя из сессии
-$current_login = $_SESSION['login'];
+$current_login = $_SESSION['username'];
 
 // Подключение к базе данных
 $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
@@ -26,8 +26,8 @@ try {
 }
 
 // Получаем информацию о пользователе из базы данных
-$stmt = $pdo->prepare("SELECT * FROM users WHERE login = :login");
-$stmt->execute(['login' => $current_login]);
+$stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
+$stmt->execute(['username' => $current_login]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($user && !empty($user['profile_picture'])) {
@@ -47,6 +47,7 @@ if ($user && !empty($user['profile_picture'])) {
 
   <link rel="stylesheet" href="../styles/menu.css" />
   <link rel="stylesheet" href="../styles/profile.css" />
+  <link rel="stylesheet" href="../styles/scrollBar.css" />
 
   <title>FoodMood</title>
 </head>
@@ -66,7 +67,7 @@ if ($user && !empty($user['profile_picture'])) {
           <div class="offcanvas-body">
             <ul class="list-unstyled">
               <li><a href="../index_startPage.php" class="menu-item">Main Page</a></li>
-              <li><a href="search.html" class="menu-item">Food Recipes</a></li>
+              <li><a href="search.php" class="menu-item">Food Recipes</a></li>
               <li><a href="mood.html" class="menu-item">Mood Recipes</a></li>
               <li><a href="help.html" class="menu-item">Help</a></li>
             </ul>
@@ -82,8 +83,10 @@ if ($user && !empty($user['profile_picture'])) {
         <img src="display_avatar.php" alt="avatar" class="ava-img" id="avatarImage" data-bs-toggle="modal" data-bs-target="#avatarModal">
       </div>
       <div style="font-size: 50px;" class="profile-name" id="profile-name"><?php echo htmlspecialchars($user['username'] . ' ' . $user['lastname']); ?></div>
+      <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#userInfoModal">View User Info</button>
     </div>
-
+  
+    
     <div class="buttons-changer">
       <button class="profile-option change-password">CHANGE PASSWORD</button>
       <button class="profile-option change-email">CHANGE EMAIL</button>
@@ -228,9 +231,33 @@ if ($user && !empty($user['profile_picture'])) {
     </div>
   </div>
 
+  <!-- Модальное окно с информацией о пользователе -->
+  <div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userInfoModalLabel">User Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Username:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
+        <p><strong>Lastname:</strong> <?php echo htmlspecialchars($user['lastname']); ?></p>
+        <p><strong>Login:</strong> <?php echo htmlspecialchars($user['login']); ?></p>
+        <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
+        <p><strong>Phone Number:</strong> <?php echo htmlspecialchars($user['phone_number']); ?></p>
+        <p><strong>Gender:</strong> <?php echo htmlspecialchars($user['gender']); ?></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+ 
+
+
   <!-- Подключение скриптов -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../scripts/profile.js"></script>
+  <script src="../scripts/scroll.js"></script>
 </body>
 </html>
