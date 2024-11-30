@@ -23,7 +23,7 @@ body {
   color: #a0a5a8;
 }
 
-header{
+header {
   position: absolute;
   top: 0;
   right: 0;
@@ -69,7 +69,6 @@ header{
     transform: scale(0.4);
   }
 }
-
 
 .container {
   display: flex;
@@ -120,13 +119,16 @@ header{
   box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9;
   cursor: pointer;
 }
+
 .form__input:focus {
   box-shadow: inset 4px 4px 4px #d1d9e6, inset -4px -4px 4px #f9f9f9;
 }
+
 .form__span {
   margin-top: 30px;
   margin-bottom: 12px;
 }
+
 .form__link {
   color: #181818;
   font-size: 15px;
@@ -228,6 +230,7 @@ header{
   overflow: hidden;
   box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #f9f9f9;
 }
+
 .switch__circle {
   position: absolute;
   width: 500px;
@@ -239,12 +242,14 @@ header{
   left: -60%;
   transition: 1.25s;
 }
+
 .switch__circle--t {
   top: -30%;
   left: 60%;
   width: 300px;
   height: 300px;
 }
+
 .switch__container {
   display: flex;
   justify-content: center;
@@ -255,16 +260,19 @@ header{
   padding: 50px 55px;
   transition: 1.25s;
 }
+
 .switch__button {
   cursor: pointer;
   background-color: #FFFFFF;
   color: black;
 }
+
 .switch__button:hover {
   box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
   transform: scale(0.985);
   transition: 0.25s;
 }
+
 .switch__button:active, .switch__button:focus {
   box-shadow: 2px 2px 6px #d1d9e6, -2px -2px 6px #f9f9f9;
   transform: scale(0.97);
