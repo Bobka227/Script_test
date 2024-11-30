@@ -1,3 +1,8 @@
+
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles/menu.css">
     <link rel="stylesheet" href="../styles/search.css">
+    <link rel="stylesheet" href="../styles/scrollBar.css" />
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -29,8 +35,12 @@
                     <div class="offcanvas-body">
                         <ul class="list-unstyled">
                             <li><a href="../index_startPage.php" class="menu-item">Main Page</a></li>
-                            <li><a href="register.html" class="menu-item">Sign In/Sign Up</a></li>
-                            <li><a href="search.html" class="menu-item">Food Recipes</a></li>
+                            <?php if(isset($_SESSION['username'])): ?>
+                                <li><a href="profile.php" class="menu-item">Profile</a></li>
+                            <?php else: ?>
+                                <li><a href="register.php" class="menu-item">Sign In/Sign Up</a></li>
+                            <?php endif; ?>  
+                            <li><a href="search.php" class="menu-item">Food Recipes</a></li>
                             <li><a href="mood.html" class="menu-item">Mood Recipes</a></li>
                             <li><a href="help.html" class="menu-item">Help</a></li>
                         </ul>
@@ -137,5 +147,7 @@
         </section>
     </main>
     <footer></footer>
+    <script src="../scripts/scroll.js"></script>
+
 </body>
 </html>

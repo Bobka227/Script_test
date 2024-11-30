@@ -1,12 +1,9 @@
 <?php
 session_start();
 
-// Проверяем, авторизован ли пользователь
 if (!isset($_SESSION['login'])) {
     exit();
 }
-
-// Подключение к базе данных (используйте свои параметры подключения)
 $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
 $dbname = 'hoc3ablulex394pb';
 $db_username = 'emk2ggh76qbpq4ml';
@@ -31,7 +28,6 @@ if ($user && !empty($user['profile_picture_blob'])) {
     header("Content-Type: " . $user['profile_picture_type']);
     echo $user['profile_picture_blob'];
 } else {
-    // Если нет изображения, выводим аватар по умолчанию
     $defaultImage = '../images/default_avatar.png';
     $imageType = mime_content_type($defaultImage);
     header("Content-Type: " . $imageType);
