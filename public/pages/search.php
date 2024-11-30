@@ -146,7 +146,40 @@ session_start();
             </div>
         </section>
     </main>
-    <footer></footer>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 footer-section">
+                    <h5>About FoodMood</h5>
+                    <p>FoodMood is your personal food assistant, helping you explore new recipes and customize your meal plans according to your mood. Discover delicious recipes, whether you're happy, sad, or anything in between!</p>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index_startPage.html">Main Page</a></li>
+                        <li><a href="register.php">Sign In/Sign Up</a></li>
+                        <li><a href="search.php">Food Recipes</a></li>
+                        <li><a href="mood.php">Mood Recipes</a></li>
+                        <li><a href="help.html">Help</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 footer-section">
+                    <h5>Contact Us</h5>
+                    <p>Email: <a href="mailto:support@FoodMood.com">support@FoodMood.com</a></p>
+                    <p>Phone: +420 777 430 106</p>
+                    <div class ="footer-social-links">
+                        <a href="#"><img src="../images/footer/facebookdefault.svg" alt="Facebook"></a>
+                        <a href="#"><img src="../images/footer/instadefault.svg" alt="Instagram"></a>
+                        <a href="#"><img src="../images/footer/youtubedefault.svg" alt="YouTube"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 FoodMood. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <script src="../scripts/scroll.js"></script>
 
 </body>
