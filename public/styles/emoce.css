@@ -112,10 +112,6 @@ body {
     box-sizing: border-box;
 }
 
-.foodList-li:hover {
-    transform: scale(1.05);
-}
-
 .foodList-image {
     background-color: grey;
     border-radius: 15px;
@@ -156,6 +152,38 @@ body {
     background-color: aliceblue;
 }
 
+.recipe-card-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.recipe-card-side:hover {
+    transform: scale(0.95);
+    cursor: pointer;
+}
+
+.food-name-back {
+    font-size: 20px;
+}
+
+.foodList-qr {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+    margin-bottom: 85px;
+}
+
+.foodList-qr img {
+    background-color: grey;
+    width: 200px;
+    height: 200px;
+}
+
 
 /* modal */
 .modal-calculate {
@@ -194,4 +222,13 @@ body {
         grid-column: 2;
         grid-row: 4;
     }
+}
+
+/* display */
+.d-none {
+    display: none;
+}
+
+.d-block{
+    display: block;
 }

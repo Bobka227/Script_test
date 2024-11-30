@@ -16,7 +16,7 @@ try {
     if ($emotion_id > 0) {
         // Запрос на выборку блюд, связанных с данной эмоцией
         $stmt = $pdo->prepare("
-            SELECT r.id, r.name, r.time, r.image
+            SELECT r.id, r.name, r.time, r.image, r.qr_code_link, r.pdf_link
             FROM recipes r
             JOIN recipe_emotion re ON r.id = re.recipe_id
             WHERE re.emotion_id = :emotion_id
@@ -29,7 +29,9 @@ foreach ($results as $recipe) {
     $groupedData[$recipe['time']][] = [
         'id' => $recipe['id'],
         'name' => $recipe['name'],
-        'image' => $recipe['image'] // Добавлено поле image
+        'image' => $recipe['image'], // Добавлено поле image
+        'qr_code_link' => $recipe['qr_code_link'], // Добавлено поле qr_code
+        'pdf_link' => $recipe['pdf_link'] // Добавлено поле pdf
     ];
 }
 
