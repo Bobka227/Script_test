@@ -53,7 +53,7 @@ body {
     font-weight: bold;
 }
 
-.buttons-changer{
+.buttons-changer {
     display: flex;
     justify-content: center;
     flex-direction: column;
