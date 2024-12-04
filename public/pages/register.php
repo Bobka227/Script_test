@@ -49,7 +49,7 @@ if (isset($_SESSION['login'])) {
         </nav>
     </header>
 
-    <main>
+    <main class="main-main">
       <div class="main">
         <div class="container a-container" id="a-container">
           <form class="form" id="a-form" action="../register_script.php" method="POST" enctype="multipart/form-data">
