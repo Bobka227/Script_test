@@ -55,12 +55,11 @@ session_start();
 
     <main>
         <section class="start">
-            <b>Salmon Bass</b>
+            <b>Salmon Bass</b>                 <!-- изменить: убрать послание Кирюше -->
             <h1 class="title">salmon bass mackerel trout</h1>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                Debitis corporis id, laboriosam quod 
-                veniam dicta sed quaerat voluptas dolores 
-                numquam minima, odio sunt. Molestiae, libero autemporno.
+                Debitis corporis id, quaerat voluptas dolores 
+                numquam minima, odio sunt. Привет, Кирюша! Удачи на сдаче!
             </p>
             <button type="button" class="btnGetStarted">Get started...</button>
 
@@ -84,8 +83,8 @@ session_start();
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 footer-section">
-                        <h5>About FoodMood</h5>
-                        <p>FoodMood is your personal food assistant, helping you explore new recipes and customize your meal plans according to your mood. Discover delicious recipes, whether you're happy, sad, or anything in between!</p>
+                        <h5>About FoodMood</h5> <!-- изменить: убрать свэг в конце текста -->
+                        <p>FoodMood is your personal food assistant, helping you explore new recipes and customize your meal plans according to your mood. Discover delicious recipes, whether you're happy, sad, or anything in between! СВЭГ</p>
                     </div>
                     <div class="col-md-4 footer-section">
                         <h5>Quick Links</h5>
