@@ -131,7 +131,7 @@ session_start();
                         dignissimos quaerat explicabo architecto nostrum minus!
                     </p> 
                     <br class="swag">
-                    <a href="https://www.foodandwine.com/aldi-thanksgiving-basket-2024-8728597">Read more</a> 
+                    <a href="https://www.foodandwine.com/aldi-thanksgiving-basket-2024-8728597" class="news-link">Read more</a> 
                 </div>                  
                 <img src="../images/news/cat3.jpg" alt="news image">
             </article>

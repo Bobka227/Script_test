@@ -18,6 +18,10 @@ body {
     padding: 2rem 1rem;
 }
 
+.title-container {
+    margin-top: 3rem;
+}
+
 .title-text {
     width: 80%;
     margin: 0 auto;
@@ -53,6 +57,7 @@ body {
     color: #333333;
     margin: 0;
     margin-bottom: 1rem;
+    margin-right: 2rem;
 }
 
 .open-answer-btn {
