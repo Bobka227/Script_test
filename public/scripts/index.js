@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
     const modal = document.getElementById('modal');
     const btnGetStarted = document.querySelector('.btnGetStarted');
     const btnCloseModal = document.getElementById('btnCloseModal');
@@ -16,7 +15,22 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     btnLogin.addEventListener('click', () => {
-        window.location.href = 'pages/register.php';
+        // Отправляем запрос на проверку авторизации
+        fetch('check_aut.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.authenticated) {
+                    // Если пользователь авторизован, перенаправляем на mood.php
+                    window.location.href = 'pages/mood.php';
+                } else {
+                    // Если пользователь не авторизован, перенаправляем на register.php
+                    window.location.href = 'pages/register.php';
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка проверки авторизации:', error);
+                alert('Ошибка! Попробуйте ещё раз.');
+            });
     });
 
     window.addEventListener('click', (e) => {

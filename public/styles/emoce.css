@@ -35,7 +35,7 @@ body {
 
 .emotions-list {
     margin-top: 70px;
-    margin-bottom: 53px;
+    margin-bottom: 10px;
     gap: 15px;
     padding: 0 15px;
     list-style: none;
@@ -68,6 +68,12 @@ body {
     color: white;
 }
 
+.emotion-item img {
+    width: 90px;
+    height: 90px;
+    border-radius: 5.5vh;
+}
+
 .calculate-btn, .back-to-emotion-list {
     align-self: center;
     text-transform: uppercase;
@@ -84,6 +90,15 @@ body {
     width: fit-content;
     max-width: 100%;
     white-space: nowrap;
+    z-index: 1;
+}
+.calculate-btn:hover{
+    transform: scale(1.05);
+    background-color: #037a4c;
+}
+.back-to-emotion-list:hover{
+    transform: scale(1.05);
+    background-color: #037a4c;
 }
 
 
@@ -104,10 +119,6 @@ body {
     align-items: center;
     width: 33.33%;
     box-sizing: border-box;
-}
-
-.foodList-li:hover {
-    transform: scale(1.05);
 }
 
 .foodList-image {
@@ -150,6 +161,38 @@ body {
     background-color: aliceblue;
 }
 
+.recipe-card-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.recipe-card-side:hover {
+    transform: scale(0.95);
+    cursor: pointer;
+}
+
+.food-name-back {
+    font-size: 20px;
+}
+
+.foodList-qr {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+    margin-bottom: 85px;
+}
+
+.foodList-qr img {
+    background-color: grey;
+    width: 200px;
+    height: 200px;
+}
+
 
 /* modal */
 .modal-calculate {
@@ -157,7 +200,43 @@ body {
 }
 
 
+
+
 /* media */
+
+@media(max-width: 1200px) {
+    .foodList-image{
+        width: 150px;
+        height: 150px;
+    }
+}
+@media(max-width: 1000px) {
+    .emotion-item img {
+        width: 70px;
+        height: 70px;
+        border-radius: 5.5vh;
+    }
+    .foodList-image{
+        width: 200px;
+        height: 300px;
+    }
+
+    .foodList-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 15px;
+    }
+    .recipe-card-side:hover {
+        transform: scale(0.95);
+        cursor: pointer;
+    }
+    .foodList-qr img {
+        background-color: grey;
+        width: 150px;
+        height: 150px;
+    }
+}
 @media (max-width: 880px) {
     .emotion-calculator, .food-mood-list {
         min-width: 140px;
@@ -188,4 +267,19 @@ body {
         grid-column: 2;
         grid-row: 4;
     }
+}
+
+@media (max-width: 400px) {
+    .footer{
+        min-height: 115vh;
+    }
+}
+
+/* display */
+.d-none {
+    display: none;
+}
+
+.d-block{
+    display: block;
 }

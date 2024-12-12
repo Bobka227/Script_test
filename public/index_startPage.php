@@ -11,6 +11,7 @@ session_start();
     <link rel="stylesheet" href="styles/menu.css">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="icon" href="images/logo_browser/logo_browser_2.png" type="image/png">
+    <link rel="stylesheet" href="styles/scrollBar.css">
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -42,9 +43,9 @@ session_start();
                             <?php else: ?>
                                 <li><a href="pages/register.php" class="menu-item">Sign In/Sign Up</a></li>
                             <?php endif; ?>        
-                            <li><a href="pages/search.html" class="menu-item">Food Recipes</a></li>
-                            <li><a href="pages/mood.html" class="menu-item">Mood Recipes</a></li>
-                            <li><a href="pages/TestHtml.php" class="menu-item">Help</a></li>
+                            <li><a href="pages/search.php" class="menu-item">Food Recipes</a></li>
+                            <li><a href="pages/mood.php" class="menu-item">Mood Recipes</a></li>
+                            <li><a href="pages/help.html" class="menu-item">Help</a></li>
                         </ul>
                     </div>
                 </div>
@@ -54,12 +55,12 @@ session_start();
 
     <main>
         <section class="start">
-            <b>Salmon Bass</b>
-            <h1 class="title">salmon bass mackerel trout</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                Debitis corporis id, laboriosam quod 
-                veniam dicta sed quaerat voluptas dolores 
-                numquam minima, odio sunt. Molestiae, libero autemporno.
+            <b>FoodMood</b>                 
+            <h1 class="title">Daily Menu Based on Emotions</h1>
+            <p>We brighten your emotions by adding a touch of flavor to your day. 
+                Check out our menu options and select your favorite, 
+                crafted based on your emotions.
+                <br> <br> <span style="color: green;">Привет, Кирюша! Удачи на сдаче!</span>  <!-- изменить: убрать послание Кирюше -->
             </p>
             <button type="button" class="btnGetStarted">Get started...</button>
 
@@ -68,7 +69,7 @@ session_start();
                     <p>This feature is intended only for registered users.</p>
                     <ul class="modal-buttons">
                         <li><button id="btnCloseModal" class="modal-btn">Close</button></li>
-                        <li><button id="btnLogin" class="modal-btn">Sign in or Sign up</button></li>
+                        <li><button style="text-transform: uppercase;" id="btnLogin" class="modal-btn">Sign up or try</button></li>
                     </ul>
                 </div>
             </div>
@@ -78,6 +79,44 @@ session_start();
             <img src="images/menu/salad.png" alt="promo image" class="promo-image">
         </section>
     </main>
-    <footer></footer>
+
+    <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 footer-section">
+                        <h5>About FoodMood</h5>
+                        <p>FoodMood is your personal food assistant, helping you explore new 
+                            recipes and customize your meal plans according to your 
+                            mood. Discover delicious recipes, whether you're 
+                            happy, sad, or anything in between! СВЭГ</p>  <!-- изменить: убрать свэг в конце текста -->
+                    </div>
+                    <div class="col-md-4 footer-section">
+                        <h5>Quick Links</h5>
+                        <ul class="footer-links">
+                            <li><a href="index_startPage.html">Main Page</a></li>
+                            <li><a href="pages/register.php">Sign In/Sign Up</a></li>
+                            <li><a href="pages/search.php">Food Recipes</a></li>
+                            <li><a href="pages/mood.php">Mood Recipes</a></li>
+                            <li><a href="pages/help.html">Help</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 footer-section">
+                        <h5>Contact Us</h5>
+                        <p>Email: <a href="mailto:support@FoodMood.com">support@FoodMood.com</a></p>
+                        <p>Phone: +420 777 430 106</p>
+                        <div class ="footer-social-links">
+                            <a href="#"><img src="../images/footer/facebookdefault.svg" alt="Facebook"></a>
+                            <a href="#"><img src="../images/footer/instadefault.svg" alt="Instagram"></a>
+                            <a href="#"><img src="../images/footer/youtubedefault.svg" alt="YouTube"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>© 2024 FoodMood. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+    <script  defer src="scripts/scroll.js"></script>
 </body>
 </html>

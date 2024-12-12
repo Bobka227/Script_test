@@ -1,0 +1,28 @@
+html, body {
+    scrollbar-width: none; /* Для Firefox */
+    -ms-overflow-style: none; /* Для IE */
+  }
+  
+  html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none; /* Webkit-браузеры */
+  }
+  
+  /* Плавное появление скроллбара */
+  html.scrolling, body.scrolling {
+    scrollbar-width: thin; /* Возвращаем скроллбар в Firefox */
+    -ms-overflow-style: auto; /* Возвращаем скроллбар в IE */
+  }
+  
+  html.scrolling::-webkit-scrollbar, body.scrolling::-webkit-scrollbar {
+    display: block;
+  }
+  
+  html.scrolling::-webkit-scrollbar-thumb {
+    background: #888; /* Цвет ползунка */
+    border-radius: 5px; /* Закруглённые края */
+    transition: background 0.3s ease; /* Плавное изменение цвета */
+  }
+  
+  html.scrolling::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Цвет при наведении */
+  }

@@ -3,6 +3,7 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
     background: url(../images/menu/My_profile.png) fixed;
     position: relative;
@@ -13,13 +14,13 @@ body {
     color: #333;
 }
 
-
 .profile-container {
     padding: 30px;
     border-radius: 10px;
     text-align: center;
     position: relative;
 }
+
 .avatar-container {
     margin-bottom: 100px;
 }
@@ -33,8 +34,8 @@ body {
     align-items: center;
     border-radius: 50%; 
     overflow: hidden;
-
 }
+
 .profile-pic img {
     width: 200px;
     height: 200px;
@@ -52,11 +53,12 @@ body {
     font-weight: bold;
 }
 
-.buttons-changer{
+.buttons-changer {
     display: flex;
     justify-content: center;
     flex-direction: column;
 }
+
 .profile-option {
     background-color: #e0e0e0;
     border: none;
@@ -70,9 +72,11 @@ body {
     cursor: pointer;
     transition: background-color 0.2s;
 }
+
 .profile-option:hover {
     background-color: #d0d0d0;
 }
+
 .logout-button {
     display: flex;
     margin-top: 30px;
@@ -80,6 +84,29 @@ body {
     color: #333;
     font-weight: bold;
 }
+
 .logout-button:hover {
     background-color: #df2020;
+}
+
+.phone-number {
+    display: flex;
+    justify-content: start;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.btn-info{
+    margin-top: 20px;
+    display: flex;
+    justify-content: start;
+    background-color: #cccccc !important;
+    text-transform: uppercase;
+    color: #333;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
