@@ -25,6 +25,16 @@ try {
     die("Ошибка подключения к базе данных: " . $e->getMessage());
 }
 
+// Проверяем, является ли пользователь администратором
+function isAdmin($pdo, $login) {
+    $stmt = $pdo->prepare("SELECT role FROM users WHERE username = :username");
+    $stmt->execute(['username' => $login]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $user && $user['role'] === 'admin';
+}
+
+$is_admin = isAdmin($pdo, $current_login);
+
 // Получаем информацию о пользователе из базы данных
 $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
 $stmt->execute(['username' => $current_login]);
@@ -91,7 +101,10 @@ if ($user && !empty($user['profile_picture'])) {
       <button class="profile-option change-password">CHANGE PASSWORD</button>
       <button class="profile-option change-email">CHANGE EMAIL</button>
       <button class="profile-option change-phone">CHANGE PHONE NUMBER</button>
-      <button class="profile-option change-info">CHANGE PERSONAL INFORMATION</button> 
+      <button class="profile-option change-info">CHANGE PERSONAL INFORMATION</button>
+      <?php if ($is_admin): ?>
+        <button class="profile-option view-all-users" id="viewAllUsersButton">VIEW ALL USERS</button>
+      <?php endif; ?>
     </div>
 
     <!-- Кнопка выхода -->
@@ -258,5 +271,13 @@ if ($user && !empty($user['profile_picture'])) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../scripts/profile.js"></script>
   <script src="../scripts/scroll.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('#viewAllUsersButton').on('click', function() {
+        window.location.href = 'view_all_users.php';
+      });
+    });
+  </script>
 </body>
 </html>
