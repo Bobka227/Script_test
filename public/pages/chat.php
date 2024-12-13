@@ -191,18 +191,26 @@ $conn->close();
     const notifications = document.getElementById('notifications');
     const recipientId = <?= json_encode($selected_user_id) ?>;
 
-    const ws = new WebSocket('wss://jidlosmidlo.herokuapp.com/chat');
+    const socket = new WebSocket("wss://jidlosmidlo.herokuapp.com/chat");
 
-    // Обработчики событий
-    ws.onopen = () => console.log('WebSocket connection established');
-    ws.onmessage = (event) => console.log('Message received:', event.data);
-    ws.onerror = (error) => console.error('WebSocket error:', error);
-    ws.onclose = () => console.log('WebSocket connection closed');
+    // Event listeners for debugging
+    socket.onopen = () => {
+        console.log("WebSocket connection established.");
+    };
 
-    // Отправка тестового сообщения
-    ws.send('Hello, WebSocket!');
+    socket.onmessage = (event) => {
+        console.log("Message from server:", event.data);
+    };
 
-    ws.onmessage = (event) => {
+    socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+    };
+
+    socket.onclose = (event) => {
+        console.log(`WebSocket closed. Code: ${event.code}, Reason: ${event.reason}`);
+    };
+
+    socket.onmessage = (event) => {
         const msg = JSON.parse(event.data);
 
         const messageDiv = document.createElement('div');
@@ -229,7 +237,7 @@ $conn->close();
             created_at: new Date().toISOString(),
         };
 
-        ws.send(JSON.stringify(data)); // Send message through WebSocket
+        socket.send(JSON.stringify(data)); // Send message through WebSocket
         messageForm.querySelector('textarea').value = '';
     });
 
