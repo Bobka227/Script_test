@@ -9,7 +9,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 // Получаем логин пользователя из сессии
-$current_login = $_SESSION['login'];
+$current_login = $_SESSION['username'];
 
 // Подключение к базе данных
 $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
