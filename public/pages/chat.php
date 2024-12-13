@@ -191,7 +191,7 @@ $conn->close();
     const notifications = document.getElementById('notifications');
     const recipientId = <?= json_encode($selected_user_id) ?>;
 
-    const socket = new WebSocket("wss://jidlosmidlo.herokuapp.com/chat");
+    const socket = new WebSocket("wss://jidlosmidlo-cdad357aca19.herokuapp.com/chat");
 
     // Event listeners for debugging
     socket.onopen = () => {
