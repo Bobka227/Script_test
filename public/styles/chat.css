@@ -7,41 +7,45 @@ body {
     background-color: #f0f2f5;
 }
 
+
+.header{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
+
 .messenger-container {
     display: flex;
     width: 100%;
 }
 
-/* Стили контейнера поиска */
 .user-list form {
-    display: flex; /* Располагаем элементы в одну строку */
+    display: flex; 
     align-items: center;
-    gap: 10px; /* Расстояние между полем ввода и кнопками */
-    margin-bottom: 20px; /* Отступ под формой поиска */
+    gap: 10px; 
+    margin-bottom: 20px; 
 }
 
-/* Стили поля ввода поиска */
 .user-list form input[type="text"] {
-    flex-grow: 1; /* Поле занимает оставшееся пространство */
-    padding: 8px 12px; /* Внутренние отступы для удобства */
-    font-size: 14px; /* Размер текста */
-    border: 1px solid #ddd; /* Лёгкая граница */
-    border-radius: 5px; /* Скруглённые углы */
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Внутренняя тень */
+    flex-grow: 1; 
+    padding: 8px 12px; 
+    font-size: 14px; 
+    border: 1px solid #ddd;
+    border-radius: 5px; 
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s;
 }
 
 .user-list form input[type="text"]:focus {
-    border-color: #4CAF50; /* Синий акцент при фокусе */
-    outline: none; /* Убираем стандартный outline */
+    border-color: #4CAF50; 
+    outline: none; 
 }
 
-/* Стили кнопки поиска */
 .user-list form button[type="submit"] {
     padding: 8px 15px;
     font-size: 14px;
     color: #fff;
-    /*background: #007bff;*/
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -56,13 +60,12 @@ body {
     background: #2d782f;
 }
 
-/* Стили кнопки "Все" */
 .user-list form .show-all-btn {
     display: inline-block;
     padding: 8px 15px;
     font-size: 14px;
     color: #fff;
-    background: #4CAF50; /* Зелёный цвет для кнопки "Все" */
+    background: #4CAF50; 
     border: none;
     border-radius: 5px;
     text-decoration: none;
@@ -75,7 +78,7 @@ body {
 }
 
 .user-list form .show-all-btn:hover {
-    background: #2b702e /* Более тёмный зелёный при наведении */
+    background: #2b702e ;
 }
 
 

@@ -1,16 +1,15 @@
 html, body {
-    scrollbar-width: none; /* Для Firefox */
-    -ms-overflow-style: none; /* Для IE */
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
   }
   
   html::-webkit-scrollbar, body::-webkit-scrollbar {
-    display: none; /* Webkit-браузеры */
+    display: none; 
   }
   
-  /* Плавное появление скроллбара */
   html.scrolling, body.scrolling {
-    scrollbar-width: thin; /* Возвращаем скроллбар в Firefox */
-    -ms-overflow-style: auto; /* Возвращаем скроллбар в IE */
+    scrollbar-width: thin;
+    -ms-overflow-style: auto; 
   }
   
   html.scrolling::-webkit-scrollbar, body.scrolling::-webkit-scrollbar {
@@ -18,11 +17,11 @@ html, body {
   }
   
   html.scrolling::-webkit-scrollbar-thumb {
-    background: #888; /* Цвет ползунка */
-    border-radius: 5px; /* Закруглённые края */
-    transition: background 0.3s ease; /* Плавное изменение цвета */
+    background: #888;
+    border-radius: 5px; 
+    transition: background 0.3s ease; 
   }
   
   html.scrolling::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Цвет при наведении */
+    background: #555;
   }

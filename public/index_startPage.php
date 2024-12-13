@@ -45,7 +45,11 @@ session_start();
                             <?php endif; ?>        
                             <li><a href="pages/search.php" class="menu-item">Food Recipes</a></li>
                             <li><a href="pages/mood.php" class="menu-item">Mood Recipes</a></li>
-                            <li><a href="pages/chat.php" class="menu-item">Help</a></li>
+                            <?php if(isset($_SESSION['username'])): ?>
+                                <li><a href="pages/chat.php" class="menu-item">Chat</a></li>
+                            <?php else: ?>
+                            <?php endif; ?>  
+                            <li><a href="pages/help.html" class="menu-item">Help</a></li>
                         </ul>
                     </div>
                 </div>

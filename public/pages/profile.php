@@ -25,6 +25,16 @@ try {
     die("Ошибка подключения к базе данных: " . $e->getMessage());
 }
 
+// Проверяем, является ли пользователь администратором
+function isAdmin($pdo, $login) {
+    $stmt = $pdo->prepare("SELECT role FROM users WHERE username = :username");
+    $stmt->execute(['username' => $login]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $user && $user['role'] === 'admin';
+}
+
+$is_admin = isAdmin($pdo, $current_login);
+
 // Получаем информацию о пользователе из базы данных
 $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
 $stmt->execute(['username' => $current_login]);
@@ -49,6 +59,12 @@ if ($user && !empty($user['profile_picture'])) {
   <link rel="stylesheet" href="../styles/profile.css" />
   <link rel="stylesheet" href="../styles/scrollBar.css" />
 
+  <style>
+    .profile-pic img {
+      border-radius: 0; /* Убираем округление */
+    }
+  </style>
+
   <title>FoodMood</title>
 </head>
 <body>
@@ -69,6 +85,10 @@ if ($user && !empty($user['profile_picture'])) {
               <li><a href="../index_startPage.php" class="menu-item">Main Page</a></li>
               <li><a href="search.php" class="menu-item">Food Recipes</a></li>
               <li><a href="mood.php" class="menu-item">Mood Recipes</a></li>
+              <?php if(isset($_SESSION['username'])): ?>
+                     <li><a href="chat.php" class="menu-item">Chat</a></li>
+              <?php else: ?>
+              <?php endif; ?> 
               <li><a href="help.html" class="menu-item">Help</a></li>
             </ul>
           </div>
@@ -91,7 +111,10 @@ if ($user && !empty($user['profile_picture'])) {
       <button class="profile-option change-password">CHANGE PASSWORD</button>
       <button class="profile-option change-email">CHANGE EMAIL</button>
       <button class="profile-option change-phone">CHANGE PHONE NUMBER</button>
-      <button class="profile-option change-info">CHANGE PERSONAL INFORMATION</button> 
+      <button class="profile-option change-info">CHANGE PERSONAL INFORMATION</button>
+      <?php if ($is_admin): ?>
+        <button class="profile-option view-all-users" id="viewAllUsersButton">VIEW ALL USERS</button>
+      <?php endif; ?>
     </div>
 
     <!-- Кнопка выхода -->
@@ -213,23 +236,53 @@ if ($user && !empty($user['profile_picture'])) {
   <!-- Модальное окно для загрузки аватара -->
   <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="avatarForm" enctype="multipart/form-data">
-          <div class="modal-header">
-            <h5 class="modal-title">Upload Avatar</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <input type="file" name="avatar" id="avatarInput" accept="image/*" required class="form-control">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary">Upload</button>
-          </div>
-        </form>
-      </div>
+        <div class="modal-content">
+            <form id="avatarForm" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Avatar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="file" name="avatar" id="avatarInput" accept="image/*" required class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="uploadButton">Upload</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
+</div>
+
+<script>
+    // Обработчик отправки формы загрузки аватара
+    document.getElementById('avatarForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Останавливаем стандартное поведение формы
+
+        const formData = new FormData(this);
+
+        fetch('upload_image.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Обновляем аватар и перезагружаем страницу
+                document.getElementById('avatarImage').src = 'display_avatar.php?' + new Date().getTime();
+                setTimeout(() => {
+                    location.reload(); // Обновление страницы через 500мс
+                }, 500);
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Ошибка загрузки аватара: ' + error.message);
+        });
+    });
+</script>
+
 
   <!-- Модальное окно с информацией о пользователе -->
   <div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
@@ -253,10 +306,21 @@ if ($user && !empty($user['profile_picture'])) {
     </div>
 
 
+
+<img src="display_avatar.php" alt="User Avatar" class="ava-img" id="avatarImage">
+
   <!-- Подключение скриптов -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../scripts/profile.js"></script>
   <script src="../scripts/scroll.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('#viewAllUsersButton').on('click', function() {
+        window.location.href = 'view_all_users.php';
+      });
+    });
+  </script>
 </body>
 </html>
