@@ -18,19 +18,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recipient_id'], $_POS
         die('Сообщение не может быть пустым.');
     }
 
+
     // Вставляем сообщение в базу
     $created_at = date('Y-m-d H:i:s'); // Альтернатива для NOW()
     $query = "INSERT INTO messages (sender_id, recipient_id, message, created_at) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("iiss", $sender_id, $recipient_id, $message, $created_at);
 
+
     if ($stmt->execute()) {
-        header('Location: chat.php?user=' . $recipient_id); // Перенаправляем на чат с конкретным пользователем
+        http_response_code(200);
+        echo json_encode(['success' => true]);
         exit();
     } else {
-        die('Ошибка сохранения сообщения: ' . $stmt->error);
+        http_response_code(500);
+        echo json_encode(['error' => 'Ошибка сохранения сообщения']);
+        exit();
     }
-} else {
-    die('Неверные данные формы.');
+
 }
 ?>
