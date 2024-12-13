@@ -104,6 +104,7 @@ $conn->close();
     <meta charset="UTF-8">
     <title>Chat</title>
     <link rel="stylesheet" href="../styles/chat.css">
+    <link rel="stylesheet" href="../styles/notification.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -254,29 +255,43 @@ $conn->close();
         }
 
         // Функция проверки новых сообщений
-        async function checkNewMessages() {
-            try {
-                const response = await fetch('check_new_messages.php');
-                if (!response.ok) throw new Error('Failed to check new messages');
-
-                const data = await response.json();
-                if (data.new_messages > 0) {
-                    notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
-                    notifications.classList.add('show');
-                    setTimeout(() => notifications.classList.remove('show'), 4000);
-                }
-            } catch (error) {
-                console.error('Error checking new messages:', error);
-            }
-        }
+        // async function checkNewMessages() {
+        //     try {
+        //         const response = await fetch('check_new_messages.php');
+        //         if (!response.ok) throw new Error('Failed to check new messages');
+        //
+        //         const data = await response.json();
+        //         if (data.new_messages > 0) {
+        //             notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
+        //             notifications.classList.add('show');
+        //             setTimeout(() => notifications.classList.remove('show'), 4000);
+        //         }
+        //     } catch (error) {
+        //         console.error('Error checking new messages:', error);
+        //     }
+        // }
 
         // Устанавливаем интервалы для обновления данных
         setInterval(fetchMessages, 2000); // Обновление сообщений
-        setInterval(checkNewMessages, 10000); // Проверка уведомлений
+        // setInterval(checkNewMessages, 10000); // Проверка уведомлений
 
         // Выполняем начальную загрузку данных
         fetchMessages();
-        checkNewMessages();
+        // checkNewMessages();
+    </script>
+
+    <script type="module">
+        import Notification from '../scripts/notification';
+
+        const notification = new Notification();
+
+        // Проверка новых сообщений
+        setInterval(() => {
+            notification.checkNewMessages();
+        }, 10000);
+
+        // Пример вызова
+        // notification.show('This is a test notification!');
     </script>
 
 </body>
