@@ -18,12 +18,17 @@ class ChatServer implements MessageComponentInterface {
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
+        $numRecv = count($this->clients) - 1; // Количество подключенных клиентов, кроме отправителя
+        echo sprintf('Connection %d sending message "%s" to %d other connection(s)' . "\n",
+            $from->resourceId, $msg, $numRecv);
+
         foreach ($this->clients as $client) {
             if ($from !== $client) {
-                $client->send($msg);
+                $client->send("Client {$from->resourceId} says: $msg");
             }
         }
     }
+
 
     public function onClose(ConnectionInterface $conn) {
         $this->clients->detach($conn);
@@ -38,7 +43,8 @@ class ChatServer implements MessageComponentInterface {
 
 use Ratchet\App;
 
-$port = getenv('PORT') ?: 8081;
+//$port = 8081;
+//echo "Starting WebSocket server on port $port...\n";
+
+$port = getenv('PORT') ?: 8080;
 $app = new Ratchet\App('0.0.0.0', $port, '0.0.0.0');
-$app->route('/chat', new ChatServer, ['*']);
-$app->run();
