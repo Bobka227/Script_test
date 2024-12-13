@@ -115,23 +115,21 @@ $conn->close();
     <div class="user-list">
         <h3>Users</h3>
         <form method="GET" action="">
-            <input type="text" name="search" placeholder="Serch users" value="<?= htmlspecialchars($search_query) ?>">
-            <button class="serch" type="submit">Serch</button>
+            <input type="text" name="search" placeholder="Search users" value="<?= htmlspecialchars($search_query) ?>">
+            <button class="search" type="submit">Search</button>
             <a href="?show_all=1" class="show-all-btn">All</a>
         </form>
         <ul>
             <?php foreach ($users as $user): ?>
                 <li class="<?= $user['id'] === $selected_user_id ? 'active' : '' ?>">
                     <a href="?user=<?= $user['id'] ?>">
-                        <span class="user-icon">👤</span> <!-- Иконка пользователя -->
+                        <span class="user-icon">👤</span>
                         <?= htmlspecialchars($user['username']) ?>
                     </a>
                     <form method="POST" action="add_favorite.php" class="add-favorite-form">
                         <input type="hidden" name="favorite_id" value="<?= $user['id'] ?>">
                         <button type="submit" class="favorite-btn">
-                        <span class="star <?= in_array($user['id'], array_column($favorites, 'favorite_id')) ? 'filled' : '' ?>">
-                            ★
-                        </span>
+                            <span class="star <?= in_array($user['id'], array_column($favorites, 'favorite_id')) ? 'filled' : '' ?>">★</span>
                         </button>
                     </form>
                 </li>
@@ -143,14 +141,10 @@ $conn->close();
         <p>No new messages</p>
     </div>
 
-
     <!-- Чат -->
     <div class="chat-window">
         <div class="chat-header">
-            <h3>
-                Chat with <?= htmlspecialchars($selected_user['username'] ?? 'select user') ?>
-            </h3>
-
+            <h3>Chat with <?= htmlspecialchars($selected_user['username'] ?? 'select user') ?></h3>
         </div>
         <div class="chat-messages" id="chat-messages">
             <?php if ($messages): ?>
@@ -168,57 +162,26 @@ $conn->close();
             <input type="hidden" name="recipient_id" value="<?= $selected_user_id ?>">
             <textarea name="message" placeholder="Enter your message" required></textarea>
             <button type="submit">Send</button>
-            <script>
-                const messageForm = document.getElementById('message-form');
-
-                messageForm.addEventListener('submit', async (event) => {
-                    event.preventDefault(); // Отключаем стандартное поведение формы
-
-                    const formData = new FormData(messageForm);
-
-                    try {
-                        const response = await fetch('send_message.php', {
-                            method: 'POST',
-                            body: formData
-                        });
-
-                        if (!response.ok) {
-                            console.error('Ошибка отправки сообщения');
-                            return;
-                        }
-
-                        // Очищаем поле ввода
-                        messageForm.querySelector('textarea').value = '';
-
-                        // Обновляем сообщения
-                        fetchMessages();
-                    } catch (error) {
-                        console.error('Ошибка при отправке сообщения:', error);
-                    }
-                });
-            </script>
         </form>
     </div>
 </div>
 
 <script>
-    const chatMessages = document.getElementById('chat-messages');
-    const recipientId = <?= json_encode($selected_user_id) ?>;
-
-    // Функция для получения сообщений
+    // Функция обновления сообщений
     async function fetchMessages() {
+        const chatMessages = document.getElementById('chat-messages');
+        const recipientId = <?= json_encode($selected_user_id) ?>;
+
         try {
             const response = await fetch(`get_messages.php?recipient_id=${recipientId}`);
             if (!response.ok) {
                 console.error('Ошибка при загрузке сообщений');
                 return;
             }
-            const messages = await response.json();
 
-            // Очищаем контейнер сообщений
+            const messages = await response.json();
             chatMessages.innerHTML = '';
 
-            // Добавляем сообщения в контейнер
             messages.forEach(msg => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', msg.sender === 'You' ? 'outgoing' : 'incoming');
@@ -236,40 +199,113 @@ $conn->close();
         }
     }
 
-    // Автоматическое обновление каждые 2 секунды
-    setInterval(fetchMessages, 2000);
-
-    // Подгружаем сообщения при загрузке страницы
-    fetchMessages();
-
-        async function checkNewMessages() {
-        try {
-        const response = await fetch('/check_new_messages.php');
-        if (!response.ok) {
-        console.error('Ошибка при проверке новых сообщений');
-        return;
-    }
-
-        const data = await response.json();
+    // Функция проверки новых сообщений
+    async function checkNewMessages() {
         const notifications = document.getElementById('notifications');
 
-        if (data.new_messages > 0) {
-        notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
-        notifications.classList.add('show');
-        setTimeout(() => {
-        notifications.classList.remove('show');
-    }, 4000); // Убираем уведомление через 4 секунды
-    }
-    } catch (error) {
-        console.error('Ошибка при запросе новых сообщений:', error);
-    }
+        try {
+            const response = await fetch('check_new_messages.php');
+            if (!response.ok) {
+                console.error('Ошибка при проверке новых сообщений');
+                return;
+            }
+
+            const data = await response.json();
+            if (data.new_messages > 0) {
+                notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
+                notifications.classList.add('show');
+                setTimeout(() => notifications.classList.remove('show'), 4000); // Убираем уведомление через 4 секунды
+            }
+        } catch (error) {
+            console.error('Ошибка при запросе новых сообщений:', error);
+        }
     }
 
-        // Проверяем каждые 10 секунд
-        setInterval(checkNewMessages, 10000);
+    // Обработчик формы отправки сообщений
+    const messageForm = document.getElementById('message-form');
+    messageForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-        // Первоначальная проверка
-        checkNewMessages();
+        const formData = new FormData(messageForm);
+
+        try {
+            const response = await fetch('send_message.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                console.error('Ошибка отправки сообщения');
+                return;
+            }
+
+            messageForm.querySelector('textarea').value = '';
+            fetchMessages();
+        } catch (error) {
+            console.error('Ошибка при отправке сообщения:', error);
+        }
+    });
+
+    // Автоматическое обновление
+    setInterval(fetchMessages, 2000); // Обновление чата
+    setInterval(checkNewMessages, 10000); // Проверка новых сообщений
+    fetchMessages();
+    checkNewMessages();
+
+
+    const ws = new WebSocket('wss://jidlosmidlo.herokuapp.com/chat'');
+
+    // Обработка открытия соединения
+    ws.onopen = () => {
+        console.log('Connected to WebSocket server');
+    };
+
+    // Обработка получения сообщений
+    ws.onmessage = (event) => {
+        const chatMessages = document.getElementById('chat-messages');
+        const msg = JSON.parse(event.data);
+
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', msg.sender === 'You' ? 'outgoing' : 'incoming');
+        messageDiv.innerHTML = `
+        <p><strong>${msg.sender}:</strong> ${msg.message}</p>
+        <span class="timestamp">${msg.created_at}</span>
+    `;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    // Обработка закрытия соединения
+    ws.onclose = () => {
+        console.log('Disconnected from WebSocket server');
+    };
+
+    // Обработка ошибок
+    ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+    };
+
+    // Отправка сообщения через WebSocket
+    const messageForm = document.getElementById('message-form');
+    messageForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(messageForm);
+        const message = formData.get('message');
+        const recipientId = formData.get('recipient_id');
+
+        const data = {
+            sender: 'You', // Можно заменить на реального пользователя
+            message: message,
+            recipient_id: recipientId,
+            created_at: new Date().toISOString()
+        };
+
+        ws.send(JSON.stringify(data));
+        messageForm.querySelector('textarea').value = '';
+    });
+
 </script>
 </body>
 </html>
+
