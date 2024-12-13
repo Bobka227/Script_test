@@ -116,7 +116,7 @@ $conn->close();
 
     <link rel="stylesheet" href="../styles/menu.css" />
 </head>
-<body>
+<body/>
 <title>FoodMood</title>
   </head>
   <body>
@@ -289,7 +289,7 @@ $conn->close();
     checkNewMessages();
 
 
-    const ws = new WebSocket('wss://jidlosmidlo.herokuapp.com/chat'');
+    const ws = new WebSocket('wss://jidlosmidlo.herokuapp.com/chat');
 
     // Обработка открытия соединения
     ws.onopen = () => {
