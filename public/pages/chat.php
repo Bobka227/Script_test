@@ -184,73 +184,32 @@ $conn->close();
         </form>
     </div>
 </div>
+    <script>
+        const messageForm = document.getElementById('message-form');
+        const chatMessages = document.getElementById('chat-messages');
+        const notifications = document.getElementById('notifications');
+        const recipientId = <?= json_encode($selected_user_id) ?>;
 
-<script>
-    const messageForm = document.getElementById('message-form');
-    const chatMessages = document.getElementById('chat-messages');
-    const notifications = document.getElementById('notifications');
-    const recipientId = <?= json_encode($selected_user_id) ?>;
+        // Создаем WebSocket соединение
+        const socket = new WebSocket("wss://jidlosmidlo.herokuapp.com/chat");
 
-    const socket = new WebSocket("wss://jidlosmidlo.herokuapp.com/chat");
-
-    socket.onopen = () => {
-        console.log("Connected to WebSocket server.");
-        socket.send("Hello from browser client!");
-    };
-
-    socket.onmessage = (event) => {
-        console.log("Message from server:", event.data);
-    };
-
-    socket.onerror = (error) => {
-        console.error("WebSocket error:", error);
-    };
-
-    socket.onclose = () => {
-        console.log("WebSocket connection closed.");
-    };
-
-    socket.onmessage = (event) => {
-        const msg = JSON.parse(event.data);
-
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', msg.sender === 'You' ? 'outgoing' : 'incoming');
-        messageDiv.innerHTML = `
-        <p><strong>${msg.sender}:</strong> ${msg.message}</p>
-        <span class="timestamp">${msg.created_at}</span>
-    `;
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    };
-
-    // Form submission handler
-    messageForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(messageForm);
-        const message = formData.get('message');
-
-        const data = {
-            sender: 'You',
-            message: message,
-            recipient_id: recipientId,
-            created_at: new Date().toISOString(),
+        // Обработчик события открытия WebSocket
+        socket.onopen = () => {
+            console.log("Connected to WebSocket server.");
+            socket.send(JSON.stringify({ type: 'greeting', message: 'Hello from browser client!' }));
         };
 
-        socket.send(JSON.stringify(data)); // Send message through WebSocket
-        messageForm.querySelector('textarea').value = '';
-    });
+        // Обработчик сообщения от сервера
+        socket.onmessage = (event) => {
+            try {
+                const msg = JSON.parse(event.data);
 
-    // Fetch messages through AJAX as a fallback
-    async function fetchMessages() {
-        try {
-            const response = await fetch(`get_messages.php?recipient_id=${recipientId}`);
-            if (!response.ok) throw new Error('Failed to load messages');
+                // Проверяем структуру сообщения
+                if (!msg.sender || !msg.message || !msg.created_at) {
+                    console.warn("Invalid message format:", msg);
+                    return;
+                }
 
-            const messages = await response.json();
-            chatMessages.innerHTML = '';
-
-            messages.forEach(msg => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', msg.sender === 'You' ? 'outgoing' : 'incoming');
                 messageDiv.innerHTML = `
@@ -258,40 +217,103 @@ $conn->close();
                 <span class="timestamp">${msg.created_at}</span>
             `;
                 chatMessages.appendChild(messageDiv);
-            });
-
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        } catch (error) {
-            console.error('Error fetching messages:', error);
-        }
-    }
-
-    // Check for new messages
-    async function checkNewMessages() {
-        try {
-            const response = await fetch('check_new_messages.php');
-            if (!response.ok) throw new Error('Failed to check new messages');
-
-            const data = await response.json();
-            if (data.new_messages > 0) {
-                notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
-                notifications.classList.add('show');
-                setTimeout(() => notifications.classList.remove('show'), 4000);
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Прокрутка вниз
+            } catch (error) {
+                console.error("Failed to process server message:", error, event.data);
             }
-        } catch (error) {
-            console.error('Error checking new messages:', error);
+        };
+
+        // Обработчик ошибок WebSocket
+        socket.onerror = (error) => {
+            console.error("WebSocket error:", error);
+            notifications.innerHTML = "<p>Error connecting to WebSocket server</p>";
+            notifications.classList.add('show');
+            setTimeout(() => notifications.classList.remove('show'), 4000);
+        };
+
+        // Обработчик закрытия WebSocket
+        socket.onclose = (event) => {
+            console.log("WebSocket connection closed:", event);
+            notifications.innerHTML = "<p>WebSocket connection closed</p>";
+            notifications.classList.add('show');
+            setTimeout(() => notifications.classList.remove('show'), 4000);
+        };
+
+        // Обработчик отправки сообщения
+        messageForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(messageForm);
+            const message = formData.get('message');
+            if (!message) return; // Пропуск пустых сообщений
+
+            const data = {
+                sender: 'You',
+                message: message,
+                recipient_id: recipientId,
+                created_at: new Date().toISOString(),
+            };
+
+            // Отправка сообщения через WebSocket
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify(data));
+                messageForm.querySelector('textarea').value = '';
+            } else {
+                console.warn("WebSocket is not open. Message not sent.");
+            }
+        });
+
+        // Функция для загрузки сообщений через AJAX
+        async function fetchMessages() {
+            try {
+                const response = await fetch(`get_messages.php?recipient_id=${recipientId}`);
+                if (!response.ok) throw new Error('Failed to load messages');
+
+                const messages = await response.json();
+                chatMessages.innerHTML = '';
+
+                messages.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('message', msg.sender === 'You' ? 'outgoing' : 'incoming');
+                    messageDiv.innerHTML = `
+                    <p><strong>${msg.sender}:</strong> ${msg.message}</p>
+                    <span class="timestamp">${msg.created_at}</span>
+                `;
+                    chatMessages.appendChild(messageDiv);
+                });
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
         }
-    }
 
-    // Set intervals for updates
-    setInterval(fetchMessages, 2000);
-    setInterval(checkNewMessages, 10000);
+        // Функция проверки новых сообщений
+        async function checkNewMessages() {
+            try {
+                const response = await fetch('check_new_messages.php');
+                if (!response.ok) throw new Error('Failed to check new messages');
 
-    // Initial calls
-    fetchMessages();
-    checkNewMessages();
+                const data = await response.json();
+                if (data.new_messages > 0) {
+                    notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
+                    notifications.classList.add('show');
+                    setTimeout(() => notifications.classList.remove('show'), 4000);
+                }
+            } catch (error) {
+                console.error('Error checking new messages:', error);
+            }
+        }
 
-</script>
+        // Устанавливаем интервалы для обновления данных
+        setInterval(fetchMessages, 2000); // Обновление сообщений
+        setInterval(checkNewMessages, 10000); // Проверка уведомлений
+
+        // Выполняем начальную загрузку данных
+        fetchMessages();
+        checkNewMessages();
+    </script>
+
 </body>
 </html>
 

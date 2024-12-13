@@ -29,7 +29,6 @@ class ChatServer implements MessageComponentInterface {
         }
     }
 
-
     public function onClose(ConnectionInterface $conn) {
         $this->clients->detach($conn);
         echo "Connection {$conn->resourceId} has disconnected\n";
@@ -43,8 +42,7 @@ class ChatServer implements MessageComponentInterface {
 
 use Ratchet\App;
 
-//$port = 8081;
-//echo "Starting WebSocket server on port $port...\n";
-
-$port = getenv('PORT') ?: 8080;
+$port = getenv('PORT') ?: 8081; // Получение порта из переменной среды
 $app = new Ratchet\App('0.0.0.0', $port, '0.0.0.0');
+$app->route('/chat', new ChatServer, ['*']); // Настройка маршрута
+$app->run();
