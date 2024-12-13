@@ -82,25 +82,10 @@ $favorites_result = $stmt->get_result();
 $favorites = $favorites_result->fetch_all(MYSQLI_ASSOC);
 $favorite_ids = !empty($favorites) ? array_column($favorites, 'favorite_id') : [];
 
-$selected_user_id = isset($_GET['user']) ? (int)$_GET['user'] : null;
-
-// Получаем информацию о выбранном собеседнике
-$selected_user = null;
-if ($selected_user_id) {
-    $query = "SELECT id, username FROM users WHERE id = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $selected_user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $selected_user = $result->fetch_assoc();
-    }
-}
-
 $stmt->close();
 $conn->close();
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -116,9 +101,7 @@ $conn->close();
 
     <link rel="stylesheet" href="../styles/menu.css" />
 </head>
-<body/>
 <title>FoodMood</title>
-  </head>
   <body>
     <header class="header">
         <nav class="navbar">
@@ -203,102 +186,19 @@ $conn->close();
 </div>
 
 <script>
-    // Функция обновления сообщений
-    async function fetchMessages() {
-        const chatMessages = document.getElementById('chat-messages');
-        const recipientId = <?= json_encode($selected_user_id) ?>;
-
-        try {
-            const response = await fetch(`get_messages.php?recipient_id=${recipientId}`);
-            if (!response.ok) {
-                console.error('Ошибка при загрузке сообщений');
-                return;
-            }
-
-            const messages = await response.json();
-            chatMessages.innerHTML = '';
-
-            messages.forEach(msg => {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', msg.sender === 'You' ? 'outgoing' : 'incoming');
-                messageDiv.innerHTML = `
-                    <p><strong>${msg.sender}:</strong> ${msg.message}</p>
-                    <span class="timestamp">${msg.created_at}</span>
-                `;
-                chatMessages.appendChild(messageDiv);
-            });
-
-            // Прокрутка вниз
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        } catch (error) {
-            console.error('Ошибка при запросе сообщений:', error);
-        }
-    }
-
-    // Функция проверки новых сообщений
-    async function checkNewMessages() {
-        const notifications = document.getElementById('notifications');
-
-        try {
-            const response = await fetch('check_new_messages.php');
-            if (!response.ok) {
-                console.error('Ошибка при проверке новых сообщений');
-                return;
-            }
-
-            const data = await response.json();
-            if (data.new_messages > 0) {
-                notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
-                notifications.classList.add('show');
-                setTimeout(() => notifications.classList.remove('show'), 4000); // Убираем уведомление через 4 секунды
-            }
-        } catch (error) {
-            console.error('Ошибка при запросе новых сообщений:', error);
-        }
-    }
-
-    // Обработчик формы отправки сообщений
     const messageForm = document.getElementById('message-form');
-    messageForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(messageForm);
-
-        try {
-            const response = await fetch('send_message.php', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                console.error('Ошибка отправки сообщения');
-                return;
-            }
-
-            messageForm.querySelector('textarea').value = '';
-            fetchMessages();
-        } catch (error) {
-            console.error('Ошибка при отправке сообщения:', error);
-        }
-    });
-
-    // Автоматическое обновление
-    setInterval(fetchMessages, 2000); // Обновление чата
-    setInterval(checkNewMessages, 10000); // Проверка новых сообщений
-    fetchMessages();
-    checkNewMessages();
-
+    const chatMessages = document.getElementById('chat-messages');
+    const notifications = document.getElementById('notifications');
+    const recipientId = <?= json_encode($selected_user_id) ?>;
 
     const ws = new WebSocket('wss://jidlosmidlo.herokuapp.com/chat');
 
-    // Обработка открытия соединения
-    ws.onopen = () => {
-        console.log('Connected to WebSocket server');
-    };
+    // WebSocket handlers
+    ws.onopen = () => console.log('Connected to WebSocket server');
+    ws.onclose = () => console.log('Disconnected from WebSocket server');
+    ws.onerror = (error) => console.error('WebSocket error:', error);
 
-    // Обработка получения сообщений
     ws.onmessage = (event) => {
-        const chatMessages = document.getElementById('chat-messages');
         const msg = JSON.parse(event.data);
 
         const messageDiv = document.createElement('div');
@@ -311,35 +211,73 @@ $conn->close();
         chatMessages.scrollTop = chatMessages.scrollHeight;
     };
 
-    // Обработка закрытия соединения
-    ws.onclose = () => {
-        console.log('Disconnected from WebSocket server');
-    };
-
-    // Обработка ошибок
-    ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-    };
-
-    // Отправка сообщения через WebSocket
-    const messageForm = document.getElementById('message-form');
-    messageForm.addEventListener('submit', (event) => {
+    // Form submission handler
+    messageForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
         const formData = new FormData(messageForm);
         const message = formData.get('message');
-        const recipientId = formData.get('recipient_id');
 
         const data = {
-            sender: 'You', // Можно заменить на реального пользователя
+            sender: 'You',
             message: message,
             recipient_id: recipientId,
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
         };
 
-        ws.send(JSON.stringify(data));
+        ws.send(JSON.stringify(data)); // Send message through WebSocket
         messageForm.querySelector('textarea').value = '';
     });
+
+    // Fetch messages through AJAX as a fallback
+    async function fetchMessages() {
+        try {
+            const response = await fetch(`get_messages.php?recipient_id=${recipientId}`);
+            if (!response.ok) throw new Error('Failed to load messages');
+
+            const messages = await response.json();
+            chatMessages.innerHTML = '';
+
+            messages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', msg.sender === 'You' ? 'outgoing' : 'incoming');
+                messageDiv.innerHTML = `
+                <p><strong>${msg.sender}:</strong> ${msg.message}</p>
+                <span class="timestamp">${msg.created_at}</span>
+            `;
+                chatMessages.appendChild(messageDiv);
+            });
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    }
+
+    // Check for new messages
+    async function checkNewMessages() {
+        try {
+            const response = await fetch('check_new_messages.php');
+            if (!response.ok) throw new Error('Failed to check new messages');
+
+            const data = await response.json();
+            if (data.new_messages > 0) {
+                notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
+                notifications.classList.add('show');
+                setTimeout(() => notifications.classList.remove('show'), 4000);
+            }
+        } catch (error) {
+            console.error('Error checking new messages:', error);
+        }
+    }
+
+    // Set intervals for updates
+    setInterval(fetchMessages, 2000);
+    setInterval(checkNewMessages, 10000);
+
+    // Initial calls
+    fetchMessages();
+    checkNewMessages();
 
 </script>
 </body>
