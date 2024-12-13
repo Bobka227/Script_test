@@ -1,1 +1,1 @@
-web: php websocket-server.php
+web: vendor/bin/heroku-php-apache2 public/
