@@ -103,8 +103,44 @@ $conn->close();
     <meta charset="UTF-8">
     <title>Chat</title>
     <link rel="stylesheet" href="../styles/chat.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="icon" href="../images/logo_browser/logo_browser_2.png" type="image/png">
+
+    <link rel="stylesheet" href="../styles/menu.css" />
 </head>
 <body>
+<title>FoodMood</title>
+  </head>
+  <body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+    
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                    <div class="offcanvas-header">
+                        <h5 id="offcanvasRightLabel">Menu</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="list-unstyled">
+                            <li><a href="../index_startPage.php" class="menu-item">Main Page</a></li>
+                            <!-- <li><a href="register.html" class="menu-item">Sign In/Sign Up</a></li> -->
+                            <li><a href="search.php" class="menu-item">Food Recipes</a></li>
+                            <li><a href="mood.html" class="menu-item">Mood Recipes</a></li>
+                            <li><a href="help.html" class="menu-item">Help</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
 <div class="messenger-container">
     <!-- Список пользователей -->
     <div class="user-list">
