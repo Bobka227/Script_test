@@ -177,7 +177,7 @@ $conn->close();
                 <p class="no-messages">Chat is empty.</p>
             <?php endif; ?>
         </div>
-        <form id="message-form" class="message-form">
+        <form id="message-form" class="message-form" action="send_message.php" method="POST">
             <input type="hidden" name="recipient_id" value="<?= $selected_user_id ?>">
             <textarea name="message" placeholder="Enter your message" required></textarea>
             <button type="submit">Send</button>
@@ -192,6 +192,29 @@ $conn->close();
 
 
 
+        messageForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Предотвращаем стандартное поведение формы
+            const formData = new FormData(messageForm);
+
+            try {
+                const response = await fetch('send_message.php', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) throw new Error('Failed to send message');
+
+                const result = await response.json();
+                if (result.success) {
+                    messageForm.reset(); // Очищаем форму после отправки
+                    fetchMessages(); // Обновляем сообщения
+                } else {
+                    alert('Failed to send message: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        });
 
         // Функция для загрузки сообщений через AJAX
         async function fetchMessages() {
