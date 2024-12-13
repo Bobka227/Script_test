@@ -1,14 +1,12 @@
 <?php
 session_start();
-require '../../config.php'; // Подключаем файл с настройками и подключением к базе данных
+require '../../config.php'; // Подключение к базе данных
 
-// Проверяем, авторизован ли пользователь
 if (!isset($_SESSION['username'])) {
     header('Location: register.php');
     exit();
 }
 
-// Получаем имя пользователя и ID текущего пользователя
 $username = $_SESSION['username'];
 $query = "SELECT id FROM users WHERE LOWER(username) = LOWER(?)";
 $stmt = $conn->prepare($query);
@@ -24,17 +22,15 @@ if ($result->num_rows > 0) {
     die('Пользователь не найден');
 }
 
-// Проверяем, нужно ли показывать всех пользователей
 $show_all = isset($_GET['show_all']) && $_GET['show_all'] == '1';
+$search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// Если выбрано "Все", получаем всех пользователей
-if ($show_all) {
-    $query = "SELECT id, username, profile_picture_blob FROM users WHERE id != ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $user_id);
-} else {
-    $search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
-    if (!empty($search_query)) {
+function getUsers($conn, $user_id, $show_all, $search_query) {
+    if ($show_all) {
+        $query = "SELECT id, username, profile_picture_blob FROM users WHERE id != ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $user_id);
+    } elseif (!empty($search_query)) {
         $query = "SELECT id, username, profile_picture_blob FROM users 
                   WHERE id != ? AND username LIKE CONCAT('%', ?, '%')";
         $stmt = $conn->prepare($query);
@@ -47,18 +43,16 @@ if ($show_all) {
         $stmt = $conn->prepare($query);
         $stmt->bind_param("i", $user_id);
     }
+    if (!$stmt->execute()) {
+        die('Ошибка выполнения запроса: ' . $stmt->error);
+    }
+    $users_result = $stmt->get_result();
+    return $users_result->fetch_all(MYSQLI_ASSOC);
 }
-$stmt->execute();
-$users_result = $stmt->get_result();
-$users = $users_result->fetch_all(MYSQLI_ASSOC);
-$stmt->execute();
-$users_result = $stmt->get_result();
-$users = $users_result->fetch_all(MYSQLI_ASSOC);
 
-// Получаем ID выбранного собеседника (по умолчанию первый пользователь из списка)
+$users = getUsers($conn, $user_id, $show_all, $search_query);
 $selected_user_id = isset($_GET['user']) ? (int)$_GET['user'] : ($users[0]['id'] ?? null);
 
-// Получаем сообщения между текущим пользователем и выбранным собеседником
 if ($selected_user_id) {
     $query = "SELECT m.message, m.created_at, 
                      CASE WHEN m.sender_id = ? THEN 'You' ELSE u.username END AS sender
@@ -69,7 +63,9 @@ if ($selected_user_id) {
               ORDER BY m.created_at ASC";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("iiiii", $user_id, $user_id, $selected_user_id, $selected_user_id, $user_id);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        die('Ошибка выполнения запроса: ' . $stmt->error);
+    }
     $messages_result = $stmt->get_result();
     $messages = $messages_result->fetch_all(MYSQLI_ASSOC);
 } else {
@@ -78,24 +74,29 @@ if ($selected_user_id) {
 
 $query = "SELECT favorite_id FROM favorites WHERE user_id = ?";
 $stmt = $conn->prepare($query);
-if (!$stmt) {
-    die('Ошибка подготовки запроса: ' . $conn->error);
-}
 $stmt->bind_param("i", $user_id);
-$stmt->execute();
-$favorites_result = $stmt->get_result();
-if (!$favorites_result) {
+if (!$stmt->execute()) {
     die('Ошибка выполнения запроса: ' . $stmt->error);
 }
+$favorites_result = $stmt->get_result();
 $favorites = $favorites_result->fetch_all(MYSQLI_ASSOC);
+$favorite_ids = !empty($favorites) ? array_column($favorites, 'favorite_id') : [];
 
-// Преобразуем массив избранных для удобства проверки
-$favorite_ids = array_column($favorites, 'favorite_id');
-$search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
+$selected_user = null;
+if ($selected_user_id) {
+    $query = "SELECT id, username FROM users WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $selected_user_id);
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+        $selected_user = $result->fetch_assoc();
+    }
+}
 
 $stmt->close();
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -111,9 +112,7 @@ $conn->close();
 
     <link rel="stylesheet" href="../styles/menu.css" />
 </head>
-<body>
 <title>FoodMood</title>
-  </head>
   <body>
     <header class="header">
         <nav class="navbar">
@@ -146,23 +145,21 @@ $conn->close();
     <div class="user-list">
         <h3>Users</h3>
         <form method="GET" action="">
-            <input type="text" name="search" placeholder="Serch users" value="<?= htmlspecialchars($search_query) ?>">
-            <button class="serch" type="submit">Serch</button>
+            <input type="text" name="search" placeholder="Search users" value="<?= htmlspecialchars($search_query) ?>">
+            <button class="search" type="submit">Search</button>
             <a href="?show_all=1" class="show-all-btn">All</a>
         </form>
         <ul>
             <?php foreach ($users as $user): ?>
                 <li class="<?= $user['id'] === $selected_user_id ? 'active' : '' ?>">
                     <a href="?user=<?= $user['id'] ?>">
-                        <span class="user-icon">👤</span> <!-- Иконка пользователя -->
+                        <span class="user-icon">👤</span>
                         <?= htmlspecialchars($user['username']) ?>
                     </a>
                     <form method="POST" action="add_favorite.php" class="add-favorite-form">
                         <input type="hidden" name="favorite_id" value="<?= $user['id'] ?>">
                         <button type="submit" class="favorite-btn">
-                        <span class="star <?= in_array($user['id'], array_column($favorites, 'favorite_id')) ? 'filled' : '' ?>">
-                            ★
-                        </span>
+                            <span class="star <?= in_array($user['id'], array_column($favorites, 'favorite_id')) ? 'filled' : '' ?>">★</span>
                         </button>
                     </form>
                 </li>
@@ -170,14 +167,17 @@ $conn->close();
         </ul>
     </div>
 
+    <div id="notifications" class="notifications">
+        <p>No new messages</p>
+    </div>
+
     <!-- Чат -->
     <div class="chat-window">
         <div class="chat-header">
-            <h3>
-                Chat with <?= htmlspecialchars($users[array_search($selected_user_id, array_column($users, 'id'))]['username'] ?? 'select user') ?>
-            </h3>
+            <h3>Chat with <?= htmlspecialchars($selected_user['username'] ?? 'select user') ?></h3>
+
         </div>
-        <div class="chat-messages">
+        <div class="chat-messages" id="chat-messages">
             <?php if ($messages): ?>
                 <?php foreach ($messages as $msg): ?>
                     <div class="message <?= $msg['sender'] === 'You' ? 'outgoing' : 'incoming' ?>">
@@ -189,12 +189,96 @@ $conn->close();
                 <p class="no-messages">Chat is empty.</p>
             <?php endif; ?>
         </div>
-        <form method="POST" action="send_message.php" class="message-form">
+        <form id="message-form" class="message-form" action="send_message.php" method="POST">
             <input type="hidden" name="recipient_id" value="<?= $selected_user_id ?>">
             <textarea name="message" placeholder="Enter your message" required></textarea>
             <button type="submit">Send</button>
         </form>
     </div>
 </div>
+    <script>
+        const messageForm = document.getElementById('message-form');
+        const chatMessages = document.getElementById('chat-messages');
+        const notifications = document.getElementById('notifications');
+        const recipientId = <?= json_encode($selected_user_id) ?>;
+
+
+
+        messageForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Предотвращаем стандартное поведение формы
+            const formData = new FormData(messageForm);
+
+            try {
+                const response = await fetch('send_message.php', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) throw new Error('Failed to send message');
+
+                const result = await response.json();
+                if (result.success) {
+                    messageForm.reset(); // Очищаем форму после отправки
+                    fetchMessages(); // Обновляем сообщения
+                } else {
+                    alert('Failed to send message: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        });
+
+        // Функция для загрузки сообщений через AJAX
+        async function fetchMessages() {
+            try {
+                const response = await fetch(`get_messages.php?recipient_id=${recipientId}`);
+                if (!response.ok) throw new Error('Failed to load messages');
+
+                const messages = await response.json();
+                chatMessages.innerHTML = '';
+
+                messages.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('message', msg.sender === 'You' ? 'outgoing' : 'incoming');
+                    messageDiv.innerHTML = `
+                    <p><strong>${msg.sender}:</strong> ${msg.message}</p>
+                    <span class="timestamp">${msg.created_at}</span>
+                `;
+                    chatMessages.appendChild(messageDiv);
+                });
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        }
+
+        // Функция проверки новых сообщений
+        async function checkNewMessages() {
+            try {
+                const response = await fetch('check_new_messages.php');
+                if (!response.ok) throw new Error('Failed to check new messages');
+
+                const data = await response.json();
+                if (data.new_messages > 0) {
+                    notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
+                    notifications.classList.add('show');
+                    setTimeout(() => notifications.classList.remove('show'), 4000);
+                }
+            } catch (error) {
+                console.error('Error checking new messages:', error);
+            }
+        }
+
+        // Устанавливаем интервалы для обновления данных
+        setInterval(fetchMessages, 2000); // Обновление сообщений
+        setInterval(checkNewMessages, 10000); // Проверка уведомлений
+
+        // Выполняем начальную загрузку данных
+        fetchMessages();
+        checkNewMessages();
+    </script>
+
 </body>
 </html>
+

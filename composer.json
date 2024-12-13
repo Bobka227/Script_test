@@ -7,6 +7,9 @@
     "endroid/qr-code": "^6.0",
     "ext-openssl": "*",
     "vlucas/phpdotenv": "^5.6",
-    "ext-pgsql": "*"
+    "ext-pgsql": "*",
+    "cboden/ratchet": "^0.4.4",
+    "react/http": "^1.11",
+    "react/socket": "^1.16"
   }
 }
