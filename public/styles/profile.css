@@ -60,7 +60,7 @@ body {
 }
 
 .profile-option {
-    background-color: #e0e0e0;
+    background-color: #00ffcb ;
     border: none;
     width: 100%;
     padding: 15px;
@@ -74,13 +74,13 @@ body {
 }
 
 .profile-option:hover {
-    background-color: #d0d0d0;
+    background-color: #7fd3c2;
 }
 
 .logout-button {
     display: flex;
     margin-top: 30px;
-    background-color: #e0e0e0;
+    background-color: #00ffcb ;
     color: #333;
     font-weight: bold;
 }
@@ -100,7 +100,7 @@ body {
     margin-top: 20px;
     display: flex;
     justify-content: start;
-    background-color: #cccccc !important;
+    background-color: #00ffcb  !important;
     text-transform: uppercase;
     color: #333;
     font-weight: bold;
