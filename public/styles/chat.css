@@ -1,0 +1,261 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    background-color: #f0f2f5;
+}
+
+.messenger-container {
+    display: flex;
+    width: 100%;
+}
+
+/* Стили контейнера поиска */
+.user-list form {
+    display: flex; /* Располагаем элементы в одну строку */
+    align-items: center;
+    gap: 10px; /* Расстояние между полем ввода и кнопками */
+    margin-bottom: 20px; /* Отступ под формой поиска */
+}
+
+/* Стили поля ввода поиска */
+.user-list form input[type="text"] {
+    flex-grow: 1; /* Поле занимает оставшееся пространство */
+    padding: 8px 12px; /* Внутренние отступы для удобства */
+    font-size: 14px; /* Размер текста */
+    border: 1px solid #ddd; /* Лёгкая граница */
+    border-radius: 5px; /* Скруглённые углы */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Внутренняя тень */
+    transition: border-color 0.3s;
+}
+
+.user-list form input[type="text"]:focus {
+    border-color: #4CAF50; /* Синий акцент при фокусе */
+    outline: none; /* Убираем стандартный outline */
+}
+
+/* Стили кнопки поиска */
+.user-list form button[type="submit"] {
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #fff;
+    /*background: #007bff;*/
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.serch {
+    background: #4CAF50;
+}
+
+.serch:hover {
+    background: #2d782f;
+}
+
+/* Стили кнопки "Все" */
+.user-list form .show-all-btn {
+    display: inline-block;
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #fff;
+    background: #4CAF50; /* Зелёный цвет для кнопки "Все" */
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.show-all-btn{
+    margin-bottom: 10px;
+}
+
+.user-list form .show-all-btn:hover {
+    background: #2b702e /* Более тёмный зелёный при наведении */
+}
+
+
+.user-list {
+    width: 25%;
+    max-height: 100%; /* Ограничение высоты с прокруткой */
+    overflow-y: auto;
+    border-right: 1px solid #ddd;
+    background: #f9f9f9; /* Светлый фон */
+    padding: 15px; /* Простор внутри контейнера */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для объёма */
+    border-radius: 8px; /* Скруглённые углы */
+}
+
+.user-list h3 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.user-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.user-list li {
+    margin-bottom: 10px;
+    transition: background 0.3s, transform 0.2s; /* Анимация при наведении */
+}
+
+.user-list li.active {
+    background-color: #e6f7ff; /* Нежный голубой фон для активного пользователя */
+    border-left: 4px solid #4CAF50; /* Индикатор активности */
+    border-radius: 5px;
+    transform: scale(1.02); /* Небольшое увеличение */
+}
+
+.user-list li:hover {
+    background-color: #f0f8ff; /* Слегка выделяем при наведении */
+    transform: scale(1.03); /* Добавляем лёгкое увеличение */
+}
+
+.user-list a {
+    text-decoration: none;
+    color: #000;
+    display: flex; /* Используем flex для размещения текста и иконок */
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 5px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.user-list a:hover {
+    background-color: #4CAF50;
+    color: #fff; /* Белый текст при наведении */
+}
+
+.user-list a .user-icon {
+    margin-right: 10px; /* Отступ между иконкой и именем пользователя */
+    font-size: 18px;
+    color: #4CAF50 /* Синий цвет иконки */
+}
+
+.show-all-btn {
+    display: inline-block;
+    padding: 8px 15px;
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+.show-all-btn:hover {
+    color: #29872a;
+}
+
+.chat-window {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    color: #4CAF50;
+}
+
+.chat-header {
+    padding: 15px;
+    background: #4CAF50;
+    color: #fff;
+    font-size: 20px;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f9f9f9;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 70%;
+}
+
+.message.outgoing {
+    background: #d1e7dd;
+    margin-left: auto;
+}
+
+.message.incoming {
+    background: #f8d7da;
+}
+
+.timestamp {
+    font-size: 12px;
+    color: #666;
+    display: block;
+    margin-top: 5px;
+}
+
+.message-form {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+}
+
+.message-form textarea {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+    font-size: 14px;
+}
+
+.message-form button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background: #4CAF50;
+    border: none;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.message-form button:hover {
+    color: #4CAF50;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.favorite-btn .star {
+    font-size: 18px;
+    color: #aaa; /* Серый цвет для не избранных */
+    transition: color 0.3s;
+}
+
+.favorite-btn .star.filled {
+    color: gold; /* Жёлтый цвет для избранных */
+}
+
+/* Подсветка при наведении */
+.favorite-btn:hover .star {
+    color: gold;
+}
+
+
+
+
