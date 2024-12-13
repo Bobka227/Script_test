@@ -59,6 +59,12 @@ if ($user && !empty($user['profile_picture'])) {
   <link rel="stylesheet" href="../styles/profile.css" />
   <link rel="stylesheet" href="../styles/scrollBar.css" />
 
+  <style>
+    .profile-pic img {
+      border-radius: 0; /* Убираем округление */
+    }
+  </style>
+
   <title>FoodMood</title>
 </head>
 <body>
@@ -230,23 +236,53 @@ if ($user && !empty($user['profile_picture'])) {
   <!-- Модальное окно для загрузки аватара -->
   <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="avatarForm" enctype="multipart/form-data">
-          <div class="modal-header">
-            <h5 class="modal-title">Upload Avatar</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <input type="file" name="avatar" id="avatarInput" accept="image/*" required class="form-control">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary">Upload</button>
-          </div>
-        </form>
-      </div>
+        <div class="modal-content">
+            <form id="avatarForm" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Avatar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="file" name="avatar" id="avatarInput" accept="image/*" required class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="uploadButton">Upload</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
+</div>
+
+<script>
+    // Обработчик отправки формы загрузки аватара
+    document.getElementById('avatarForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Останавливаем стандартное поведение формы
+
+        const formData = new FormData(this);
+
+        fetch('upload_image.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Обновляем аватар и перезагружаем страницу
+                document.getElementById('avatarImage').src = 'display_avatar.php?' + new Date().getTime();
+                setTimeout(() => {
+                    location.reload(); // Обновление страницы через 500мс
+                }, 500);
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Ошибка загрузки аватара: ' + error.message);
+        });
+    });
+</script>
+
 
   <!-- Модальное окно с информацией о пользователе -->
   <div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
@@ -269,6 +305,9 @@ if ($user && !empty($user['profile_picture'])) {
       </div>
     </div>
 
+
+
+<img src="display_avatar.php" alt="User Avatar" class="ava-img" id="avatarImage">
 
   <!-- Подключение скриптов -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
