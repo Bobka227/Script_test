@@ -37,9 +37,7 @@ class ChatServer implements MessageComponentInterface {
 
 use Ratchet\App;
 
-// Используйте порт из переменной окружения Heroku
 $port = getenv('PORT') ?: 8080;
-
-$app = new App('0.0.0.0', $port); // 0.0.0.0 - для подключения извне
+$app = new Ratchet\App('0.0.0.0', $port, '0.0.0.0');
 $app->route('/chat', new ChatServer, ['*']);
 $app->run();
