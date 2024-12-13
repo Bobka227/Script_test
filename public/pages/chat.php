@@ -191,12 +191,16 @@ $conn->close();
     const notifications = document.getElementById('notifications');
     const recipientId = <?= json_encode($selected_user_id) ?>;
 
-    const ws = new WebSocket('wss://jidlosmidlo.herokuapp.com/chat');
+    const ws = new WebSocket('wss://<ваше-приложение>.herokuapp.com/chat');
 
-    // WebSocket handlers
-    ws.onopen = () => console.log('Connected to WebSocket server');
-    ws.onclose = () => console.log('Disconnected from WebSocket server');
+    // Обработчики событий
+    ws.onopen = () => console.log('WebSocket connection established');
+    ws.onmessage = (event) => console.log('Message received:', event.data);
     ws.onerror = (error) => console.error('WebSocket error:', error);
+    ws.onclose = () => console.log('WebSocket connection closed');
+
+    // Отправка тестового сообщения
+    ws.send('Hello, WebSocket!');
 
     ws.onmessage = (event) => {
         const msg = JSON.parse(event.data);
