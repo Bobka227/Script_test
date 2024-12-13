@@ -42,7 +42,7 @@ class ChatServer implements MessageComponentInterface {
 
 use Ratchet\App;
 
-$port = getenv('PORT') ?: 8081; // Получение порта из переменной среды
+$port = getenv('PORT') ?: 8080; // Получение порта из переменной среды
 $app = new Ratchet\App('0.0.0.0', $port, '0.0.0.0');
 $app->route('/chat', new ChatServer, ['*']); // Настройка маршрута
 $app->run();

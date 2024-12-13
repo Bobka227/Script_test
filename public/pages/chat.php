@@ -191,7 +191,8 @@ $conn->close();
         const recipientId = <?= json_encode($selected_user_id) ?>;
 
         // Создаем WebSocket соединение
-        const socket = new WebSocket("wss://jidlosmidlo.herokuapp.com/chat");
+        const socket = new WebSocket("wss://jidlosmidlo-cdad357aca19.herokuapp.com/chat");
+
 
         // Обработчик события открытия WebSocket
         socket.onopen = () => {
