@@ -82,6 +82,17 @@ $favorites_result = $stmt->get_result();
 $favorites = $favorites_result->fetch_all(MYSQLI_ASSOC);
 $favorite_ids = !empty($favorites) ? array_column($favorites, 'favorite_id') : [];
 
+$selected_user = null;
+if ($selected_user_id) {
+    $query = "SELECT id, username FROM users WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $selected_user_id);
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+        $selected_user = $result->fetch_assoc();
+    }
+}
+
 $stmt->close();
 $conn->close();
 ?>
@@ -164,6 +175,7 @@ $conn->close();
     <div class="chat-window">
         <div class="chat-header">
             <h3>Chat with <?= htmlspecialchars($selected_user['username'] ?? 'select user') ?></h3>
+
         </div>
         <div class="chat-messages" id="chat-messages">
             <?php if ($messages): ?>
