@@ -190,79 +190,8 @@ $conn->close();
         const notifications = document.getElementById('notifications');
         const recipientId = <?= json_encode($selected_user_id) ?>;
 
-        // Создаем WebSocket соединение
-        const socket = new WebSocket("wss://jidlosmidlo-cdad357aca19.herokuapp.com/chat");
 
 
-        // Обработчик события открытия WebSocket
-        socket.onopen = () => {
-            console.log("Connected to WebSocket server.");
-            socket.send(JSON.stringify({ type: 'greeting', message: 'Hello from browser client!' }));
-        };
-
-        // Обработчик сообщения от сервера
-        socket.onmessage = (event) => {
-            try {
-                const msg = JSON.parse(event.data);
-
-                // Проверяем структуру сообщения
-                if (!msg.sender || !msg.message || !msg.created_at) {
-                    console.warn("Invalid message format:", msg);
-                    return;
-                }
-
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', msg.sender === 'You' ? 'outgoing' : 'incoming');
-                messageDiv.innerHTML = `
-                <p><strong>${msg.sender}:</strong> ${msg.message}</p>
-                <span class="timestamp">${msg.created_at}</span>
-            `;
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight; // Прокрутка вниз
-            } catch (error) {
-                console.error("Failed to process server message:", error, event.data);
-            }
-        };
-
-        // Обработчик ошибок WebSocket
-        socket.onerror = (error) => {
-            console.error("WebSocket error:", error);
-            notifications.innerHTML = "<p>Error connecting to WebSocket server</p>";
-            notifications.classList.add('show');
-            setTimeout(() => notifications.classList.remove('show'), 4000);
-        };
-
-        // Обработчик закрытия WebSocket
-        socket.onclose = (event) => {
-            console.log("WebSocket connection closed:", event);
-            notifications.innerHTML = "<p>WebSocket connection closed</p>";
-            notifications.classList.add('show');
-            setTimeout(() => notifications.classList.remove('show'), 4000);
-        };
-
-        // Обработчик отправки сообщения
-        messageForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(messageForm);
-            const message = formData.get('message');
-            if (!message) return; // Пропуск пустых сообщений
-
-            const data = {
-                sender: 'You',
-                message: message,
-                recipient_id: recipientId,
-                created_at: new Date().toISOString(),
-            };
-
-            // Отправка сообщения через WebSocket
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify(data));
-                messageForm.querySelector('textarea').value = '';
-            } else {
-                console.warn("WebSocket is not open. Message not sent.");
-            }
-        });
 
         // Функция для загрузки сообщений через AJAX
         async function fetchMessages() {
