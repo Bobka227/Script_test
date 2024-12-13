@@ -163,10 +163,9 @@ $(document).ready(function () {
 		e.preventDefault()
 
 		var formData = new FormData(this)
-		formData.append('action', 'change_avatar')
 
 		$.ajax({
-			url: '../Profile_Script.php',
+			url: 'upload_image.php', // Путь к upload_image.php
 			type: 'POST',
 			data: formData,
 			contentType: false,
@@ -177,13 +176,14 @@ $(document).ready(function () {
 					// Обновляем аватарку на странице
 					$('#avatarImage').attr(
 						'src',
-						'display_avatar.php?' + new Date().getTime()
+						'upload_image.php?' + new Date().getTime()
 					)
 					// Закрываем модальное окно
 					var avatarModal = bootstrap.Modal.getInstance(
 						document.getElementById('avatarModal')
 					)
 					avatarModal.hide()
+					alert(response.message)
 				} else {
 					alert('Ошибка: ' + response.message)
 				}
@@ -194,4 +194,3 @@ $(document).ready(function () {
 		})
 	})
 })
-
