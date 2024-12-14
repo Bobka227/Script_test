@@ -288,9 +288,12 @@ $conn->close();
         async function checkNewMessages() {
             try {
                 const response = await fetch('check_new_messages.php');
+                console.log('Response status:', response.status);
                 if (!response.ok) throw new Error('Failed to check new messages');
 
                 const data = await response.json();
+                console.log('Response data:', data); // Проверяем, что сервер вернул
+
                 if (data.new_messages > 0) {
                     notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
                     notifications.classList.add('show');
@@ -309,21 +312,6 @@ $conn->close();
         fetchMessages();
         checkNewMessages();
     </script>
-
-<!--    <script type="module">-->
-<!--        import Notification from './Notification.js';-->
-<!---->
-<!--        const notification = new Notification();-->
-<!---->
-<!--        // Проверка новых сообщений-->
-<!--        setInterval(() => {-->
-<!--            notification.checkNewMessages();-->
-<!--        }, 10000);-->
-<!---->
-<!--        // Пример вызова-->
-<!--        // notification.show('This is a test notification!');-->
-<!--    </script>-->
-
 </body>
 </html>
 
