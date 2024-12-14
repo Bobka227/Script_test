@@ -5,14 +5,14 @@ require '../../config.php'; // Подключение к базе данных
 header('Content-Type: application/json');
 
 // Проверяем, авторизован ли пользователь
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['user_id'])) {
     http_response_code(403);
     echo json_encode(['error' => 'Unauthorized']);
     exit();
 }
 
-// Получаем username текущего пользователя
-$username = $_SESSION['username'];
+// Получаем user_id текущего пользователя
+$user_id = $_SESSION['user_id'];
 
 // Подготовка SQL-запроса для проверки новых сообщений
 $query = "
@@ -23,7 +23,7 @@ $query = "
 
 try {
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $username); // Используем строковый параметр
+    $stmt->bind_param("i", $user_id); // Используем числовой параметр
     $stmt->execute();
     $result = $stmt->get_result();
 
