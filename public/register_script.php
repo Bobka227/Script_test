@@ -19,7 +19,6 @@ function validateInputs($username, $lastname, $email, $phone_number, $login, $pa
 {
     $errors = [];
 
-    // Проверка имени и фамилии (латиница, минимум 2 символа)
     if (!preg_match('/^[a-zA-Z]{2,}$/', $username)) {
         $errors[] = "Name must contain only Latin letters and be at least 2 characters long.";
     }
@@ -27,28 +26,29 @@ function validateInputs($username, $lastname, $email, $phone_number, $login, $pa
         $errors[] = "Last name must contain only Latin letters and be at least 2 characters long.";
     }
 
-    // Проверка email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format.";
     }
 
-    // Проверка номера телефона (только цифры, от 10 до 15 символов)
-    if (!preg_match('/^\d{10,15}$/', $phone_number)) {
-        $errors[] = "Phone number must contain only digits and be between 10 and 15 characters.";
+    if (!preg_match('/^\+\d{1,3}\d{9,12}$/', $phone_number)) {
+        $errors['phone_number'] = "Phone number must start with a country code (e.g., +1) and have a maximum of 12 digits.";
     }
+    
 
-    // Проверка логина (латиница, цифры, от 3 символов)
     if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $login)) {
         $errors[] = "Login must contain only Latin letters, numbers, and underscores, and be at least 3 characters long.";
     }
 
-    // Проверка пароля (минимум 8 символов, хотя бы одна цифра, одна заглавная и одна строчная буква)
     if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
         $errors[] = "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number.";
     }
 
     return $errors;
 }
+$_SESSION['form_errors'] = $errors;
+
+// Сохранение успешного сообщения
+$_SESSION['success_message'] = "Registration successful!";
 
 // Проверка уникальности логина и email
 function isUserUnique($pdo, $login, $email): bool
