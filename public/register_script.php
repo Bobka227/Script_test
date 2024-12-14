@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Подключение к базе данных
 $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
 $dbname = 'hoc3ablulex394pb';
 $username = 'emk2ggh76qbpq4ml';
@@ -9,124 +10,125 @@ $password = 'lf9c0g2qky76la6x';
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Подключение к базе данных успешно!<br>"; // Отладка
 } catch (PDOException $e) {
-    die("Ошибка подключения к базе данных: " . $e->getMessage());
+    die("Database connection error: " . $e->getMessage());
 }
 
-function registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture): string
-{
-    echo "Функция регистрации вызвана<br>"; // Отладка
-
-    // Проверка на существующего пользователя по login или email
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE login = :login OR email = :email");
-    $stmt->execute(['login' => $login, 'email' => $email]);
-
-    if ($stmt->rowCount() > 0) {
-        echo "Пользователь уже существует<br>"; // Отладка
-        return "Пользователь с таким логином или email уже существует.";
-    }
-
-    // Хеширование пароля
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-    echo "Пароль захеширован<br>"; // Отладка
-
-    // Вставка нового пользователя
-    $stmt = $pdo->prepare("INSERT INTO users (username, lastname, email, phone_number, gender, login, password, profile_picture) 
-                           VALUES (:username, :lastname, :email, :phone_number, :gender, :login, :password, :profile_picture)");
-
-    try {
-        $stmt->execute([
-            'username' => $username,
-            'lastname' => $lastname,
-            'email' => $email,
-            'phone_number' => $phone_number,
-            'gender' => $gender,
-            'login' => $login,
-            'password' => $hashed_password,
-            'profile_picture' => $profile_picture
-        ]);
-        echo "Данные успешно добавлены в базу данных<br>"; // Отладка
-
-        // Установка сессии для нового пользователя
-        $_SESSION['user_id'] = $pdo->lastInsertId(); // ID нового пользователя
-        $_SESSION['username'] = $username;
-
-        // Перенаправление на страницу профиля
-        header("Location: pages/profile.php");
-
-        exit();
-    } catch (PDOException $e) {
-        echo "Ошибка вставки данных: " . $e->getMessage() . "<br>"; // Отладка
-        return "Ошибка при регистрации.";
-    }
-
-    return "Регистрация успешна!";
-} 
-
+// Функция валидации входных данных
 function validateInputs($username, $lastname, $email, $phone_number, $login, $password): array
 {
     $errors = [];
 
-    // Проверка имени и фамилии (только латиница)
-    if (!preg_match("/^[a-zA-Z]+$/", $username)) {
-        $errors[] = "The name must contain only Latin letters.";
+    // Проверка имени и фамилии (латиница, минимум 2 символа)
+    if (!preg_match('/^[a-zA-Z]{2,}$/', $username)) {
+        $errors[] = "Name must contain only Latin letters and be at least 2 characters long.";
     }
-    if (!preg_match("/^[a-zA-Z]+$/", $lastname)) {
-        $errors[] = "The last name must contain only Latin letters.";
+    if (!preg_match('/^[a-zA-Z]{2,}$/', $lastname)) {
+        $errors[] = "Last name must contain only Latin letters and be at least 2 characters long.";
     }
 
-    // Валидация email
+    // Проверка email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format.";
     }
 
-    // Проверка номера телефона (только цифры, минимум 10 символов)
-    if (!preg_match("/^\d{10,15}$/", $phone_number)) {
-        $errors[] = "Phone number must contain only digits and be at least 10 characters long.";
+    // Проверка номера телефона (только цифры, от 10 до 15 символов)
+    if (!preg_match('/^\d{10,15}$/', $phone_number)) {
+        $errors[] = "Phone number must contain only digits and be between 10 and 15 characters.";
     }
 
-    // Проверка логина (только латиница, цифры и подчеркивания)
-    if (!preg_match("/^[a-zA-Z0-9_]{3,}$/", $login)) {
-        $errors[] = "The login must be at least 3 characters long and contain only Latin letters, numbers, or underscores.";
+    // Проверка логина (латиница, цифры, от 3 символов)
+    if (!preg_match('/^[a-zA-Z0-9_]{3,}$/', $login)) {
+        $errors[] = "Login must contain only Latin letters, numbers, and underscores, and be at least 3 characters long.";
     }
 
-    // Проверка пароля (минимум 8 символов, хотя бы одна цифра, буква верхнего и нижнего регистра)
-    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/", $password)) {
-        $errors[] = "Пароль должен быть не менее 8 символов, содержать хотя бы одну цифру, одну букву верхнего и одну букву нижнего регистра.";
+    // Проверка пароля (минимум 8 символов, хотя бы одна цифра, одна заглавная и одна строчная буква)
+    if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
+        $errors[] = "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number.";
     }
 
     return $errors;
 }
 
+// Проверка уникальности логина и email
+function isUserUnique($pdo, $login, $email): bool
+{
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE login = :login OR email = :email");
+    $stmt->execute(['login' => $login, 'email' => $email]);
+    return $stmt->fetchColumn() == 0; // Если пользователь не найден, возвращаем true
+}
+
+// Регистрация пользователя
+function registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture): string
+{
+    // Проверяем уникальность логина и email
+    if (!isUserUnique($pdo, $login, $email)) {
+        return "User with this login or email already exists.";
+    }
+
+    // Хешируем пароль
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+    // Подготовленный запрос для вставки данных
+    $stmt = $pdo->prepare("INSERT INTO users (username, lastname, email, phone_number, gender, login, password, profile_picture)
+                           VALUES (:username, :lastname, :email, :phone_number, :gender, :login, :password, :profile_picture)");
+
+try {
+    $stmt->execute([
+        'username' => $username,
+        'lastname' => $lastname,
+        'email' => $email,
+        'phone_number' => $phone_number,
+        'gender' => $gender,
+        'login' => $login,
+        'password' => $hashed_password,
+        'profile_picture' => $profile_picture
+    ]);
+    echo "Данные успешно добавлены в базу данных<br>"; // Отладка
+
+    // Установка сессии для нового пользователя
+    $_SESSION['user_id'] = $pdo->lastInsertId(); // ID нового пользователя
+    $_SESSION['username'] = $username;
+
+    // Перенаправление на страницу профиля
+    header("Location: pages/profile.php");
+
+    exit();
+} catch (PDOException $e) {
+    echo "Ошибка вставки данных: " . $e->getMessage() . "<br>"; // Отладка
+    return "Ошибка при регистрации.";
+}
+}
+
+// Обработка данных при отправке формы
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo "POST запрос получен<br>"; // Отладка
+    $username = $_POST['username'];
+    $lastname = $_POST['lastname'];
+    $email = $_POST['email'];
+    $phone_number = $_POST['phone_number'];
+    $gender = $_POST['gender'];
+    $login = $_POST['login'];
+    $password = $_POST['password'];
+    $profile_picture = null;
 
-    // Проверка, что все необходимые поля не пустые
-    if (!empty($_POST['username']) && !empty($_POST['lastname']) && !empty($_POST['email']) &&
-        !empty($_POST['phone_number']) && !empty($_POST['gender']) && !empty($_POST['login']) && !empty($_POST['password'])) {
+    // Если пользователь загрузил изображение
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+        $profile_picture = 'uploads/' . basename($_FILES['profile_picture']['name']);
+        move_uploaded_file($_FILES['profile_picture']['tmp_name'], $profile_picture);
+    }
 
-        $username = $_POST['username'];
-        $lastname = $_POST['lastname'];
-        $email = $_POST['email'];
-        $phone_number = $_POST['phone_number'];
-        $gender = $_POST['gender'];
-        $login = $_POST['login'];
-        $password = $_POST['password'];
-        
-        // Обработка изображения профиля (если загружено)
-        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-            $profile_picture = 'uploads/' . basename($_FILES['profile_picture']['name']);
-            move_uploaded_file($_FILES['profile_picture']['tmp_name'], $profile_picture);
-        } else {
-            $profile_picture = null; // Если нет изображения, значение будет null
+    // Проверяем данные
+    $errors = validateInputs($username, $lastname, $email, $phone_number, $login, $password);
+
+    if (!empty($errors)) {
+        // Выводим ошибки
+        foreach ($errors as $error) {
+            echo "<p style='color: red;'>$error</p>";
         }
-
-        // Вызов функции регистрации
-        $result = registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture);
-        echo $result;
     } else {
-        echo "Все поля должны быть заполнены!";
+        // Пытаемся зарегистрировать пользователя
+        $result = registerUser($pdo, $username, $lastname, $email, $phone_number, $gender, $login, $password, $profile_picture);
+        echo "<p style='color: green;'>$result</p>";
     }
 }
 ?>

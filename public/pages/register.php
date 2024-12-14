@@ -1,11 +1,12 @@
 <?php
 session_start();
 if (isset($_SESSION['login'])) {
-    // Если пользователь уже авторизован, перенаправляем его на профиль
     header("Location: profile.php");
     exit();
 }
+
 ?>
+
 <!DOCTYPE html>
 <html lang="es" dir="ltr">
   <head>
@@ -93,23 +94,20 @@ document.addEventListener("DOMContentLoaded", () => {
               pattern=".+@.+"
               oninvalid="this.setCustomValidity('Please include an @ in the email address.')"
               oninput="this.setCustomValidity('')">
-            <input class="form__input" type="text" name="phone_number" placeholder="Phone number" required>
+            <input class="form__input" type="tel" name="phone_number" placeholder="Phone number" required>
             <select class="form__input" name="gender" required>
               <option value="">Select Gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
             <input class="form__input" type="text" name="login" placeholder="Login" required>
-            <div class="password-toggle">
+            
               <input class="form__input" type="password" name="password" id="password" placeholder="Password" required>
               <button type="button" onclick="togglePassword()" class="toggle-btn">👁️</button>
-            </div>
-            <script>
-              function togglePassword() {
-                   const passwordField = document.getElementById('password');
-                   passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
-               }
-            </script>            
+              <small id="password-error" class="error-message" style="color: red; display: none;">
+        Password must be at least 8 characters, with uppercase, lowercase, and a number.
+    </small>
+                      
             <label for="profile_picture">Upload Profile Picture</label>
             <div class="file-upload">
               <input type="file" name="profile_picture" accept="image/*" class="img-choose" id="profile_picture">
