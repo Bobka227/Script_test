@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'config.php'; // Подключение к базе данных или конфигу
+require '../../config.php'; // Подключение к базе данных или конфигу
 
 header('Content-Type: application/json');
 
