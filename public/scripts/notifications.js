@@ -14,7 +14,7 @@ function showNotification(message) {
 // Функция проверки новых сообщений
 async function checkNewMessages() {
     try {
-        const response = await fetch('../pages/check_new_messages.php');
+        const response = await fetch('/pages/check_new_messages.php');
         if (!response.ok) throw new Error('Failed to check new messages');
 
         const data = await response.json();
