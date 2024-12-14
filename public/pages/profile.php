@@ -58,6 +58,7 @@ if ($user && !empty($user['profile_picture'])) {
   <link rel="stylesheet" href="../styles/menu.css" />
   <link rel="stylesheet" href="../styles/profile.css" />
   <link rel="stylesheet" href="../styles/scrollBar.css" />
+    <link rel="stylesheet" href="../styles/notification.css">
 
   <style>
     .profile-pic img {
@@ -322,5 +323,7 @@ if ($user && !empty($user['profile_picture'])) {
       });
     });
   </script>
+      <script src="../scripts/notifications.js"></script>
+
 </body>
 </html>

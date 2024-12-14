@@ -203,24 +203,19 @@ $conn->close();
         const notifications = document.getElementById('notifications');
         const recipientId = <?= json_encode($selected_user_id) ?>;
 
-
-
+        // Отправка сообщения
         messageForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Предотвращаем стандартное поведение формы
+            e.preventDefault();
             const formData = new FormData(messageForm);
 
             try {
-                const response = await fetch('send_message.php', {
-                    method: 'POST',
-                    body: formData,
-                });
-
+                const response = await fetch('send_message.php', { method: 'POST', body: formData });
                 if (!response.ok) throw new Error('Failed to send message');
 
                 const result = await response.json();
                 if (result.success) {
-                    messageForm.reset(); // Очищаем форму после отправки
-                    fetchMessages(); // Обновляем сообщения
+                    messageForm.reset();
+                    fetchMessages(); // Перезагрузка сообщений после отправки
                 } else {
                     alert('Failed to send message: ' + result.error);
                 }
@@ -229,7 +224,7 @@ $conn->close();
             }
         });
 
-        // Функция для загрузки сообщений через AJAX
+        // Загрузка сообщений
         async function fetchMessages() {
             try {
                 const response = await fetch(`get_messages.php?recipient_id=${recipientId}`);
@@ -238,7 +233,9 @@ $conn->close();
                 const messages = await response.json();
                 chatMessages.innerHTML = '';
 
-                messages.forEach(msg => {
+                const unreadMessageIds = []; // Массив для ID непрочитанных сообщений
+
+                messages.forEach((msg) => {
                     const messageDiv = document.createElement('div');
                     messageDiv.classList.add('message', msg.sender === 'You' ? 'outgoing' : 'incoming');
                     messageDiv.innerHTML = `
@@ -246,53 +243,86 @@ $conn->close();
                     <span class="timestamp">${msg.created_at}</span>
                 `;
                     chatMessages.appendChild(messageDiv);
+
+                    // Собираем ID непрочитанных сообщений, отправленных другим пользователем
+                    if (!msg.is_read && msg.sender !== 'You') {
+                        unreadMessageIds.push(msg.id);
+                    }
                 });
 
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Помечаем сообщения как прочитанные
+                if (unreadMessageIds.length > 0) {
+                    await markMessagesAsRead(unreadMessageIds);
+                }
             } catch (error) {
                 console.error('Error fetching messages:', error);
             }
         }
 
-        // Функция проверки новых сообщений
-        // async function checkNewMessages() {
-        //     try {
-        //         const response = await fetch('check_new_messages.php');
-        //         if (!response.ok) throw new Error('Failed to check new messages');
-        //
-        //         const data = await response.json();
-        //         if (data.new_messages > 0) {
-        //             notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
-        //             notifications.classList.add('show');
-        //             setTimeout(() => notifications.classList.remove('show'), 4000);
-        //         }
-        //     } catch (error) {
-        //         console.error('Error checking new messages:', error);
-        //     }
-        // }
+        // Функция для пометки сообщений как прочитанных
+        async function markMessagesAsRead(messageIds) {
+            console.log('Messages to mark as read:', messageIds); // Отладка
+            try {
+                const response = await fetch('mark_as_read.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message_ids: messageIds }),
+                });
 
-        // Устанавливаем интервалы для обновления данных
-        setInterval(fetchMessages, 2000); // Обновление сообщений
-        // setInterval(checkNewMessages, 10000); // Проверка уведомлений
+                if (!response.ok) {
+                    throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
+                }
 
-        // Выполняем начальную загрузку данных
-        fetchMessages();
-        // checkNewMessages();
-    </script>
-
-    <script type="module">
-        import Notification from '../scripts/notification';
-
-        const notification = new Notification();
+                const result = await response.json();
+                console.log('Marked as read:', result);
+            } catch (error) {
+                console.error('Error marking messages as read:', error);
+            }
+        }
 
         // Проверка новых сообщений
-        setInterval(() => {
-            notification.checkNewMessages();
-        }, 10000);
+        async function checkNewMessages() {
+            try {
+                const response = await fetch('check_new_messages.php');
+                if (!response.ok) throw new Error('Failed to check new messages');
 
-        // Пример вызова
-        // notification.show('This is a test notification!');
+                const data = await response.json();
+                if (data.new_messages > 0) {
+                    notifications.innerHTML = `<p>You have ${data.new_messages} new message(s)</p>`;
+                    notifications.classList.add('show');
+                    setTimeout(() => notifications.classList.remove('show'), 4000);
+                }
+            } catch (error) {
+                console.error('Error checking new messages:', error);
+            }
+        }
+
+        // Обновление данных каждые несколько секунд
+        setInterval(fetchMessages, 2000); // Обновление сообщений
+        setInterval(checkNewMessages, 10000); // Уведомления о новых сообщениях
+
+        // Первая загрузка данных
+        fetchMessages();
+        checkNewMessages();
     </script>
+
+<!--    <script type="module">-->
+<!--        import Notification from './Notification.js';-->
+<!---->
+<!--        const notification = new Notification();-->
+<!---->
+<!--        // Проверка новых сообщений-->
+<!--        setInterval(() => {-->
+<!--            notification.checkNewMessages();-->
+<!--        }, 10000);-->
+<!---->
+<!--        // Пример вызова-->
+<!--        // notification.show('This is a test notification!');-->
+<!--    </script>-->
 
 </body>
 </html>
