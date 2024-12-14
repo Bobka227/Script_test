@@ -48,6 +48,39 @@ if (isset($_SESSION['login'])) {
             </div>
         </nav>
     </header>
+    <?php if (isset($_SESSION['message'])): ?>
+    <div class="alert alert-<?php echo $_SESSION['message_type']; ?> text-center" role="alert">
+        <?php 
+            echo $_SESSION['message']; 
+            unset($_SESSION['message']); 
+            unset($_SESSION['message_type']);
+        ?>
+    </div>
+<?php endif; ?>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const loginInput = document.querySelector("input[name='login']");
+    const emailInput = document.querySelector("input[name='email']");
+    
+    loginInput.addEventListener("blur", () => checkAvailability("login", loginInput.value));
+    emailInput.addEventListener("blur", () => checkAvailability("email", emailInput.value));
+
+    function checkAvailability(field, value) {
+        if (!value) return;
+        fetch(`../check_availability.php?field=${field}&value=${encodeURIComponent(value)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.available) {
+                    alert(`${field === "login" ? "Login" : "Email"} is already taken.`);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
+</script>
+
 
     <main class="main-main">
       <div class="main">
@@ -67,7 +100,16 @@ if (isset($_SESSION['login'])) {
               <option value="female">Female</option>
             </select>
             <input class="form__input" type="text" name="login" placeholder="Login" required>
-            <input class="form__input" type="password" name="password" placeholder="Password" required>
+            <div class="password-toggle">
+              <input class="form__input" type="password" name="password" id="password" placeholder="Password" required>
+              <button type="button" onclick="togglePassword()" class="toggle-btn">👁️</button>
+            </div>
+            <script>
+              function togglePassword() {
+                   const passwordField = document.getElementById('password');
+                   passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+               }
+            </script>            
             <label for="profile_picture">Upload Profile Picture</label>
             <div class="file-upload">
               <input type="file" name="profile_picture" accept="image/*" class="img-choose" id="profile_picture">

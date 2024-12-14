@@ -62,6 +62,41 @@ function registerUser($pdo, $username, $lastname, $email, $phone_number, $gender
     }
 
     return "Регистрация успешна!";
+} 
+
+function validateInputs($username, $lastname, $email, $phone_number, $login, $password): array
+{
+    $errors = [];
+
+    // Проверка имени и фамилии (только латиница)
+    if (!preg_match("/^[a-zA-Z]+$/", $username)) {
+        $errors[] = "The name must contain only Latin letters.";
+    }
+    if (!preg_match("/^[a-zA-Z]+$/", $lastname)) {
+        $errors[] = "The last name must contain only Latin letters.";
+    }
+
+    // Валидация email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid email format.";
+    }
+
+    // Проверка номера телефона (только цифры, минимум 10 символов)
+    if (!preg_match("/^\d{10,15}$/", $phone_number)) {
+        $errors[] = "Phone number must contain only digits and be at least 10 characters long.";
+    }
+
+    // Проверка логина (только латиница, цифры и подчеркивания)
+    if (!preg_match("/^[a-zA-Z0-9_]{3,}$/", $login)) {
+        $errors[] = "The login must be at least 3 characters long and contain only Latin letters, numbers, or underscores.";
+    }
+
+    // Проверка пароля (минимум 8 символов, хотя бы одна цифра, буква верхнего и нижнего регистра)
+    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/", $password)) {
+        $errors[] = "Пароль должен быть не менее 8 символов, содержать хотя бы одну цифру, одну букву верхнего и одну букву нижнего регистра.";
+    }
+
+    return $errors;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
