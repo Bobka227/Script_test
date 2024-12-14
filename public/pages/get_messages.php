@@ -4,9 +4,18 @@ require '../../config.php';
 
 header('Content-Type: application/json');
 
+// Проверяем, авторизован ли пользователь
 if (!isset($_SESSION['user_id'])) {
     http_response_code(403);
     echo json_encode(['error' => 'Unauthorized']);
+    exit();
+}
+
+// Получаем ключ шифрования из переменной окружения
+$encryption_key = getenv('ENCRYPTION_KEY');
+if (!$encryption_key) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Encryption key is not set']);
     exit();
 }
 
@@ -19,6 +28,7 @@ if (!$recipient_id) {
     exit();
 }
 
+// Подготавливаем SQL-запрос для получения сообщений
 $query = "
     SELECT m.id, m.message, m.is_read, m.created_at, 
            CASE WHEN m.sender_id = ? THEN 'You' ELSE u.username END AS sender
@@ -37,7 +47,7 @@ $messages = [];
 while ($row = $result->fetch_assoc()) {
     $messages[] = [
         'id' => $row['id'],
-        'message' => $row['message'],
+        'message' => decrypt_message($row['message'], $encryption_key),
         'is_read' => $row['is_read'],
         'created_at' => $row['created_at'],
         'sender' => $row['sender']
@@ -45,4 +55,13 @@ while ($row = $result->fetch_assoc()) {
 }
 
 echo json_encode($messages);
+
+// Функция для расшифровки сообщения
+function decrypt_message($encrypted_message, $key) {
+    $data = base64_decode($encrypted_message);
+    $iv_length = openssl_cipher_iv_length('AES-256-CBC');
+    $iv = substr($data, 0, $iv_length);
+    $encrypted = substr($data, $iv_length);
+    return openssl_decrypt($encrypted, 'AES-256-CBC', $key, 0, $iv);
+}
 ?>
