@@ -18,7 +18,7 @@ $username = $_SESSION['username'];
 $query = "
     SELECT COUNT(*) as new_messages
     FROM messages
-    WHERE recipient_username = ? AND is_read = 0
+    WHERE recipient_id = ? AND is_read = 0
 ";
 
 try {
