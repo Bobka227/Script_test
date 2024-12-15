@@ -1,17 +1,14 @@
 <?php
-session_start(); // Инициализация сессии
+session_start(); 
+require_once '../session_hendler.php';
 
-// Проверяем, авторизован ли пользователь
 if (!isset($_SESSION['username'])) {
-    // Если нет, перенаправляем на страницу входа
     header("Location: register.php");
     exit();
 }
 
-// Получаем логин пользователя из сессии
 $current_login = $_SESSION['username'];
 
-// Подключение к базе данных
 $host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
 $dbname = 'hoc3ablulex394pb';
 $db_username = 'emk2ggh76qbpq4ml';
@@ -20,12 +17,10 @@ $db_password = 'lf9c0g2qky76la6x';
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $db_username, $db_password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    // Отладочный вывод удалён
 } catch (PDOException $e) {
     die("Ошибка подключения к базе данных: " . $e->getMessage());
 }
 
-// Проверяем, является ли пользователь администратором
 function isAdmin($pdo, $login) {
     $stmt = $pdo->prepare("SELECT role FROM users WHERE username = :username");
     $stmt->execute(['username' => $login]);
@@ -35,7 +30,6 @@ function isAdmin($pdo, $login) {
 
 $is_admin = isAdmin($pdo, $current_login);
 
-// Получаем информацию о пользователе из базы данных
 $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
 $stmt->execute(['username' => $current_login]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -43,8 +37,11 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($user && !empty($user['profile_picture'])) {
     $avatarPath = '../' . $user['profile_picture'];
 } else {
-    $avatarPath = '../images/default_avatar.png'; // Путь к аватарке по умолчанию
+    $avatarPath = '../images/default_avatar.png'; 
 }
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -284,9 +281,10 @@ if ($user && !empty($user['profile_picture'])) {
     });
 </script>
 
+<img src="display_avatar.php" alt="User Avatar" class="ava-img" id="avatarImage" style="display:none">
 
-  <!-- Модальное окно с информацией о пользователе -->
-  <div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
+<!-- Модальное окно с информацией о пользователе -->
+<div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="userInfoModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -306,24 +304,34 @@ if ($user && !empty($user['profile_picture'])) {
       </div>
     </div>
 
-
-
-<img src="display_avatar.php" alt="User Avatar" class="ava-img" id="avatarImage">
-
   <!-- Подключение скриптов -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../scripts/profile.js"></script>
   <script src="../scripts/scroll.js"></script>
 
-  <script>
-    $(document).ready(function() {
-      $('#viewAllUsersButton').on('click', function() {
-        window.location.href = 'view_all_users.php';
-      });
-    });
-  </script>
-      <script src="../scripts/notifications.js"></script>
 
+
+
+
+  <script>
+const inactivityLimit = 1200000  ; 
+let inactivityTimer; 
+
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer); 
+    inactivityTimer = setTimeout(() => {
+        alert("Вы были неактивны слишком долго. Вас перенаправят на страницу входа.");
+        window.location.href = "register.php"; 
+    }, inactivityLimit);
+}
+
+["mousemove", "keydown", "click", "scroll"].forEach((event) => {
+    window.addEventListener(event, resetInactivityTimer);
+});
+
+resetInactivityTimer();
+
+  </script>
 </body>
 </html>

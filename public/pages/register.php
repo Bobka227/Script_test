@@ -1,10 +1,18 @@
 <?php
 session_start();
+// Чтение сообщений из сессии
+$errors = $_SESSION['form_errors'] ?? [];
+$success_message = $_SESSION['success_message'] ?? '';
+
+// Очистка сообщений после их извлечения
+unset($_SESSION['form_errors'], $_SESSION['success_message']);
+
+
 if (isset($_SESSION['login'])) {
-    // Если пользователь уже авторизован, перенаправляем его на профиль
     header("Location: profile.php");
     exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es" dir="ltr">
@@ -48,26 +56,66 @@ if (isset($_SESSION['login'])) {
             </div>
         </nav>
     </header>
+    <?php if (isset($_SESSION['message'])): ?>
+    <div class="alert alert-<?php echo $_SESSION['message_type']; ?> text-center" role="alert">
+        <?php 
+            echo $_SESSION['message']; 
+            unset($_SESSION['message']); 
+            unset($_SESSION['message_type']);
+        ?>
+    </div>
+<?php endif; ?>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const loginInput = document.querySelector("input[name='login']");
+    const emailInput = document.querySelector("input[name='email']");
+    
+    loginInput.addEventListener("blur", () => checkAvailability("login", loginInput.value));
+    emailInput.addEventListener("blur", () => checkAvailability("email", emailInput.value));
+
+    function checkAvailability(field, value) {
+        if (!value) return;
+        fetch(`../check_availability.php?field=${field}&value=${encodeURIComponent(value)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.available) {
+                    alert(`${field === "login" ? "Login" : "Email"} is already taken.`);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
+</script>
+
 
     <main class="main-main">
       <div class="main">
         <div class="container a-container" id="a-container">
           <form class="form" id="a-form" action="../register_script.php" method="POST" enctype="multipart/form-data">
             <h2 class="form_title title">Create Account</h2>
-            <input class="form__input" type="text" name="username" placeholder="Name" required>
-            <input class="form__input" type="text" name="lastname" placeholder="Last Name" required>
+            <input id="username" class="form__input" type="text" name="username" placeholder="Name" required>
+            <input id="lastname" class="form__input" type="text" name="lastname" placeholder="Last Name" required>
             <input class="form__input" type="email" name="email" placeholder="Email" required
               pattern=".+@.+"
               oninvalid="this.setCustomValidity('Please include an @ in the email address.')"
               oninput="this.setCustomValidity('')">
-            <input class="form__input" type="text" name="phone_number" placeholder="Phone number" required>
+            <input id="phone_number" class="form__input" type="tel" name="phone_number" placeholder="Phone number" required>
+            <small class="error-message" id="phone_number-error"></small>
             <select class="form__input" name="gender" required>
               <option value="">Select Gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
-            <input class="form__input" type="text" name="login" placeholder="Login" required>
-            <input class="form__input" type="password" name="password" placeholder="Password" required>
+            <input id="login" class="form__input" type="text" name="login" placeholder="Login" required>
+            
+              <input class="form__input" type="password" name="password" id="password" placeholder="Password" required>
+              <button type="button" onclick="togglePassword()" class="toggle-btn">👁️</button>
+              <small id="password-error" class="error-message" style="color: red; display: none;">
+               Password must be at least 8 characters, with uppercase, lowercase, and a number.
+              </small>
+                      
             <label for="profile_picture">Upload Profile Picture</label>
             <div class="file-upload">
               <input type="file" name="profile_picture" accept="image/*" class="img-choose" id="profile_picture">
@@ -100,6 +148,52 @@ if (isset($_SESSION['login'])) {
         </div>
       </div>
     </main>
+
+
+<!-- Модальное окно -->
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="infoModalLabel">
+                    <?php if (!empty($errors)) echo "Error"; else echo "Success"; ?>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php if (!empty($errors)): ?>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= htmlspecialchars($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <p><?= htmlspecialchars($success_message) ?></p>
+                <?php endif; ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const errorsExist = <?= json_encode(!empty($errors)) ?>;
+        const successMessage = <?= json_encode(!empty($success_message)) ?>;
+
+        if (errorsExist || successMessage) {
+            const modal = new bootstrap.Modal(document.getElementById('infoModal'));
+            modal.show();
+        }
+    });
+</script>
+
+
+
     <script defer src="../scripts/register.js"></script>
   </body>
 </html>
