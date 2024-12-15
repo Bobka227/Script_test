@@ -1,5 +1,7 @@
 <?php
 session_start();
+require_once '../session_hendler.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -162,5 +164,29 @@ session_start();
             </div>
         </div>
     </footer>
+
+    <script>
+    // Время бездействия до завершения сессии (20 минут)
+const inactivityLimit = 1200000   ; // 20 минут = 1200000 мс
+let inactivityTimer; // Таймер для отслеживания бездействия
+
+// Сброс таймера бездействия
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer); // Сбрасываем предыдущий таймер
+    inactivityTimer = setTimeout(() => {
+        alert("Вы были неактивны слишком долго. Вас перенаправят на страницу входа.");
+        window.location.href = "register.php"; 
+    }, inactivityLimit);
+}
+
+// Отслеживание активности пользователя
+["mousemove", "keydown", "click", "scroll"].forEach((event) => {
+    window.addEventListener(event, resetInactivityTimer);
+});
+
+// Инициализация таймера при загрузке страницы
+resetInactivityTimer();
+
+  </script>
 </body>
 </html>

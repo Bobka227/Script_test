@@ -1,6 +1,8 @@
 
 <?php
 session_start();
+require_once '../session_hendler.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -187,5 +189,25 @@ session_start();
 
     <script src="../scripts/scroll.js"></script>
 
+
+    <script>
+const inactivityLimit = 1200000   ;
+let inactivityTimer; 
+
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer); 
+    inactivityTimer = setTimeout(() => {
+        alert("Вы были неактивны слишком долго. Вас перенаправят на страницу входа.");
+        window.location.href = "register.php"; 
+    }, inactivityLimit);
+}
+
+["mousemove", "keydown", "click", "scroll"].forEach((event) => {
+    window.addEventListener(event, resetInactivityTimer);
+});
+
+resetInactivityTimer();
+
+  </script>
 </body>
 </html>

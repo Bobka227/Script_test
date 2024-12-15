@@ -14,7 +14,6 @@ if (isset($_SESSION['login'])) {
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="es" dir="ltr">
   <head>
