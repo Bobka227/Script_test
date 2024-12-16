@@ -59,7 +59,7 @@ if ($user && !empty($user['profile_picture'])) {
 
   <style>
     .profile-pic img {
-      border-radius: 0; /* Убираем округление */
+      border-radius: 0; 
     }
   </style>
 
@@ -111,7 +111,7 @@ if ($user && !empty($user['profile_picture'])) {
       <button class="profile-option change-phone">CHANGE PHONE NUMBER</button>
       <button class="profile-option change-info">CHANGE PERSONAL INFORMATION</button>
       <?php if ($is_admin): ?>
-        <button class="profile-option view-all-users" id="viewAllUsersButton">VIEW ALL USERS</button>
+       <a style="text-decoration:none; text-transform:uppercase;" class="profile-option view-all-users" id="viewAllUsersButton" href="view_all_users.php">VIEW ALL USERS</a>
       <?php endif; ?>
     </div>
 

@@ -1,6 +1,6 @@
 <?php
-session_start(); // Инициализация сессии
-
+session_start(); 
+require_once '../session_hendler.php';
 // Проверяем, авторизован ли пользователь
 if (!isset($_SESSION['username'])) {
     header("Location: register.php");
@@ -126,6 +126,24 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </tbody>
     </table>
 </div>
+<script>
+   const inactivityLimit = 1200000  ; 
+let inactivityTimer; 
+
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer); 
+    inactivityTimer = setTimeout(() => {
+        alert("Вы были неактивны слишком долго. Вас перенаправят на страницу входа.");
+        window.location.href = "register.php"; 
+    }, inactivityLimit);
+}
+
+["mousemove", "keydown", "click", "scroll"].forEach((event) => {
+    window.addEventListener(event, resetInactivityTimer);
+});
+
+resetInactivityTimer();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
