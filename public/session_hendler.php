@@ -14,6 +14,5 @@ if (isset($_SESSION['last_activity'])) {
     }
 }
 
-// Обновляем время последней активности
 $_SESSION['last_activity'] = time();
 ?>
