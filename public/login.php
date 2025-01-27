@@ -1,9 +1,9 @@
 <?php
 session_start();
-$host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
-$dbname = 'hoc3ablulex394pb';
-$username = 'emk2ggh76qbpq4ml';
-$password = 'lf9c0g2qky76la6x';
+$host = 'enqhzd10cxh7hv2e.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
+$dbname = 'nb6x6m9qlsec07j8';
+$username = 'wk4kwaf4w8x12twh';
+$password = 'ijw8uyd2lwkgf8on';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);

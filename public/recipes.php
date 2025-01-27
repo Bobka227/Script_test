@@ -4,10 +4,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$host = 's554ongw9quh1xjs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
-$dbname = 'hoc3ablulex394pb';
-$username = 'emk2ggh76qbpq4ml';
-$password = 'lf9c0g2qky76la6x';
+$host = 'enqhzd10cxh7hv2e.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
+$dbname = 'nb6x6m9qlsec07j8';
+$username = 'wk4kwaf4w8x12twh';
+$password = 'ijw8uyd2lwkgf8on';
 
 $conn = new mysqli($host, $username, $password, $dbname);
 
