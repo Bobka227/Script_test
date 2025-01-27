@@ -132,7 +132,7 @@ $conn->close();
                             <li><a href="../index_startPage.php" class="menu-item">Main Page</a></li>
                             <!-- <li><a href="register.html" class="menu-item">Sign In/Sign Up</a></li> -->
                             <li><a href="search.php" class="menu-item">Food Recipes</a></li>
-                            <li><a href="mood.html" class="menu-item">Mood Recipes</a></li>
+                            <li><a href="mood.php" class="menu-item">Mood Recipes</a></li>
                             <li><a href="help.html" class="menu-item">Help</a></li>
                         </ul>
                     </div>

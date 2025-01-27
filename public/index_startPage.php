@@ -10,6 +10,8 @@ require_once 'session_hendler.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script src="../scripts/notifications.js"></script>
+    
     <link rel="stylesheet" href="styles/menu.css">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="icon" href="images/logo_browser/logo_browser_2.png" type="image/png">
