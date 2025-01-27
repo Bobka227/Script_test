@@ -66,7 +66,6 @@ require_once 'session_hendler.php';
             <p>We brighten your emotions by adding a touch of flavor to your day. 
                 Check out our menu options and select your favorite, 
                 crafted based on your emotions.
-                <br> <br> <span style="color: green;">Привет, Кирюша! Удачи на сдаче!</span>  <!-- изменить: убрать послание Кирюше -->
             </p>
             <button type="button" class="btnGetStarted">Get started...</button>
 
@@ -94,7 +93,7 @@ require_once 'session_hendler.php';
                         <p>FoodMood is your personal food assistant, helping you explore new 
                             recipes and customize your meal plans according to your 
                             mood. Discover delicious recipes, whether you're 
-                            happy, sad, or anything in between! СВЭГ</p>  <!-- изменить: убрать свэг в конце текста -->
+                            happy, sad, or anything in between! </p> 
                     </div>
                     <div class="col-md-4 footer-section">
                         <h5>Quick Links</h5>
