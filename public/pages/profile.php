@@ -56,7 +56,7 @@ if ($user && !empty($user['profile_picture'])) {
   <link rel="stylesheet" href="../styles/profile.css" />
   <link rel="stylesheet" href="../styles/scrollBar.css" />
     <link rel="stylesheet" href="../styles/notification.css">
-
+    <script src="../scripts/notifications.js"></script>
   <style>
     .profile-pic img {
       border-radius: 0; 

@@ -2,6 +2,7 @@
 session_start();
 require '../../config.php';
 
+
 header('Content-Type: application/json');
 
 // Проверяем, авторизован ли пользователь
